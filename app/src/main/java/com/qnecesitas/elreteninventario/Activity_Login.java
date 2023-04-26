@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.qnecesitas.elreteninventario.auxiliary.Constants;
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools;
 import com.qnecesitas.elreteninventario.data.ModelPassword;
