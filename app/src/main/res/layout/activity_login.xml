@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/AL_CL_Container_All"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    tools:context=".Activity_Login">
+
+    <!--CL Container-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!--IV Logo Company-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/AL_IV_LogoCompany"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/circular_background"
+            android:padding="12dp"
+            android:src="@drawable/assignment"
+            android:translationZ="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--RadioGroup User-->
+        <RadioGroup
+            android:id="@+id/AL_RG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/AL_IV_LogoCompany">
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/AL_RB_Dependent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/Dependent"
+                android:textColor="@color/white"
+                app:buttonTint="@color/white" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/AL_RB_Administrator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Administrator"
+                android:textColor="@color/white"
+                app:buttonTint="@color/white" />
+
+        </RadioGroup>
+
+        <!--ET Password-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/AL_TIL_Password"
+            style="@style/CustomBorderTIlLogin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:errorIconTint="@color/white"
+            app:errorTextColor="@color/white"
+            app:hintTextColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/AL_RG">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/AL_TIET_Password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="password"
+                android:hint="@string/Password"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textColorLink="@color/white" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!--Button Start session-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/AL_BTN_StartSession"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/Start_session"
+            android:textColor="@color/design_default_color_on_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/AL_TIL_Password" />
+
+        <ProgressBar
+            android:id="@+id/AL_PB_Cargando"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:indeterminateTint="@color/white"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/AL_BTN_StartSession" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
