@@ -64,4 +64,5 @@
     <color name="white">#FFFFFF</color>
     <color name="mtrl_textinput_default_box_stroke_color">#FFFFFF</color>
     <color name="black_transp_backg">#79000000</color>
+    <color name="gray_icon_h">#C1C1C1</color>
 </resources>

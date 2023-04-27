@@ -30,4 +30,8 @@
     <string name="Estanteria">Estantería</string>
     <string name="Productos">Productos</string>
     <string name="Estad_sticas">Estadísticas</string>
+    <string name="agregar_estant">Agregar estante</string>
+    <string name="Reintentar">Reintentar</string>
+    <string name="error">Error</string>
+    <string name="c_digo_del_estante">Código del estante</string>
 </resources>

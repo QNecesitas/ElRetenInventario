@@ -9,11 +9,11 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 import java.util.ArrayList
 
-interface IRetrofitShelves {
+interface IRetrofitShelvesS {
 
 
     @FormUrlEncoded
-    @POST("UpdateShelf.php")
+    @POST("UpdateShelfS.php")
     fun updateShelf(
         @Field("token") token: String,
         @Field("codeShelf") codeShelf: String,
@@ -22,7 +22,7 @@ interface IRetrofitShelves {
 
 
     @FormUrlEncoded
-    @POST("DeleteShelf.php")
+    @POST("DeleteShelfS.php")
     fun deleteShelf(
         @Field("token") token: String,
         @Field("codeShelf") codeShelf: String,
@@ -31,7 +31,7 @@ interface IRetrofitShelves {
 
 
     @FormUrlEncoded
-    @POST("AddShelf.php")
+    @POST("AddShelfS.php")
     fun addShelf(
         @Field("token") token: String,
         @Field("codeShelf") codeShelf: String,
@@ -39,10 +39,9 @@ interface IRetrofitShelves {
 
 
 
-    @GET("FetchShelves.php")
+    @GET("FetchShelvesS.php")
     fun fetchShelves(
-        @Query("token") token: String,
-        @Query("isCounter") isCounter: Boolean
+        @Query("token") token: String
     ): Call<ArrayList<ModelShelf>>
 
 

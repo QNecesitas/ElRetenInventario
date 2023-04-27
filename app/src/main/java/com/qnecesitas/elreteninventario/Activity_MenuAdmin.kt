@@ -2,8 +2,7 @@ package com.qnecesitas.elreteninventario
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.qnecesitas.ElRetenInventario.R
-import com.qnecesitas.ElRetenInventario.databinding.ActivityMenuAdminBinding
+import com.qnecesitas.elreteninventario.databinding.ActivityMenuAdminBinding
 
 class Activity_MenuAdmin : AppCompatActivity() {
     private lateinit var binding: ActivityMenuAdminBinding
