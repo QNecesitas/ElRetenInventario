@@ -19,9 +19,15 @@
     <string name="Cerrar">Cerrar</string>
     <string name="cerrar_password">La aplicación cerrará por demasiados intentos fallidos de contraseña.</string>
     <string name="intentos_fallidos">Demasiados intentos</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Vacio">Vacio\n</string>
     <string name="no_hay_estantes_aun">No hay estantes aún</string>
     <string name="a_dir_estantes">Añadir estantes</string>
+    <string name="Pedidos">Pedidos</string>
+    <string name="text_header">El éxito en los negocios vienen de tener un inventario bien gestionado</string>
+    <string name="lee_lacocca">Lee Lacocca</string>
+    <string name="Estanteria">Estantería</string>
+    <string name="Productos">Productos</string>
+    <string name="Estad_sticas">Estadísticas</string>
 </resources>
