@@ -1,4 +1,5 @@
 <resources>
+    <string name="Icono_de_sesion">Ícono de sesion</string>
     <string name="app_name">ElRetenInventario</string>
     <string name="Icono_de_estante">Ícono de estante</string>
     <string name="codigo_s">Código: %s</string>
@@ -34,4 +35,6 @@
     <string name="Reintentar">Reintentar</string>
     <string name="error">Error</string>
     <string name="c_digo_del_estante">Código del estante</string>
+    <string name="ACCEPT">ACEPTAR</string>
+    <string name="CANCEL">CANCELAR</string>
 </resources>

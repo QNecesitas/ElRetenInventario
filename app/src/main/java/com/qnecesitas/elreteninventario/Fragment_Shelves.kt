@@ -21,7 +21,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
 class Fragment_Shelves : Fragment() {
 
     //Recycler
@@ -33,7 +32,7 @@ class Fragment_Shelves : Fragment() {
     private lateinit var retrofitShelvesImpl: RetrofitShelvesImplS
 
     //Add Shelf
-    private lateinit var li_binding:LiAddShelfBinding
+    private lateinit var li_binding: LiAddShelfBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -121,16 +120,49 @@ class Fragment_Shelves : Fragment() {
         val builder = AlertDialog.Builder(binding.root.context)
         builder.setView(li_binding.root)
         val alertDialog = builder.create()
+        var tiedContent : String;
 
-
+        li_binding.btnAccept.setOnClickListener {
+            tiedContent = li_binding.tied.text.toString()
+            if(tiedContent.isNotEmpty()) addNewShelf(tiedContent)
+            else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+        }
 
         //Finalizado
         builder.setCancelable(true)
         alertDialog.window!!.setGravity(Gravity.CENTER)
         alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         alertDialog.show()
-
-
     }
 
+    private fun addNewShelf(shelfCode : String) {
+        if (NetworkTools.isOnline(binding.root.context, false)) {
+            val call = retrofitShelvesImpl.addShelf(Constants.PHP_TOKEN,shelfCode)
+            call.enqueue(object : Callback<Boolean> {
+                override fun onResponse(
+                    call: Call<Boolean>,
+                    response: Response<Boolean>
+                ) {
+                    if (response.isSuccessful) {
+                        binding.fsNotConnection.visibility = View.GONE
+                        binding.fsRecycler.visibility = View.VISIBLE
+                        loadRecyclerInfo()
+                    } else {
+                        binding.fsNotConnection.visibility = View.VISIBLE
+                        binding.fsRecycler.visibility = View.GONE
+                    }
+                }
+                override fun onFailure(
+                    call: Call<Boolean>,
+                    t: Throwable
+                ) {
+                    binding.fsNotConnection.visibility = View.VISIBLE
+                    binding.fsRecycler.visibility = View.GONE
+                }
+            })
+        } else {
+            binding.fsNotConnection.visibility = View.VISIBLE
+            binding.fsRecycler.visibility = View.GONE
+        }
+    }
 }
