@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">ElRetenInventario</string>
+    <string name="Icono_de_estante">Ícono de estante</string>
+    <string name="codigo_s">Código: %s</string>
+    <string name="cant_gavetas">%s gavetas</string>
+    <string name="Dependent">Dependiente</string>
+    <string name="Administrator">Administrador</string>
+    <string name="Password">Contraseña</string>
+    <string name="Start_session">Iniciar sesión</string>
+    <string name="Se_ha_producido_un_error">Se ha producido un error</string>
+    <string name="Revise_su_conexion">Revise su conexión a Internet e intente de nuevo</string>
+    <string name="Aceptar">Aceptar</string>
+    <string name="este_campo_no_debe_vacio">Este campo no debe de estar vacío</string>
+    <string name="Contrasena_incorrecta">Contraseña incorrecta</string>
+    <string name="salir">Salir</string>
+    <string name="seguro_desea_salir">Realmente desea salir de la aplicación</string>
+    <string name="Si">Si</string>
+    <string name="no">No</string>
+    <string name="Cerrar">Cerrar</string>
+    <string name="cerrar_password">La aplicación cerrará por demasiados intentos fallidos de contraseña.</string>
+    <string name="intentos_fallidos">Demasiados intentos</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Vacio">Vacio\n</string>
+    <string name="no_hay_estantes_aun">No hay estantes aún</string>
+    <string name="a_dir_estantes">Añadir estantes</string>
 </resources>
