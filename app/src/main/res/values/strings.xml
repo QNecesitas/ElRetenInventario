@@ -1,6 +1,6 @@
 <resources>
     <string name="Icono_de_sesion">Ícono de sesion</string>
-    <string name="app_name">ElRetenInventario</string>
+    <string name="app_name">El Retén Inventario</string>
     <string name="Icono_de_estante">Ícono de estante</string>
     <string name="codigo_s">Código: %s</string>
     <string name="cant_gavetas">%s gavetas</string>

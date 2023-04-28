@@ -20,12 +20,12 @@ class RetrofitSessionImpIS : IRetrofitSessions{
         return productApi.updateSessions(token, codeSession)
     }
 
-    override fun deleteSessions(token: String, codeDrawer : String): Call<Boolean> {
-        return productApi.deleteSessions(token, codeDrawer)
+    override fun deleteSessions(token: String, codeSession : String): Call<Boolean> {
+        return productApi.deleteSessions(token, codeSession)
     }
 
-    override fun addSession(token: String, codeShelf: String): Call<Boolean> {
-        return productApi.addSession(token, codeShelf)
+    override fun addSession(token: String, codeSession: String): Call<Boolean> {
+        return productApi.addSession(token, codeSession)
     }
 
     override fun fetchSessions(token: String): Call<ArrayList<ModelSession>> {

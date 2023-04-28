@@ -22,11 +22,12 @@
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             android:src="@drawable/backg_menu_admin_mobile"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="300sp"
+            android:layout_height="300dp"
             android:background="@color/black_transp_backg"
             app:layout_constraintTop_toTopOf="parent" />
 
