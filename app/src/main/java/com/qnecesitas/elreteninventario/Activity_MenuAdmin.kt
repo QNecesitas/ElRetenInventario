@@ -34,7 +34,8 @@ class Activity_MenuAdmin : AppCompatActivity() {
     }
 
     private fun click_products() {
-        //TODO Aun no creado
+        val intent = Intent(this, Activity_EditProduct::class.java)
+        startActivity(intent)
     }
 
     private fun click_orders() {
