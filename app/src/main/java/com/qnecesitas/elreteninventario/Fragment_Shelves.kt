@@ -110,12 +110,12 @@ class Fragment_Shelves : Fragment() {
             binding.fsRecycler.visibility = View.VISIBLE
         }
         adapterRShelves = AdapterRShelves(al_shelves, binding.root.context)
-        adapterRShelves.setEditListener(object: AdapterRShelves.OnClickListener{
+        adapterRShelves.setEditListener(object: AdapterRShelves.RecyclerClickListener{
             override fun onClick(position: Int) {
                 click_edit(position)
             }
         })
-        adapterRShelves.setDeleteListener(object: AdapterRShelves.OnClickListener{
+        adapterRShelves.setDeleteListener(object: AdapterRShelves.RecyclerClickListener{
             override fun onClick(position: Int) {
                 click_delete(position)
             }

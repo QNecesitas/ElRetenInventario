@@ -12,8 +12,8 @@ import com.qnecesitas.elreteninventario.databinding.RecyclerShelvesBinding
 class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val context: Context) :
     RecyclerView.Adapter<AdapterRShelves.ShelvesViewHolder>() {
 
-    private var editListener: OnClickListener? = null
-    private var deleteListener: OnClickListener? = null
+    private var editListener: RecyclerClickListener? = null
+    private var deleteListener: RecyclerClickListener? = null
 
 
     class ShelvesViewHolder(private val binding: RecyclerShelvesBinding) :
@@ -23,8 +23,8 @@ class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val
         fun bind(
             model: ModelShelf,
             context: Context,
-            editListener: OnClickListener?,
-            deleteListener: OnClickListener?,
+            editListener: RecyclerClickListener?,
+            deleteListener: RecyclerClickListener?,
             position: Int
         ) {
             val code = context.getString(R.string.codigo_s, model.c_ShelfS)
@@ -53,15 +53,15 @@ class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val
         holder.bind(al_shelves[position], context, editListener, deleteListener, position)
     }
 
-    interface OnClickListener {
+    interface RecyclerClickListener {
         fun onClick(position: Int);
     }
 
-    fun setEditListener(editListener: OnClickListener) {
+    fun setEditListener(editListener: RecyclerClickListener) {
         this.editListener = editListener
     }
 
-    fun setDeleteListener(deleteListener: OnClickListener) {
+    fun setDeleteListener(deleteListener: RecyclerClickListener) {
         this.deleteListener = deleteListener
     }
 
