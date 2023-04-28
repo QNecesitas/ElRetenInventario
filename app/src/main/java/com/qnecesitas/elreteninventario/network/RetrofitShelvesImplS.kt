@@ -16,16 +16,16 @@ class RetrofitShelvesImplS : IRetrofitShelvesS {
 
     private val productApi: IRetrofitShelvesS = retrofit.create(IRetrofitShelvesS::class.java)
 
-    override fun updateShelf(token: String, c_ShelfSOld: String, c_ShelfSNew: String): Call<String> {
-        return productApi.updateShelf(token, c_ShelfSOld, c_ShelfSNew)
+    override fun updateShelf(token: String, c_shelfSOld: String, c_shelfSNew: String): Call<String> {
+        return productApi.updateShelf(token, c_shelfSOld, c_shelfSNew)
     }
 
-    override fun deleteShelf(token: String, c_ShelfS: String): Call<String> {
-        return productApi.deleteShelf(token, c_ShelfS)
+    override fun deleteShelf(token: String, c_shelfS: String): Call<String> {
+        return productApi.deleteShelf(token, c_shelfS)
     }
 
-    override fun addShelf(token: String, c_ShelfS: String): Call<String> {
-        return productApi.addShelf(token, c_ShelfS)
+    override fun addShelf(token: String, c_shelfS: String): Call<String> {
+        return productApi.addShelf(token, c_shelfS)
     }
 
     override fun fetchShelves(token: String): Call<ArrayList<ModelShelf>> {

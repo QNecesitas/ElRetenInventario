@@ -16,8 +16,8 @@ interface IRetrofitShelvesS {
     @POST("UpdateShelfS.php")
     fun updateShelf(
         @Field("token") token: String,
-        @Field("c_ShelfSOld") c_ShelfSOld: String,
-        @Field("c_ShelfSNew") c_ShelfSNew: String,
+        @Field("c_shelfSOld") c_shelfSOld: String,
+        @Field("c_shelfSNew") c_ShelfSNew: String,
     ) : Call<String>
 
 
@@ -26,7 +26,7 @@ interface IRetrofitShelvesS {
     @POST("DeleteShelfS.php")
     fun deleteShelf(
         @Field("token") token: String,
-        @Field("c_ShelfS") c_ShelfS: String,
+        @Field("c_shelfS") c_shelfS: String,
     ) : Call<String>
 
 
@@ -35,7 +35,7 @@ interface IRetrofitShelvesS {
     @POST("AddShelfS.php")
     fun addShelf(
         @Field("token") token: String,
-        @Field("c_ShelfS") c_ShelfS: String,
+        @Field("c_shelfS") c_shelfS: String,
     ) : Call<String>
 
 

@@ -2,6 +2,7 @@ package com.qnecesitas.elreteninventario.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qnecesitas.elreteninventario.R
@@ -14,20 +15,21 @@ class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val
 
     private var editListener: RecyclerClickListener? = null
     private var deleteListener: RecyclerClickListener? = null
+    private var touchListener: RecyclerTouchListener? = null
 
 
     class ShelvesViewHolder(private val binding: RecyclerShelvesBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
 
         fun bind(
             model: ModelShelf,
             context: Context,
             editListener: RecyclerClickListener?,
             deleteListener: RecyclerClickListener?,
+            touchListener: RecyclerTouchListener?,
             position: Int
         ) {
-            val code = context.getString(R.string.codigo_s, model.c_ShelfS)
+            val code = context.getString(R.string.codigo_s, model.c_shelfS)
             val cant = context.getString(R.string.cant_gavetas, model.amount.toString())
 
             binding.rsTvCodigo.text = code
@@ -35,6 +37,7 @@ class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val
 
             binding.btnEdit.setOnClickListener { editListener?.onClick(position)}
             binding.btnDelete.setOnClickListener { deleteListener?.onClick(position)}
+            binding.root.setOnClickListener { touchListener?.onClickItem(binding.root,adapterPosition) }
 
         }
 
@@ -50,7 +53,7 @@ class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val
     override fun getItemCount() = al_shelves.size
 
     override fun onBindViewHolder(holder: ShelvesViewHolder, position: Int) {
-        holder.bind(al_shelves[position], context, editListener, deleteListener, position)
+        holder.bind(al_shelves[position], context, editListener, deleteListener,touchListener, position)
     }
 
     interface RecyclerClickListener {
@@ -63,6 +66,14 @@ class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val
 
     fun setDeleteListener(deleteListener: RecyclerClickListener) {
         this.deleteListener = deleteListener
+    }
+
+    fun setRecyclerTouchListener(touchListener: RecyclerTouchListener) {
+        this.touchListener = touchListener
+    }
+
+    interface RecyclerTouchListener{
+        fun onClickItem(v : View, position: Int);
     }
 
 }

@@ -24,7 +24,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Fragment_Drawers : Fragment() {
+class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
     //Recycler
     private lateinit var binding: FragmentDrawersBinding
@@ -59,7 +59,7 @@ class Fragment_Drawers : Fragment() {
 
         //Internet
         binding.fdRetryConnection.setOnClickListener { loadRecyclerInfo() }
-
+        loadRecyclerInfo()
         return binding.root
     }
 

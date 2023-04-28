@@ -25,6 +25,7 @@ import retrofit2.Response
 
 class Fragment_Shelves : Fragment() {
 
+    private var openShelfS: OpenShelfS? = null
     //Recycler
     private lateinit var binding: FragmentShelvesBinding
     private lateinit var al_shelves: ArrayList<ModelShelf>
@@ -58,7 +59,7 @@ class Fragment_Shelves : Fragment() {
 
         //Internet
         binding.fsRetryConnection.setOnClickListener { loadRecyclerInfo() }
-
+        loadRecyclerInfo()
         return binding.root
     }
 
@@ -120,7 +121,14 @@ class Fragment_Shelves : Fragment() {
                 click_delete(position)
             }
         })
+        adapterRShelves.setRecyclerTouchListener(object: AdapterRShelves.RecyclerTouchListener{
+            override fun onClickItem(v: View, position: Int) {
+                //rescatar el codigo del estante pulsado
+                var c_shelfS = al_shelves.get(position).c_shelfS
+                openShelfS?.onShelfSClicked(c_shelfS)
+            }
 
+        })
         binding.fsRecycler.adapter = adapterRShelves
     }
 
@@ -143,7 +151,9 @@ class Fragment_Shelves : Fragment() {
             tietContent = li_binding.tiet.text.toString()
             if (tietContent.isNotEmpty()) addNewShelfInternet(tietContent)
             else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+            alertDialog.dismiss()
         }
+        li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
         //Finalizado
         builder.setCancelable(true)
@@ -202,7 +212,7 @@ class Fragment_Shelves : Fragment() {
 
     //Edit shelf
     private fun click_edit(position: Int) {
-        li_editShelf(al_shelves[position].c_ShelfS, position)
+        li_editShelf(al_shelves[position].c_shelfS, position)
     }
 
     private fun li_editShelf(codeShelfOld: String, position: Int) {
@@ -218,7 +228,9 @@ class Fragment_Shelves : Fragment() {
             tiedContent = li_binding.tiet.text.toString()
             if (tiedContent.isNotEmpty()) editShelfInternet(codeShelfOld, tiedContent, position)
             else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+            alertDialog.dismiss()
         }
+        li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
         //Finalizado
         builder.setCancelable(true)
@@ -237,7 +249,7 @@ class Fragment_Shelves : Fragment() {
                     response: Response<String>
                 ) {
                     if (response.isSuccessful) {
-                        al_shelves[position].c_ShelfS = shelfCodeNew
+                        al_shelves[position].c_shelfS = shelfCodeNew
                         updateRecyclerAdapter()
                         FancyToast.makeText(
                             requireContext(),
@@ -292,7 +304,7 @@ class Fragment_Shelves : Fragment() {
         ) { dialog, _ ->
             if (NetworkTools.isOnline(requireContext(), true)) {
                 dialog.dismiss()
-                deleteShelfInternet(al_shelves[position].c_ShelfS, position)
+                deleteShelfInternet(al_shelves[position].c_shelfS, position)
             }
         }
         builder.setNegativeButton(R.string.No,
@@ -347,5 +359,12 @@ class Fragment_Shelves : Fragment() {
         }
     }
 
+    public fun setOpenShelfSListener(openShelfS: OpenShelfS){
+        this.openShelfS = openShelfS
+    }
+
+    interface OpenShelfS{
+        fun onShelfSClicked(c_shelfS : String)
+    }
 
 }
