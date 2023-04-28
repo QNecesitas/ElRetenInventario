@@ -37,4 +37,11 @@
     <string name="c_digo_del_estante">Código del estante</string>
     <string name="ACCEPT">ACEPTAR</string>
     <string name="CANCEL">CANCELAR</string>
+    <string name="Almacen">Almacén</string>
+    <string name="Editar">Editar</string>
+    <string name="Eliminar">Eliminar</string>
+    <string name="Operacion_realizada_con_exito">Operación realizada con éxito</string>
+    <string name="Eliminar_producto">Eliminar producto</string>
+    <string name="Desea_eliminar_producto">¿Desea realmente eliminar el producto?</string>
+    <string name="No">No</string>
 </resources>

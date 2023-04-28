@@ -18,7 +18,7 @@
                 android:layout_height="@dimen/icons_folders"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/llButtons"
                 android:layout_marginStart="12sp"
                 android:src="@drawable/ic_inventory_24"
                 android:contentDescription="@string/Icono_de_sesion"/>
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@id/rs_ivIcon_session"
                 app:layout_constraintTop_toBottomOf="@id/rs_tvCodigo_session"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/llButtons"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 android:layout_marginStart="8dp"
@@ -52,6 +52,43 @@
                 android:layout_marginBottom="4dp"
                 android:textSize="@dimen/textSize_s"
                 android:text="@string/cant_gavetas"/>
+
+
+
+            <!--Buttons-->
+            <LinearLayout
+                android:id="@+id/llButtons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="12sp"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rs_cant">
+
+                <TextView
+                    android:id="@+id/btn_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Editar"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="@dimen/textSize_m"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/btn_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/Eliminar"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="@dimen/textSize_m"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

@@ -115,7 +115,8 @@ public class Activity_Login extends AppCompatActivity {
             String inputPassword = binding.ALTIETPassword.getText().toString();
 
             if (bdPassword.equals(inputPassword)) {
-                //TODO  Falta la actividad a donde ira
+                Intent intent = new Intent(Activity_Login.this, Activity_MenuAdmin.class);
+                startActivity(intent);
             } else {
                 countBadPassword++;
                 binding.ALTILPassword.setError(getString(R.string.Contrasena_incorrecta));

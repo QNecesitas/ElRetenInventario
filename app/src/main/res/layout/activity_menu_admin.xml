@@ -66,7 +66,7 @@
 
         <!--Card View Shelf-->
         <androidx.cardview.widget.CardView
-            android:id="@+id/ama_cv_shelf"
+            android:id="@+id/ama_cv_store"
             android:layout_width="0sp"
             android:layout_height="200dp"
             android:layout_marginStart="12dp"
@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="@string/Estanteria"
+                    android:text="@string/Almacen"
                     android:textSize="@dimen/textSize_m" />
 
             </LinearLayout>
@@ -108,7 +108,7 @@
             android:layout_marginStart="6dp"
             android:layout_marginEnd="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ama_cv_shelf"
+            app:layout_constraintStart_toEndOf="@id/ama_cv_store"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -146,7 +146,7 @@
             android:layout_marginEnd="6dp"
             app:layout_constraintEnd_toStartOf="@id/ama_cv_products"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ama_cv_shelf">
+            app:layout_constraintTop_toBottomOf="@id/ama_cv_store">
 
             <LinearLayout
                 android:layout_width="match_parent"
