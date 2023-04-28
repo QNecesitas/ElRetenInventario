@@ -1,6 +1,6 @@
 package com.qnecesitas.elreteninventario.data
 
 data class ModelShelf(
-    var code: String,
+    var c_ShelfS: String,
     var amount: Int
 )

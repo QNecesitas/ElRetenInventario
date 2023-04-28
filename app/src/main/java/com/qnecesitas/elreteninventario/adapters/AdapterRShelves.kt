@@ -12,20 +12,34 @@ import com.qnecesitas.elreteninventario.databinding.RecyclerShelvesBinding
 class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val context: Context) :
     RecyclerView.Adapter<AdapterRShelves.ShelvesViewHolder>() {
 
+    private var editListener: RecyclerClickListener? = null
+    private var deleteListener: RecyclerClickListener? = null
+
 
     class ShelvesViewHolder(private val binding: RecyclerShelvesBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(model: ModelShelf, context: Context) {
-            val code = context.getString(R.string.codigo_s, model.code)
+        fun bind(
+            model: ModelShelf,
+            context: Context,
+            editListener: RecyclerClickListener?,
+            deleteListener: RecyclerClickListener?,
+            position: Int
+        ) {
+            val code = context.getString(R.string.codigo_s, model.c_ShelfS)
             val cant = context.getString(R.string.cant_gavetas, model.amount.toString())
 
             binding.rsTvCodigo.text = code
             binding.rsCant.text = cant
+
+            binding.btnEdit.setOnClickListener { editListener?.onClick(position)}
+            binding.btnDelete.setOnClickListener { deleteListener?.onClick(position)}
+
         }
 
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShelvesViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -36,7 +50,19 @@ class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val
     override fun getItemCount() = al_shelves.size
 
     override fun onBindViewHolder(holder: ShelvesViewHolder, position: Int) {
-        holder.bind(al_shelves[position], context)
+        holder.bind(al_shelves[position], context, editListener, deleteListener, position)
+    }
+
+    interface RecyclerClickListener {
+        fun onClick(position: Int);
+    }
+
+    fun setEditListener(editListener: RecyclerClickListener) {
+        this.editListener = editListener
+    }
+
+    fun setDeleteListener(deleteListener: RecyclerClickListener) {
+        this.deleteListener = deleteListener
     }
 
 }
