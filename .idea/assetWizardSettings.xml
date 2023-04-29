@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../../Markoz/Android-Trabajo/sdk/icons/material/materialicons/wifi_off/baseline_wifi_off_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../Game%20Development/Android/3.3/icons/material/materialicons/location_on/baseline_location_on_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,8 +28,14 @@
                         </option>
                         <option name="values">
                           <map>
+<<<<<<< HEAD
+                            <entry key="color" value="1e1e1e" />
+                            <entry key="outputName" value="baseline_location_on_24" />
+                            <entry key="sourceFile" value="D:\QNecesitas\Operaciones\ElRetenInventario" />
+=======
                             <entry key="outputName" value="baseline_wifi_off_24" />
                             <entry key="sourceFile" value="C:\Users\caca\AndroidStudioProjects\ElRetenInventario" />
+>>>>>>> eab156edfd394e030bf108caa3bf9ff49e3d73c0
                           </map>
                         </option>
                       </PersistentState>

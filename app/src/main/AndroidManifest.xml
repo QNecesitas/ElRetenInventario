@@ -29,6 +29,12 @@
             android:name=".Activity_MenuAdmin"
             android:exported="false" />
         <activity
+            android:name=".Activity_AboutDev"
+            android:exported="false" />
+        <activity
+            android:name=".Activity_AboutUs"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
