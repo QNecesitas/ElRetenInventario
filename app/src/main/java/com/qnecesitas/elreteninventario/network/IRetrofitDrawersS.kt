@@ -15,7 +15,7 @@ interface IRetrofitDrawersS {
     @POST("UpdateDrawerS.php")
     fun updateDrawer(
         @Field("token") token: String,
-        @Field("codeShelf") codeDrawer : String,
+        @Field("c_drawerS") c_drawerS : String,
     ) : Call<Boolean>
 
 
@@ -24,7 +24,7 @@ interface IRetrofitDrawersS {
     @POST("DeleteDrawerS.php")
     fun deleteDrawer(
         @Field("token") token: String,
-        @Field("codeShelf") codeDrawer : String,
+        @Field("c_drawerS") c_drawerS : String,
     ) : Call<Boolean>
 
 
@@ -33,14 +33,16 @@ interface IRetrofitDrawersS {
     @POST("AddDrawerS.php")
     fun addDrawer(
         @Field("token") token: String,
-        @Field("codeDrawer") codeShelf: String,
+        @Field("c_drawerS") c_drawerS: String,
+        @Field("fk_c_shelfS") fk_c_shelfS: String
     ) : Call<Boolean>
 
 
 
     @GET("FetchDrawersS.php")
     fun fetchDrawers(
-        @Query("token") token: String
+        @Query("token") token: String,
+        @Query("fk_c_shelfS") fk_c_shelfS: String
     ): Call<ArrayList<ModelDrawer>>
 
 

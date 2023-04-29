@@ -17,20 +17,20 @@ class RetrofitDrawersImplS : IRetrofitDrawersS {
 
     private val productApi: IRetrofitDrawersS = retrofit.create(IRetrofitDrawersS::class.java)
 
-    override fun updateDrawer(token: String, codeDrawer : String): Call<Boolean> {
-        return productApi.updateDrawer(token, codeDrawer)
+    override fun updateDrawer(token: String, c_drawerS : String): Call<Boolean> {
+        return productApi.updateDrawer(token, c_drawerS)
     }
 
-    override fun deleteDrawer(token: String, codeDrawer : String): Call<Boolean> {
-        return productApi.deleteDrawer(token, codeDrawer)
+    override fun deleteDrawer(token: String, c_drawerS : String): Call<Boolean> {
+        return productApi.deleteDrawer(token, c_drawerS)
     }
 
-    override fun addDrawer(token: String, codeShelf: String): Call<Boolean> {
-        return productApi.addDrawer(token, codeShelf)
+    override fun addDrawer(token: String, c_drawerS: String,fk_c_shelfS: String): Call<Boolean> {
+        return productApi.addDrawer(token, c_drawerS,fk_c_shelfS)
     }
 
-    override fun fetchDrawers(token: String): Call<ArrayList<ModelDrawer>> {
-        return productApi.fetchDrawers(token)
+    override fun fetchDrawers(token: String, fk_c_shelfS: String): Call<ArrayList<ModelDrawer>> {
+        return productApi.fetchDrawers(token,fk_c_shelfS)
     }
 
 

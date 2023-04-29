@@ -2,6 +2,6 @@ package com.qnecesitas.elreteninventario.data
 
 data class ModelDrawer(
     var code : String,
-    var parentShelfCode : String,
-    var amount : Int
+    var fk_c_shelfS : String,
+    var amount : Int = 0
 )

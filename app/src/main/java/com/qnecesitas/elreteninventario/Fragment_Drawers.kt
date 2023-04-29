@@ -17,9 +17,11 @@ import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelDrawer
 import com.qnecesitas.elreteninventario.data.ModelShelf
 import com.qnecesitas.elreteninventario.databinding.FragmentDrawersBinding
+import com.qnecesitas.elreteninventario.databinding.LiAddDrawerBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddShelfBinding
 import com.qnecesitas.elreteninventario.network.RetrofitDrawersImplS
 import com.qnecesitas.elreteninventario.network.RetrofitShelvesImplS
+import com.shashank.sony.fancytoastlib.FancyToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,7 +37,8 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     private lateinit var retrofitDrawersImpl: RetrofitDrawersImplS
 
     //Add Shelf
-    private lateinit var li_binding: LiAddShelfBinding
+    private lateinit var li_binding: LiAddDrawerBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +70,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     private fun loadRecyclerInfo() {
         if (NetworkTools.isOnline(binding.root.context, false)) {
 
-            val call = retrofitDrawersImpl.fetchDrawers(Constants.PHP_TOKEN)
+            val call = retrofitDrawersImpl.fetchDrawers(Constants.PHP_TOKEN,c_shelfS)
             call.enqueue(object : Callback<ArrayList<ModelDrawer>> {
                 override fun onResponse(
                     call: Call<ArrayList<ModelDrawer>>,
@@ -119,11 +122,19 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
     private fun li_newDrawer() {
         val inflater = LayoutInflater.from(binding.root.context)
-        li_binding = LiAddShelfBinding.inflate(inflater)
+        li_binding = LiAddDrawerBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
         builder.setView(li_binding.root)
         val alertDialog = builder.create()
+        var tietContent: String;
 
+        li_binding.btnAccept.setOnClickListener {
+            tietContent = li_binding.tiet.text.toString()
+            if (tietContent.isNotEmpty()) addNewDrawerInternet(tietContent)
+            else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+            alertDialog.dismiss()
+        }
+        li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
         //Finalizado
         builder.setCancelable(true)
@@ -132,6 +143,52 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         alertDialog.show()
 
 
+    }
+
+    private fun addNewDrawerInternet(drawerCode: String) {
+        if (NetworkTools.isOnline(binding.root.context, true)) {
+            val call = retrofitDrawersImpl.addDrawer(Constants.PHP_TOKEN, drawerCode,c_shelfS)
+            call.enqueue(object : Callback<Boolean> {
+                override fun onResponse(
+                    call: Call<Boolean>,
+                    response: Response<Boolean>
+                ) {
+                    if (response.isSuccessful) {
+                        val model = ModelDrawer(drawerCode, c_shelfS)
+                        al_drawers.add(model)
+                        updateRecyclerAdapter()
+                        FancyToast.makeText(
+                            requireContext(),
+                            getString(R.string.Operacion_realizada_con_exito),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.SUCCESS,
+                            false
+                        ).show()
+                    } else {
+                        FancyToast.makeText(
+                            requireContext(),
+                            getString(R.string.Revise_su_conexion),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.ERROR,
+                            false
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<Boolean>,
+                    t: Throwable
+                ) {
+                    FancyToast.makeText(
+                        requireContext(),
+                        getString(R.string.Revise_su_conexion),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.ERROR,
+                        false
+                    ).show()
+                }
+            })
+        }
     }
 
 }

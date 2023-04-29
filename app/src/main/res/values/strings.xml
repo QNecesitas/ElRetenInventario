@@ -35,6 +35,7 @@
     <string name="Reintentar">Reintentar</string>
     <string name="error">Error</string>
     <string name="c_digo_del_estante">Código del estante</string>
+    <string name="c_digo_de_gaveta">Código de la gaveta</string>
     <string name="ACCEPT">ACEPTAR</string>
     <string name="CANCEL">CANCELAR</string>
     <string name="Almacen">Almacén</string>

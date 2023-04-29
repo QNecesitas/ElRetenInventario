@@ -121,10 +121,9 @@ class Fragment_Shelves : Fragment() {
                 click_delete(position)
             }
         })
-        adapterRShelves.setRecyclerTouchListener(object: AdapterRShelves.RecyclerTouchListener{
-            override fun onClickItem(v: View, position: Int) {
-                //rescatar el codigo del estante pulsado
-                var c_shelfS = al_shelves.get(position).c_shelfS
+        adapterRShelves.setRecyclerTouchListener(object: AdapterRShelves.RecyclerClickListener{
+            override fun onClick(position: Int) {
+                val c_shelfS = al_shelves.get(position).c_shelfS
                 openShelfS?.onShelfSClicked(c_shelfS)
             }
 
