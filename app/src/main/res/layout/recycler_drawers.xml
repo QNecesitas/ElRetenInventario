@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="@dimen/cardview_default_elevation"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Icon-->
+            <ImageView
+                android:id="@+id/rs_ivIcon"
+                android:layout_width="@dimen/icons_folders"
+                android:layout_height="@dimen/icons_folders"
+                android:layout_marginStart="12sp"
+                android:contentDescription="@string/Icono_de_estante"
+                android:src="@drawable/ic_inventory_24"
+                app:layout_constraintBottom_toTopOf="@id/llButtons"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!--Code-->
+            <TextView
+                android:id="@+id/rs_tvCodigo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/codigo_s"
+                android:textSize="@dimen/textSize_m"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/rs_cant"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/rs_ivIcon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Amount-->
+            <TextView
+                android:id="@+id/rs_cant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/cant_gavetas"
+                android:textSize="@dimen/textSize_s"
+                app:layout_constraintBottom_toTopOf="@id/llButtons"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/rs_ivIcon"
+                app:layout_constraintTop_toBottomOf="@id/rs_tvCodigo" />
+
+            <!--Buttons-->
+            <LinearLayout
+                android:id="@+id/llButtons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="12sp"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rs_cant">
+
+                <TextView
+                    android:id="@+id/btn_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Editar"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="@dimen/textSize_m"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/btn_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/Eliminar"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="@dimen/textSize_m"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

@@ -58,6 +58,8 @@ public class Activity_Login extends AppCompatActivity {
     }
 
     private void click_login() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(binding.ALTIETPassword.getWindowToken(), 0);
         if (al_password.isEmpty()) {
             loadPasswordInternet();
         } else {
@@ -115,7 +117,8 @@ public class Activity_Login extends AppCompatActivity {
             String inputPassword = binding.ALTIETPassword.getText().toString();
 
             if (bdPassword.equals(inputPassword)) {
-                //TODO  Falta la actividad a donde ira
+                Intent intent = new Intent(Activity_Login.this, Activity_MenuAdmin.class);
+                startActivity(intent);
             } else {
                 countBadPassword++;
                 binding.ALTILPassword.setError(getString(R.string.Contrasena_incorrecta));
