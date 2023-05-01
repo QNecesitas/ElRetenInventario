@@ -4,6 +4,7 @@
     <string name="Icono_de_estante">Ícono de estante</string>
     <string name="codigo_s">Código: %s</string>
     <string name="cant_gavetas">%s gavetas</string>
+    <string name="cant_secciones">%s secciones</string>
     <string name="Dependent">Dependiente</string>
     <string name="Administrator">Administrador</string>
     <string name="Password">Contraseña</string>
@@ -37,14 +38,17 @@
     <string name="error">Error</string>
     <string name="c_digo_del_estante">Código del estante</string>
     <string name="c_digo_de_gaveta">Código de la gaveta</string>
+    <string name="c_digo_de_seccion">Código de la sección</string>
     <string name="ACCEPT">ACEPTAR</string>
     <string name="CANCEL">CANCELAR</string>
     <string name="Almacen">Almacén</string>
     <string name="Editar">Editar</string>
     <string name="Eliminar">Eliminar</string>
     <string name="Operacion_realizada_con_exito">Operación realizada con éxito</string>
-    <string name="Eliminar_producto">Eliminar producto</string>
-    <string name="Desea_eliminar_producto">¿Desea realmente eliminar el producto?</string>
+    <string name="Eliminar_elemento">Eliminar elemento</string>
+    <string name="Desea_eliminar_el_estante">¿Desea realmente eliminar el estante? Si elimina el estante se eliminará todo lo que contenga, incluyendo gavetas, secciones y productos.</string>
+    <string name="Desea_eliminar_la_gaveta">¿Desea realmente eliminar la gaveta? Si elimina la gaveta se eliminará todo lo que contenga, incluyendo secciones y productos.</string>
+    <string name="Desea_eliminar_la_seccion">¿Desea realmente eliminar la seccion? Si elimina la sección se eliminarán todos los productos.</string>
     <string name="No">No</string>
     <string name="name_product">Nombre del producto</string>
     <string name="price_default">0.00</string>
@@ -66,5 +70,6 @@
     <string name="qnecesitas_nat_cu">qnecesitas.nat.cu</string>
     <string name="https_www_facebook_com_qnecesitas_paginaprincipal">https://www.facebook.com/qnecesitas.paginaprincipal</string>
     <string name="misi_n">Misión:</string>
+    <string name="no_hay_gavetas_aun">No hay gavetas aún</string>
 
 </resources>

@@ -16,8 +16,9 @@ interface IRetrofitSessions {
     @POST("UpdateSessions.php")
     fun updateSessions(
         @Field("token") token: String,
-        @Field("codeSession") codeSession : String,
-    ) : Call<Boolean>
+        @Field("c_sessionSOld") c_sessionSOld: String,
+        @Field("c_sessionSNew") c_sessionSNew: String,
+    ) : Call<String>
 
 
 
@@ -25,8 +26,8 @@ interface IRetrofitSessions {
     @POST("DeleteSessions.php")
     fun deleteSessions(
         @Field("token") token: String,
-        @Field("codeSession") codeSession : String,
-    ) : Call<Boolean>
+        @Field("c_sessionS") c_sessionS : String,
+    ) : Call<String>
 
 
 
@@ -34,8 +35,8 @@ interface IRetrofitSessions {
     @POST("AddSession.php")
     fun addSession(
         @Field("token") token: String,
-        @Field("codeSession") codeSession: String,
-    ) : Call<Boolean>
+        @Field("c_sessionS") c_sessionS: String,
+    ) : Call<String>
 
 
 

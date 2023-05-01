@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
+        android:layout_margin="6dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardElevation="@dimen/cardview_default_elevation"
@@ -48,7 +49,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
-                android:text="@string/cant_gavetas"
+                android:text="@string/cant_secciones"
                 android:textSize="@dimen/textSize_s"
                 app:layout_constraintBottom_toTopOf="@id/llButtons"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +62,6 @@
                 android:id="@+id/llButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_marginEnd="12sp"
                 android:layout_marginBottom="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/Editar"
                     android:textColor="?attr/colorPrimary"
-                    android:textSize="@dimen/textSize_m"
+                    android:textSize="@dimen/textSize_s"
                     android:textStyle="bold" />
 
                 <TextView
@@ -84,7 +84,7 @@
                     android:layout_marginStart="12dp"
                     android:text="@string/Eliminar"
                     android:textColor="?attr/colorPrimary"
-                    android:textSize="@dimen/textSize_m"
+                    android:textSize="@dimen/textSize_s"
                     android:textStyle="bold" />
 
 

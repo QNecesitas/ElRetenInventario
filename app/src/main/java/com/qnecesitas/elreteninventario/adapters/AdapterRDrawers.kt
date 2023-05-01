@@ -2,14 +2,11 @@ package com.qnecesitas.elreteninventario.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.data.ModelDrawer
-import com.qnecesitas.elreteninventario.data.ModelShelf
 import com.qnecesitas.elreteninventario.databinding.RecyclerDrawersBinding
-import com.qnecesitas.elreteninventario.databinding.RecyclerShelvesBinding
 
 
 class AdapterRDrawers(private val al_drawers: ArrayList<ModelDrawer>, private val context: Context) :
@@ -27,14 +24,16 @@ class AdapterRDrawers(private val al_drawers: ArrayList<ModelDrawer>, private va
         fun bind(
             model: ModelDrawer ,
             context: Context,
-            deleteListener: RecyclerClickListener?,
             editListener: RecyclerClickListener?,
+            deleteListener: RecyclerClickListener?,
             touchListener: RecyclerClickListener?,
             position: Int
         ) {
-            val code = context.getString(R.string.codigo_s, model.code)
+            val code = context.getString(R.string.codigo_s, model.c_drawerS)
+            val amount = context.getString(R.string.cant_secciones, model.amount.toString())
 
             binding.rsTvCodigo.text = code
+            binding.rsCant.text = amount
 
             binding.btnDelete.setOnClickListener { deleteListener?.onClick(position) }
             binding.btnEdit.setOnClickListener { editListener?.onClick(position) }

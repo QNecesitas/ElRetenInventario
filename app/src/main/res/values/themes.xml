@@ -46,13 +46,4 @@
         <item name="colorControlActivated">@color/white</item>
     </style>
 
-
-    <!--Toolbar-->
-    <style name="ToolbarIcons" parent="ThemeOverlay.AppCompat.ActionBar">
-        <item name="colorControlNormal">@color/white</item>
-        <item name="backgroundColor"> @color/design_default_color_primary</item>
-    </style>
-
-
-
 </resources>

@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".Activity_Store">
 
+
+    <!--Frame container fragments-->
     <FrameLayout
         android:id="@+id/as_frame"
         app:layout_constraintStart_toStartOf="parent"

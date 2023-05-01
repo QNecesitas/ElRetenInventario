@@ -16,16 +16,16 @@ class RetrofitSessionImpIS : IRetrofitSessions{
 
     private val productApi: IRetrofitSessions = retrofit.create(IRetrofitSessions::class.java)
 
-    override fun updateSessions(token: String, codeSession : String): Call<Boolean> {
-        return productApi.updateSessions(token, codeSession)
+    override fun updateSessions(token: String, c_sessionSOld : String, c_sessionSNew : String): Call<String> {
+        return productApi.updateSessions(token, c_sessionSOld,c_sessionSNew)
     }
 
-    override fun deleteSessions(token: String, codeSession : String): Call<Boolean> {
-        return productApi.deleteSessions(token, codeSession)
+    override fun deleteSessions(token: String, c_sessionS : String): Call<String> {
+        return productApi.deleteSessions(token, c_sessionS)
     }
 
-    override fun addSession(token: String, codeSession: String): Call<Boolean> {
-        return productApi.addSession(token, codeSession)
+    override fun addSession(token: String, c_sessionS: String): Call<String> {
+        return productApi.addSession(token, c_sessionS)
     }
 
     override fun fetchSessions(token: String): Call<ArrayList<ModelSession>> {

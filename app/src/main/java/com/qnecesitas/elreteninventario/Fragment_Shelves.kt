@@ -37,6 +37,7 @@ class Fragment_Shelves : Fragment() {
     //Add Shelf
     private lateinit var li_binding: LiAddShelfBinding
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -295,8 +296,8 @@ class Fragment_Shelves : Fragment() {
         //init alert dialog
         val builder = android.app.AlertDialog.Builder(requireContext())
         builder.setCancelable(true)
-        builder.setTitle(R.string.Eliminar_producto)
-        builder.setMessage(R.string.Desea_eliminar_producto)
+        builder.setTitle(R.string.Eliminar_elemento)
+        builder.setMessage(R.string.Desea_eliminar_el_estante)
         //set listeners for dialog buttons
         builder.setPositiveButton(
             R.string.Si
@@ -358,7 +359,7 @@ class Fragment_Shelves : Fragment() {
         }
     }
 
-    public fun setOpenShelfSListener(openShelfS: OpenShelfS){
+    fun setOpenShelfSListener(openShelfS: OpenShelfS){
         this.openShelfS = openShelfS
     }
 

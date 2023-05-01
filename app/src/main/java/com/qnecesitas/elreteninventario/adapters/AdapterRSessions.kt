@@ -11,15 +11,29 @@ import com.qnecesitas.elreteninventario.databinding.RecyclerSessionsBinding
 class AdapterRSessions(private val al_session: ArrayList<ModelSession>, private val context: Context) :
     RecyclerView.Adapter<AdapterRSessions.SessionViewHolder>() {
 
+    private var editListener: RecyclerClickListener? = null
+    private var deleteListener: RecyclerClickListener? = null
+    private var touchListener: RecyclerClickListener? = null
 
     class SessionViewHolder(private val binding: RecyclerSessionsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(model: ModelSession, context: Context) {
+        fun bind(
+            model: ModelSession,
+            context: Context,
+            editListener: RecyclerClickListener?,
+            deleteListener: RecyclerClickListener?,
+            touchListener: RecyclerClickListener?,
+            position: Int
+        ) {
             val code = context.getString(R.string.codigo_s, model.code)
 
             binding.rsTvCodigoSession.text = code
+
+            binding.btnEdit.setOnClickListener { editListener?.onClick(position)}
+            binding.btnDelete.setOnClickListener { deleteListener?.onClick(position)}
+            binding.root.setOnClickListener { touchListener?.onClick(position) }
         }
 
     }
@@ -33,7 +47,24 @@ class AdapterRSessions(private val al_session: ArrayList<ModelSession>, private 
     override fun getItemCount() = al_session.size
 
     override fun onBindViewHolder(holder: SessionViewHolder, position: Int) {
-        holder.bind(al_session[position], context)
+        holder.bind(al_session[position], context, editListener, deleteListener,touchListener, position)
+    }
+
+
+    interface RecyclerClickListener {
+        fun onClick(position: Int);
+    }
+
+    fun setEditListener(editListener: RecyclerClickListener) {
+        this.editListener = editListener
+    }
+
+    fun setDeleteListener(deleteListener: RecyclerClickListener) {
+        this.deleteListener = deleteListener
+    }
+
+    fun setRecyclerTouchListener(touchListener: RecyclerClickListener) {
+        this.touchListener = touchListener
     }
 
 }

@@ -1,5 +1,6 @@
 package com.qnecesitas.elreteninventario
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -7,20 +8,17 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qnecesitas.elreteninventario.adapters.AdapterRDrawers
-import com.qnecesitas.elreteninventario.adapters.AdapterRShelves
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelDrawer
-import com.qnecesitas.elreteninventario.data.ModelShelf
 import com.qnecesitas.elreteninventario.databinding.FragmentDrawersBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddDrawerBinding
-import com.qnecesitas.elreteninventario.databinding.LiAddShelfBinding
 import com.qnecesitas.elreteninventario.network.RetrofitDrawersImplS
-import com.qnecesitas.elreteninventario.network.RetrofitShelvesImplS
 import com.shashank.sony.fancytoastlib.FancyToast
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,6 +26,7 @@ import retrofit2.Response
 
 class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
+    private var openDrawer: OpenDrawerS? = null
     //Recycler
     private lateinit var binding: FragmentDrawersBinding
     private lateinit var al_drawers: ArrayList<ModelDrawer>
@@ -36,7 +35,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     //Internet
     private lateinit var retrofitDrawersImpl: RetrofitDrawersImplS
 
-    //Add Shelf
+    //Add Drawer
     private lateinit var li_binding: LiAddDrawerBinding
 
 
@@ -112,10 +111,28 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
             binding.fdRecycler.visibility = View.VISIBLE
         }
         adapterRDrawers = AdapterRDrawers(al_drawers, binding.root.context)
+
+        adapterRDrawers.setEditListener(object: AdapterRDrawers.RecyclerClickListener{
+            override fun onClick(position: Int) {
+                click_edit(position)
+            }
+        })
+        adapterRDrawers.setDeleteListener(object: AdapterRDrawers.RecyclerClickListener{
+            override fun onClick(position: Int) {
+                click_delete(position)
+            }
+        })
+        adapterRDrawers.setTouchListener(object: AdapterRDrawers.RecyclerClickListener{
+            override fun onClick(position: Int) {
+                val c_drawer = al_drawers.get(position).c_drawerS
+                openDrawer?.onDrawerSClicked(c_drawer)
+            }
+
+        })
         binding.fdRecycler.adapter = adapterRDrawers
     }
 
-    //Add shelf
+    //Add Drawer
     private fun click_add() {
         li_newDrawer()
     }
@@ -148,10 +165,10 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     private fun addNewDrawerInternet(drawerCode: String) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
             val call = retrofitDrawersImpl.addDrawer(Constants.PHP_TOKEN, drawerCode,c_shelfS)
-            call.enqueue(object : Callback<Boolean> {
+            call.enqueue(object : Callback<String> {
                 override fun onResponse(
-                    call: Call<Boolean>,
-                    response: Response<Boolean>
+                    call: Call<String>,
+                    response: Response<String>
                 ) {
                     if (response.isSuccessful) {
                         val model = ModelDrawer(drawerCode, c_shelfS)
@@ -176,7 +193,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
                 }
 
                 override fun onFailure(
-                    call: Call<Boolean>,
+                    call: Call<String>,
                     t: Throwable
                 ) {
                     FancyToast.makeText(
@@ -189,6 +206,164 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
                 }
             })
         }
+    }
+
+    //Edit drawer
+    private fun click_edit(position: Int) {
+        li_editDrawer(al_drawers[position].c_drawerS, position)
+    }
+
+    private fun li_editDrawer(codeDrawerOld: String, position: Int) {
+        val inflater = LayoutInflater.from(binding.root.context)
+        li_binding = LiAddDrawerBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(binding.root.context)
+        builder.setView(li_binding.root)
+        val alertDialog = builder.create()
+        var tiedContent: String;
+
+        li_binding.tiet.setText(codeDrawerOld)
+        li_binding.btnAccept.setOnClickListener {
+            tiedContent = li_binding.tiet.text.toString()
+            if (tiedContent.isNotEmpty()) editDrawerInternet(codeDrawerOld, tiedContent, position)
+            else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+            alertDialog.dismiss()
+        }
+        li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
+
+        //Finalizado
+        builder.setCancelable(true)
+        alertDialog.window!!.setGravity(Gravity.CENTER)
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+    }
+
+
+    private fun editDrawerInternet(drawerCodeOld: String, drawerCodeNew: String, position: Int) {
+        if (NetworkTools.isOnline(binding.root.context, true)) {
+            val call =
+                retrofitDrawersImpl.updateDrawer(Constants.PHP_TOKEN, drawerCodeOld, drawerCodeNew)
+            call.enqueue(object : Callback<String> {
+                override fun onResponse(
+                    call: Call<String>,
+                    response: Response<String>
+                ) {
+                    if (response.isSuccessful) {
+                        al_drawers[position].c_drawerS = drawerCodeNew
+                        updateRecyclerAdapter()
+                        FancyToast.makeText(
+                            requireContext(),
+                            getString(R.string.Operacion_realizada_con_exito),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.SUCCESS,
+                            false
+                        ).show()
+                    } else {
+                        FancyToast.makeText(
+                            requireContext(),
+                            getString(R.string.Revise_su_conexion),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.ERROR,
+                            false
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<String>,
+                    t: Throwable
+                ) {
+                    FancyToast.makeText(
+                        requireContext(),
+                        getString(R.string.Revise_su_conexion),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.ERROR,
+                        false
+                    ).show()
+                }
+            })
+        }
+    }
+
+
+    //Delete drawer
+    private fun click_delete(position: Int) {
+        showAlertDialogDeleteDrawer(position)
+    }
+
+    private fun showAlertDialogDeleteDrawer(position: Int) {
+        //init alert dialog
+        val builder = android.app.AlertDialog.Builder(requireContext())
+        builder.setCancelable(true)
+        builder.setTitle(R.string.Eliminar_elemento)
+        builder.setMessage(R.string.Desea_eliminar_la_gaveta)
+        //set listeners for dialog buttons
+        builder.setPositiveButton(
+            R.string.Si
+        ) { dialog, _ ->
+            if (NetworkTools.isOnline(requireContext(), true)) {
+                dialog.dismiss()
+                deleteDrawerInternet(al_drawers[position].c_drawerS, position)
+            }
+        }
+        builder.setNegativeButton(R.string.No,
+            DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
+
+        //create the alert dialog and show it
+        builder.create().show()
+    }
+
+    private fun deleteDrawerInternet(drawerCode: String, position: Int) {
+        if (NetworkTools.isOnline(binding.root.context, true)) {
+            val call = retrofitDrawersImpl.deleteDrawer(Constants.PHP_TOKEN, drawerCode)
+            call.enqueue(object : Callback<String> {
+                override fun onResponse(
+                    call: Call<String>,
+                    response: Response<String>
+                ) {
+                    if (response.isSuccessful) {
+                        al_drawers.removeAt(position)
+                        updateRecyclerAdapter()
+                        FancyToast.makeText(
+                            requireContext(),
+                            getString(R.string.Operacion_realizada_con_exito),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.SUCCESS,
+                            false
+                        ).show()
+                    } else {
+                        FancyToast.makeText(
+                            requireContext(),
+                            getString(R.string.Revise_su_conexion),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.ERROR,
+                            false
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<String>,
+                    t: Throwable
+                ) {
+                    FancyToast.makeText(
+                        requireContext(),
+                        getString(R.string.Revise_su_conexion),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.ERROR,
+                        false
+                    ).show()
+                }
+            })
+        }
+    }
+
+
+    fun setOpenDrawerSListener(openDrawerS: Fragment_Drawers.OpenDrawerS){
+        this.openDrawer = openDrawerS
+    }
+
+    interface OpenDrawerS{
+        fun onDrawerSClicked(code : String)
     }
 
 }
