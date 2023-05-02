@@ -18,6 +18,7 @@ interface IRetrofitShelvesS {
         @Field("token") token: String,
         @Field("c_shelfSOld") c_shelfSOld: String,
         @Field("c_shelfSNew") c_ShelfSNew: String,
+        @Field("amount") amount: Int
     ) : Call<String>
 
 

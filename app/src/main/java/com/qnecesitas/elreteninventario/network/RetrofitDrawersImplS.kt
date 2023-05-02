@@ -17,12 +17,12 @@ class RetrofitDrawersImplS : IRetrofitDrawersS {
 
     private val productApi: IRetrofitDrawersS = retrofit.create(IRetrofitDrawersS::class.java)
 
-    override fun updateDrawer(token: String, c_drawerSOld: String, c_drawerSNew: String): Call<String> {
-        return productApi.updateDrawer(token, c_drawerSOld, c_drawerSNew)
+    override fun updateDrawer(token: String, c_drawerSOld: String, c_drawerSNew: String, fk_c_shelfS: String, amount: Int): Call<String> {
+        return productApi.updateDrawer(token, c_drawerSOld, c_drawerSNew, fk_c_shelfS, amount)
     }
 
-    override fun deleteDrawer(token: String, c_drawerS : String): Call<String> {
-        return productApi.deleteDrawer(token, c_drawerS)
+    override fun deleteDrawer(token: String, c_drawerS : String, fk_c_shelfS: String): Call<String> {
+        return productApi.deleteDrawer(token, c_drawerS, fk_c_shelfS)
     }
 
     override fun addDrawer(token: String, c_drawerS: String,fk_c_shelfS: String): Call<String> {

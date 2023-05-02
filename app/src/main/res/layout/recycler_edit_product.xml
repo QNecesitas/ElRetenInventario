@@ -39,6 +39,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <!--Price product-->
             <TextView
                 android:id="@+id/REP_TV_name"
                 android:layout_width="match_parent"
@@ -51,34 +52,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/REP_IV_ImageProduct" />
 
-            <!--Price-->
+            <!--Cant-->
             <TextView
-                android:id="@+id/REP_TV_Price"
+                android:id="@+id/REP_TV_Cant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8sp"
                 android:layout_marginTop="10sp"
                 android:layout_marginEnd="8sp"
-                android:text="@string/price_default"
+                android:text="@string/s_unidades"
                 android:textSize="@dimen/textSize_s"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/REP_TV_name" />
 
 
-            <!--Little description-->
-            <TextView
-                android:id="@+id/REP_TV_descProduct"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8sp"
-                android:layout_marginTop="8sp"
-                android:layout_marginEnd="8sp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/little_description"
-                android:textSize="@dimen/textSize_s"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/REP_TV_Price" />
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

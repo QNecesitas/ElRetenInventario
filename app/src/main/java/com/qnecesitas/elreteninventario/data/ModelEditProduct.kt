@@ -2,7 +2,8 @@ package com.qnecesitas.elreteninventario.data
 
 class ModelEditProduct (
     var name: String,
-    var price: Double,
     var desc: String,
-    var amount: Int
+    var amount: Int,
+    var buyPrice: Double,
+    var salePrice: Double
     )

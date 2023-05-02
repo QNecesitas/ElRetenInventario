@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Activity_EditProduct">
 
-        <!--Toolbar-->
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/AEP_AppBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    <!--Toolbar-->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/AEP_AppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/AEP_toolbar"
             android:layout_width="match_parent"
@@ -23,61 +24,153 @@
             app:title="@string/Edit_Produt"
             app:titleTextColor="@color/white">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/AEP_CL_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+
+                <ImageView
+                    android:id="@+id/aep_closed"
+                    android:layout_width="30sp"
+                    android:layout_height="30sp"
+                    android:contentDescription="@string/Cerrar"
+                    android:onClick="click_close_search"
+                    android:rotation="45"
+                    android:src="@drawable/add"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <SearchView
+                    android:id="@+id/AEP_search"
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:iconifiedByDefault="false"
+                    android:queryBackground="@drawable/almostredonded_price_white"
+                    android:queryHint="@string/Buscar_producto"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/aep_closed"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="0sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AEP_AppBar">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/AEP_recycler"
-            app:layout_constraintTop_toBottomOf="@id/AEP_AppBar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="0sp"/>
+            android:layout_height="match_parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/AEP_FAB_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="20sp"
-            android:layout_marginEnd="20sp"
-            android:src="@drawable/add"/>
+            <!--Recycler-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/AEP_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:spanCount="2" />
 
-        <!--IsEmpty-->
-        <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/AEP_image_empty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/AEP_FAB_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginEnd="20sp"
+                android:layout_marginBottom="20sp"
+                android:src="@drawable/add"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="RtlHardcoded" />
 
-            <ImageView
+            <!-- CL Not info -->
+            <LinearLayout
+                android:id="@+id/fd_not_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/cajas_vacias"
-                android:contentDescription="@string/Vacio" />
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:ignore="UseCompoundDrawables">
 
-            <TextView
-                android:textStyle="bold"
-                android:layout_marginStart="20sp"
-                android:layout_marginEnd="20sp"
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/baseline_move_to_inbox_24"
+                    app:tint="@color/gray_icon_h" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/no_hay_gavetas_aun"
+                    android:textColor="@color/gray_icon_h"
+                    android:textSize="@dimen/textSize_h"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </LinearLayout>
+
+            <!-- CL Not Connection  -->
+            <LinearLayout
+                android:id="@+id/fd_not_connection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/No_hay_productos"
-                android:textSize="@dimen/textSize_h"
-                android:textAlignment="center"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                tools:ignore="UseCompoundDrawables"
+                android:visibility="gone">
 
-        </LinearLayout>
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/baseline_wifi_off_24"
+                    app:tint="@color/gray_icon_h" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8sp"
+                    android:maxWidth="300dp"
+                    android:layout_gravity="center"
+                    android:text="@string/Revise_su_conexion"
+                    android:textColor="@color/gray_icon_h"
+                    android:textSize="@dimen/textSize_h"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Button
+                    android:id="@+id/fd_retryConnection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8sp"
+                    android:text="@string/Reintentar"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

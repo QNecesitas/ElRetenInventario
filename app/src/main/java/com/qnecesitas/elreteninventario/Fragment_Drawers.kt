@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRDrawers
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
@@ -49,6 +50,15 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         //Add Button
         binding.fdAdd.setOnClickListener { click_add() }
 
+        //Refresh
+        binding.refresh.setOnRefreshListener( object : SwipeRefreshLayout.OnRefreshListener{
+            override fun onRefresh() {
+                binding.refresh.isRefreshing = true
+                loadRecyclerInfo()
+                binding.refresh.isRefreshing = false
+            }
+        } )
+
         //Recycler
         al_drawers = ArrayList()
         adapterRDrawers = AdapterRDrawers(al_drawers, binding.root.context)
@@ -60,7 +70,11 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         retrofitDrawersImpl = RetrofitDrawersImplS()
 
         //Internet
-        binding.fdRetryConnection.setOnClickListener { loadRecyclerInfo() }
+        binding.fdRetryConnection.setOnClickListener {
+            binding.refresh.isRefreshing = true
+            loadRecyclerInfo()
+        }
+        binding.refresh.isRefreshing = true
         loadRecyclerInfo()
         return binding.root
     }
@@ -78,11 +92,13 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
                     if (response.isSuccessful) {
                         binding.fdNotConnection.visibility = View.GONE
                         binding.fdRecycler.visibility = View.VISIBLE
+                        binding.fdNotInfo.visibility = View.GONE
                         al_drawers = response.body()!!
                         updateRecyclerAdapter()
                     } else {
                         binding.fdNotConnection.visibility = View.VISIBLE
                         binding.fdRecycler.visibility = View.GONE
+                        binding.fdNotInfo.visibility = View.GONE
                     }
                 }
 
@@ -92,6 +108,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
                 ) {
                     binding.fdNotConnection.visibility = View.VISIBLE
                     binding.fdRecycler.visibility = View.GONE
+                    binding.fdNotInfo.visibility = View.GONE
                 }
             })
 
@@ -99,16 +116,20 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         } else {
             binding.fdNotConnection.visibility = View.VISIBLE
             binding.fdRecycler.visibility = View.GONE
+            binding.fdNotInfo.visibility = View.GONE
         }
+        binding.refresh.isRefreshing = false
     }
 
     private fun updateRecyclerAdapter() {
         if (al_drawers.isEmpty()) {
             binding.fdNotInfo.visibility = View.VISIBLE
             binding.fdRecycler.visibility = View.GONE
+            binding.fdNotConnection.visibility = View.GONE
         } else {
             binding.fdNotInfo.visibility = View.GONE
             binding.fdRecycler.visibility = View.VISIBLE
+            binding.fdNotConnection.visibility = View.GONE
         }
         adapterRDrawers = AdapterRDrawers(al_drawers, binding.root.context)
 
@@ -147,9 +168,12 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
-            if (tietContent.isNotEmpty()) addNewDrawerInternet(tietContent)
+            if (tietContent.isNotEmpty()){
+                binding.refresh.isRefreshing = true
+                addNewDrawerInternet(tietContent)
+                alertDialog.dismiss()
+            }
             else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
-            alertDialog.dismiss()
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -206,6 +230,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
                 }
             })
         }
+        binding.refresh.isRefreshing = false
     }
 
     //Edit drawer
@@ -224,9 +249,12 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         li_binding.tiet.setText(codeDrawerOld)
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
-            if (tiedContent.isNotEmpty()) editDrawerInternet(codeDrawerOld, tiedContent, position)
+            if (tiedContent.isNotEmpty()){
+                binding.refresh.isRefreshing = true
+                editDrawerInternet(codeDrawerOld, tiedContent, position)
+                alertDialog.dismiss()
+            }
             else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
-            alertDialog.dismiss()
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -241,7 +269,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     private fun editDrawerInternet(drawerCodeOld: String, drawerCodeNew: String, position: Int) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
             val call =
-                retrofitDrawersImpl.updateDrawer(Constants.PHP_TOKEN, drawerCodeOld, drawerCodeNew)
+                retrofitDrawersImpl.updateDrawer(Constants.PHP_TOKEN, drawerCodeOld, drawerCodeNew,al_drawers[position].fk_c_shelfS,  al_drawers[position].amount)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(
                     call: Call<String>,
@@ -282,6 +310,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
                 }
             })
         }
+        binding.refresh.isRefreshing = false
     }
 
 
@@ -302,6 +331,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         ) { dialog, _ ->
             if (NetworkTools.isOnline(requireContext(), true)) {
                 dialog.dismiss()
+                binding.refresh.isRefreshing = true
                 deleteDrawerInternet(al_drawers[position].c_drawerS, position)
             }
         }
@@ -314,7 +344,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
     private fun deleteDrawerInternet(drawerCode: String, position: Int) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
-            val call = retrofitDrawersImpl.deleteDrawer(Constants.PHP_TOKEN, drawerCode)
+            val call = retrofitDrawersImpl.deleteDrawer(Constants.PHP_TOKEN, drawerCode,al_drawers.get(position).fk_c_shelfS)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(
                     call: Call<String>,
@@ -355,6 +385,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
                 }
             })
         }
+        binding.refresh.isRefreshing = false
     }
 
 

@@ -27,9 +27,11 @@ class AdapterRSessions(private val al_session: ArrayList<ModelSession>, private 
             touchListener: RecyclerClickListener?,
             position: Int
         ) {
-            val code = context.getString(R.string.codigo_s, model.code)
+            val code = context.getString(R.string.codigo_s, model.c_sessionS)
+            val amount = context.getString(R.string.cant_producto, model.amount.toString())
 
             binding.rsTvCodigoSession.text = code
+            binding.rsCantSession.text = amount
 
             binding.btnEdit.setOnClickListener { editListener?.onClick(position)}
             binding.btnDelete.setOnClickListener { deleteListener?.onClick(position)}

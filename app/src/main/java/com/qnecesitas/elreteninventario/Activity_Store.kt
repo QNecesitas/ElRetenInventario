@@ -2,10 +2,12 @@ package com.qnecesitas.elreteninventario
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentManager
+import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.databinding.ActivityStoreBinding
 
 class Activity_Store : AppCompatActivity() {
@@ -13,16 +15,20 @@ class Activity_Store : AppCompatActivity() {
     lateinit var binding: ActivityStoreBinding
     lateinit var fragmentManager: FragmentManager
 
-    //Fragments
-    enum class EFragments{ FR_SHELVES, FR_DRAWERS, FR_SESSION }
-    lateinit var current_fragment: EFragments
-    lateinit var currentCode: String
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Toolbar
+        val toolbar = findViewById<View>(R.id.AS_toolbar) as Toolbar
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        toolbar.setNavigationOnClickListener { onBack() }
 
 
         //Fragments
@@ -37,13 +43,15 @@ class Activity_Store : AppCompatActivity() {
         })
 
 
+
+
     }
 
     private fun showFragmentShelves() {
-        current_fragment = EFragments.FR_SHELVES
-        currentCode = "no"
+        binding.ASToolbar.setTitle(R.string.Estantes)
+        FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SHELVES
         val fragment_shelves = Fragment_Shelves()
-        fragment_shelves.setOpenShelfSListener(object : Fragment_Shelves.OpenShelfS{
+        fragment_shelves.setOpenShelfSListener(object : Fragment_Shelves.OpenShelfS {
             override fun onShelfSClicked(c_shelfS: String) {
                 showFragmentDrawers(c_shelfS)
             }
@@ -54,11 +62,12 @@ class Activity_Store : AppCompatActivity() {
             .commit()
     }
 
-    private fun showFragmentDrawers(c_shelfS : String)  {
-        currentCode = c_shelfS
-        current_fragment = EFragments.FR_DRAWERS
+    private fun showFragmentDrawers(c_shelfS: String) {
+        binding.ASToolbar.setTitle(R.string.Gavetas)
+        FragmentsInfo.LAST_CODE_SHELVES_SENDED = c_shelfS
+        FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_DRAWERS
         val fragment_drawers = Fragment_Drawers(c_shelfS)
-        fragment_drawers.setOpenDrawerSListener(object : Fragment_Drawers.OpenDrawerS{
+        fragment_drawers.setOpenDrawerSListener(object : Fragment_Drawers.OpenDrawerS {
             override fun onDrawerSClicked(code: String) {
                 showFragmentSessions(code)
             }
@@ -69,14 +78,15 @@ class Activity_Store : AppCompatActivity() {
             .commit()
     }
 
-    private fun showFragmentSessions(c_drawerS : String) {
-        currentCode = c_drawerS
-        current_fragment = EFragments.FR_SESSION
+    private fun showFragmentSessions(c_drawerS: String) {
+        binding.ASToolbar.setTitle(R.string.Secciones)
+        FragmentsInfo.LAST_CODE_DRAWER_SENDED = c_drawerS
+        FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SESSION
         val fragment_sessions = Fragment_Sessions(c_drawerS)
-        fragment_sessions.setOpenSessionListener(object : Fragment_Sessions.OpenSession{
-            override fun onSessionClicked(c_sessionS: String) {
-                val intent: Intent = Intent(this@Activity_Store, Activity_EditProduct::class.java)
-                intent.putExtra("C_session",c_sessionS)
+        fragment_sessions.setOpenSessionListener(object : Fragment_Sessions.OpenSession {
+            override fun onSessionClicked(c_sessions: String) {
+                val intent = Intent(this@Activity_Store, Activity_EditProduct::class.java)
+                intent.putExtra("C_session", c_sessions)
                 startActivity(intent)
             }
 
@@ -87,10 +97,11 @@ class Activity_Store : AppCompatActivity() {
     }
 
     private fun onBack() {
-        when (current_fragment) {
-            EFragments.FR_SHELVES -> finish()
-            EFragments.FR_DRAWERS -> showFragmentShelves()
-            EFragments.FR_SESSION -> showFragmentDrawers(currentCode)
+        when (FragmentsInfo.LAST_FRAGMENT_TOUCHED) {
+            FragmentsInfo.Companion.EFragments.FR_SHELVES -> finish()
+            FragmentsInfo.Companion.EFragments.FR_DRAWERS -> showFragmentShelves()
+            FragmentsInfo.Companion.EFragments.FR_SESSION -> showFragmentDrawers(FragmentsInfo.LAST_CODE_SHELVES_SENDED)
+            FragmentsInfo.Companion.EFragments.AC_PRODUCTS -> showFragmentSessions(FragmentsInfo.LAST_CODE_DRAWER_SENDED)
         }
     }
 

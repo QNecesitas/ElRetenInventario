@@ -4,13 +4,16 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRShelves
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
@@ -19,13 +22,17 @@ import com.qnecesitas.elreteninventario.databinding.FragmentShelvesBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddShelfBinding
 import com.qnecesitas.elreteninventario.network.RetrofitShelvesImplS
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.delay
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.net.ssl.HandshakeCompletedEvent
 
 class Fragment_Shelves : Fragment() {
 
     private var openShelfS: OpenShelfS? = null
+
     //Recycler
     private lateinit var binding: FragmentShelvesBinding
     private lateinit var al_shelves: ArrayList<ModelShelf>
@@ -48,6 +55,15 @@ class Fragment_Shelves : Fragment() {
         //Options
         binding.fsAdd.setOnClickListener { click_add() }
 
+        //Refresh
+        binding.refresh.setOnRefreshListener( object : SwipeRefreshLayout.OnRefreshListener{
+            override fun onRefresh() {
+                binding.refresh.isRefreshing = true
+                loadRecyclerInfo()
+                binding.refresh.isRefreshing = false
+            }
+        } )
+
         //Recycler
         al_shelves = ArrayList()
         adapterRShelves = AdapterRShelves(al_shelves, binding.root.context)
@@ -59,11 +75,14 @@ class Fragment_Shelves : Fragment() {
         retrofitShelvesImpl = RetrofitShelvesImplS()
 
         //Internet
-        binding.fsRetryConnection.setOnClickListener { loadRecyclerInfo() }
+        binding.fsRetryConnection.setOnClickListener {
+            binding.refresh.isRefreshing = true
+            loadRecyclerInfo()
+        }
+        binding.refresh.isRefreshing = true
         loadRecyclerInfo()
         return binding.root
     }
-
 
 
     //Recycler information
@@ -79,11 +98,13 @@ class Fragment_Shelves : Fragment() {
                     if (response.isSuccessful) {
                         binding.fsNotConnection.visibility = View.GONE
                         binding.fsRecycler.visibility = View.VISIBLE
+                        binding.fsNotInfo.visibility = View.GONE
                         al_shelves = response.body()!!
                         updateRecyclerAdapter()
                     } else {
                         binding.fsNotConnection.visibility = View.VISIBLE
                         binding.fsRecycler.visibility = View.GONE
+                        binding.fsNotInfo.visibility = View.GONE
                     }
                 }
 
@@ -93,6 +114,7 @@ class Fragment_Shelves : Fragment() {
                 ) {
                     binding.fsNotConnection.visibility = View.VISIBLE
                     binding.fsRecycler.visibility = View.GONE
+                    binding.fsNotInfo.visibility = View.GONE
                 }
             })
 
@@ -100,29 +122,33 @@ class Fragment_Shelves : Fragment() {
         } else {
             binding.fsNotConnection.visibility = View.VISIBLE
             binding.fsRecycler.visibility = View.GONE
+            binding.fsNotInfo.visibility = View.GONE
         }
+        binding.refresh.isRefreshing = false
     }
 
     private fun updateRecyclerAdapter() {
         if (al_shelves.isEmpty()) {
             binding.fsNotInfo.visibility = View.VISIBLE
             binding.fsRecycler.visibility = View.GONE
+            binding.fsNotConnection.visibility = View.GONE
         } else {
             binding.fsNotInfo.visibility = View.GONE
             binding.fsRecycler.visibility = View.VISIBLE
+            binding.fsNotConnection.visibility = View.GONE
         }
         adapterRShelves = AdapterRShelves(al_shelves, binding.root.context)
-        adapterRShelves.setEditListener(object: AdapterRShelves.RecyclerClickListener{
+        adapterRShelves.setEditListener(object : AdapterRShelves.RecyclerClickListener {
             override fun onClick(position: Int) {
                 click_edit(position)
             }
         })
-        adapterRShelves.setDeleteListener(object: AdapterRShelves.RecyclerClickListener{
+        adapterRShelves.setDeleteListener(object : AdapterRShelves.RecyclerClickListener {
             override fun onClick(position: Int) {
                 click_delete(position)
             }
         })
-        adapterRShelves.setRecyclerTouchListener(object: AdapterRShelves.RecyclerClickListener{
+        adapterRShelves.setRecyclerTouchListener(object : AdapterRShelves.RecyclerClickListener {
             override fun onClick(position: Int) {
                 val c_shelfS = al_shelves.get(position).c_shelfS
                 openShelfS?.onShelfSClicked(c_shelfS)
@@ -131,7 +157,6 @@ class Fragment_Shelves : Fragment() {
         })
         binding.fsRecycler.adapter = adapterRShelves
     }
-
 
 
     //Add shelf
@@ -149,9 +174,12 @@ class Fragment_Shelves : Fragment() {
 
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
-            if (tietContent.isNotEmpty()) addNewShelfInternet(tietContent)
+            if (tietContent.isNotEmpty()){
+                binding.refresh.isRefreshing = true
+                addNewShelfInternet(tietContent)
+                alertDialog.dismiss()
+            }
             else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
-            alertDialog.dismiss()
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -206,8 +234,8 @@ class Fragment_Shelves : Fragment() {
                 }
             })
         }
+        binding.refresh.isRefreshing = false
     }
-
 
 
     //Edit shelf
@@ -226,9 +254,12 @@ class Fragment_Shelves : Fragment() {
         li_binding.tiet.setText(codeShelfOld)
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
-            if (tiedContent.isNotEmpty()) editShelfInternet(codeShelfOld, tiedContent, position)
+            if (tiedContent.isNotEmpty()){
+                binding.refresh.isRefreshing = true
+                editShelfInternet(codeShelfOld, tiedContent, position)
+                alertDialog.dismiss()
+            }
             else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
-            alertDialog.dismiss()
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -242,7 +273,7 @@ class Fragment_Shelves : Fragment() {
     private fun editShelfInternet(shelfCodeOld: String, shelfCodeNew: String, position: Int) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
             val call =
-                retrofitShelvesImpl.updateShelf(Constants.PHP_TOKEN, shelfCodeOld, shelfCodeNew)
+                retrofitShelvesImpl.updateShelf(Constants.PHP_TOKEN, shelfCodeOld, shelfCodeNew, al_shelves[position].amount)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(
                     call: Call<String>,
@@ -283,8 +314,8 @@ class Fragment_Shelves : Fragment() {
                 }
             })
         }
+        binding.refresh.isRefreshing = false
     }
-
 
 
     //Delete shelf
@@ -304,6 +335,7 @@ class Fragment_Shelves : Fragment() {
         ) { dialog, _ ->
             if (NetworkTools.isOnline(requireContext(), true)) {
                 dialog.dismiss()
+                binding.refresh.isRefreshing = true
                 deleteShelfInternet(al_shelves[position].c_shelfS, position)
             }
         }
@@ -357,14 +389,15 @@ class Fragment_Shelves : Fragment() {
                 }
             })
         }
+        binding.refresh.isRefreshing = false
     }
 
-    fun setOpenShelfSListener(openShelfS: OpenShelfS){
+    fun setOpenShelfSListener(openShelfS: OpenShelfS) {
         this.openShelfS = openShelfS
     }
 
-    interface OpenShelfS{
-        fun onShelfSClicked(c_shelfS : String)
+    interface OpenShelfS {
+        fun onShelfSClicked(c_shelfS: String)
     }
 
 }

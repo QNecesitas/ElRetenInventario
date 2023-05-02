@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".Fragment_Sessions">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fs_recycler_session"
@@ -18,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="35dp"
         android:contentDescription="@string/agregar_estant"
         android:src="@drawable/add" />
 
@@ -44,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/no_hay_estantes_aun"
+            android:text="@string/no_hay_secciones_aun"
             android:textColor="@color/gray_icon_h"
             android:textSize="@dimen/textSize_h"
             app:layout_constraintEnd_toEndOf="parent"
@@ -92,5 +100,9 @@
             android:layout_gravity="center"/>
 
     </LinearLayout>
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

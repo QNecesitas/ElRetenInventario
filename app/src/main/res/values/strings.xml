@@ -5,6 +5,7 @@
     <string name="codigo_s">Código: %s</string>
     <string name="cant_gavetas">%s gavetas</string>
     <string name="cant_secciones">%s secciones</string>
+    <string name="cant_producto">%s producto</string>
     <string name="Dependent">Dependiente</string>
     <string name="Administrator">Administrador</string>
     <string name="Password">Contraseña</string>
@@ -71,5 +72,13 @@
     <string name="https_www_facebook_com_qnecesitas_paginaprincipal">https://www.facebook.com/qnecesitas.paginaprincipal</string>
     <string name="misi_n">Misión:</string>
     <string name="no_hay_gavetas_aun">No hay gavetas aún</string>
+    <string name="estantes">Estantes</string>
+    <string name="Gavetas">Gavetas</string>
+    <string name="Estantes">Estantes</string>
+    <string name="Secciones">Secciones</string>
+    <string name="no_hay_secciones_aun">No hay secciones aún</string>
+    <string name="_0">0</string>
+    <string name="s_unidades">%s Unidades</string>
+    <string name="Buscar_producto">Buscar producto</string>
 
 </resources>
