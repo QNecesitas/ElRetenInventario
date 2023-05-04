@@ -8,7 +8,7 @@
 
     <!--Toolbar-->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/AEP_AppBar"
+        android:id="@+id/aep_appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/AEP_toolbar"
+            android:id="@+id/aep_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
@@ -25,7 +25,7 @@
             app:titleTextColor="@color/white">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/AEP_CL_search"
+                android:id="@+id/aep_cl_search"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone">
@@ -44,7 +44,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <SearchView
-                    android:id="@+id/AEP_search"
+                    android:id="@+id/aep_search"
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:iconifiedByDefault="false"
@@ -63,12 +63,12 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh"
+        android:id="@+id/aep_refresh"
         android:layout_width="wrap_content"
         android:layout_height="0sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/AEP_AppBar">
+        app:layout_constraintTop_toBottomOf="@id/aep_appBar">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -76,7 +76,7 @@
 
             <!--Recycler-->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/AEP_recycler"
+                android:id="@+id/aep_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -87,12 +87,13 @@
                 app:spanCount="2" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/AEP_FAB_add"
+                android:id="@+id/aep_fab_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
+                android:contentDescription="@string/a_adir_producto"
                 android:layout_marginEnd="20sp"
-                android:layout_marginBottom="20sp"
+                android:layout_marginBottom="40sp"
                 android:src="@drawable/add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -100,7 +101,7 @@
 
             <!-- CL Not info -->
             <LinearLayout
-                android:id="@+id/fd_not_info"
+                android:id="@+id/aep_not_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -130,13 +131,13 @@
 
             <!-- CL Not Connection  -->
             <LinearLayout
-                android:id="@+id/fd_not_connection"
+                android:id="@+id/aep_not_connection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="vertical"
-                tools:ignore="UseCompoundDrawables"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="150dp"
@@ -149,23 +150,23 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="8sp"
                     android:maxWidth="300dp"
-                    android:layout_gravity="center"
                     android:text="@string/Revise_su_conexion"
+                    android:textAlignment="center"
                     android:textColor="@color/gray_icon_h"
                     android:textSize="@dimen/textSize_h"
-                    android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <Button
-                    android:id="@+id/fd_retryConnection"
+                    android:id="@+id/aep_retryConnection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="8sp"
-                    android:text="@string/Reintentar"
-                    android:layout_gravity="center"/>
+                    android:text="@string/Reintentar" />
 
             </LinearLayout>
 

@@ -74,13 +74,13 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
             binding.refresh.isRefreshing = true
             loadRecyclerInfo()
         }
-        binding.refresh.isRefreshing = true
         loadRecyclerInfo()
         return binding.root
     }
 
     //Recycler information
     private fun loadRecyclerInfo() {
+        binding.refresh.isRefreshing = true
         if (NetworkTools.isOnline(binding.root.context, false)) {
 
             val call = retrofitDrawersImpl.fetchDrawers(Constants.PHP_TOKEN,c_shelfS)

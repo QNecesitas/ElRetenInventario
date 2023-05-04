@@ -15,20 +15,16 @@ class Activity_Store : AppCompatActivity() {
     lateinit var binding: ActivityStoreBinding
     lateinit var fragmentManager: FragmentManager
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         //Toolbar
-        val toolbar = findViewById<View>(R.id.AS_toolbar) as Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.ASToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
-        toolbar.setNavigationOnClickListener { onBack() }
+        binding.ASToolbar.setNavigationOnClickListener { onBack() }
 
 
         //Fragments
@@ -85,6 +81,7 @@ class Activity_Store : AppCompatActivity() {
         val fragment_sessions = Fragment_Sessions(c_drawerS)
         fragment_sessions.setOpenSessionListener(object : Fragment_Sessions.OpenSession {
             override fun onSessionClicked(c_sessions: String) {
+                FragmentsInfo.LAST_CODE_SESSION_SENDED = c_sessions
                 val intent = Intent(this@Activity_Store, Activity_EditProduct::class.java)
                 intent.putExtra("C_session", c_sessions)
                 startActivity(intent)

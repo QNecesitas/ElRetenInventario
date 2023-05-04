@@ -25,7 +25,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class Fragment_Sessions(var c_drawerS : String) : Fragment() {
+class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
     private var openSession: OpenSession? = null
 
@@ -51,13 +51,13 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
         binding.fsAddSession.setOnClickListener { click_add() }
 
         //Refresh
-        binding.refresh.setOnRefreshListener( object : SwipeRefreshLayout.OnRefreshListener{
+        binding.refresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
                 binding.refresh.isRefreshing = true
                 loadRecyclerInfo()
                 binding.refresh.isRefreshing = false
             }
-        } )
+        })
 
         //Recycler
         al_sessions = ArrayList()
@@ -74,7 +74,6 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
             binding.refresh.isRefreshing = true
             loadRecyclerInfo()
         }
-        binding.refresh.isRefreshing = true
         loadRecyclerInfo()
         return binding.root
     }
@@ -82,6 +81,7 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
+        binding.refresh.isRefreshing = true
         if (NetworkTools.isOnline(binding.root.context, false)) {
 
             val call = retrofitSessionImpl.fetchSessions(Constants.PHP_TOKEN, c_drawerS)
@@ -134,17 +134,17 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
         }
         adapterRSessions = AdapterRSessions(al_sessions, binding.root.context)
 
-        adapterRSessions.setEditListener(object: AdapterRSessions.RecyclerClickListener{
+        adapterRSessions.setEditListener(object : AdapterRSessions.RecyclerClickListener {
             override fun onClick(position: Int) {
                 click_edit(position)
             }
         })
-        adapterRSessions.setDeleteListener(object: AdapterRSessions.RecyclerClickListener{
+        adapterRSessions.setDeleteListener(object : AdapterRSessions.RecyclerClickListener {
             override fun onClick(position: Int) {
                 click_delete(position)
             }
         })
-        adapterRSessions.setRecyclerTouchListener(object: AdapterRSessions.RecyclerClickListener{
+        adapterRSessions.setRecyclerTouchListener(object : AdapterRSessions.RecyclerClickListener {
             override fun onClick(position: Int) {
                 val c_sessionS = al_sessions.get(position).c_sessionS
                 openSession?.onSessionClicked(c_sessionS)
@@ -156,10 +156,10 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
 
     //Add sessions
     private fun click_add() {
-        li_newDrawer()
+        li_newSession()
     }
 
-    private fun li_newDrawer() {
+    private fun li_newSession() {
         val inflater = LayoutInflater.from(binding.root.context)
         li_binding = LiAddSessionBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
@@ -169,12 +169,11 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
 
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
-            if (tietContent.isNotEmpty()){
+            if (tietContent.isNotEmpty()) {
                 binding.refresh.isRefreshing = true
                 addNewSessionInternet(tietContent)
                 alertDialog.dismiss()
-            }
-            else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+            } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -183,13 +182,11 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
         alertDialog.window!!.setGravity(Gravity.CENTER)
         alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         alertDialog.show()
-
-
     }
 
     private fun addNewSessionInternet(sessionCode: String) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
-            val call = retrofitSessionImpl.addSession(Constants.PHP_TOKEN, sessionCode,c_drawerS)
+            val call = retrofitSessionImpl.addSession(Constants.PHP_TOKEN, sessionCode, c_drawerS)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(
                     call: Call<String>,
@@ -250,12 +247,11 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
         li_binding.tiet.setText(codeSessionOld)
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
-            if (tiedContent.isNotEmpty()){
+            if (tiedContent.isNotEmpty()) {
                 binding.refresh.isRefreshing = true
                 editSessionInternet(codeSessionOld, tiedContent, position)
                 alertDialog.dismiss()
-            }
-            else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+            } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -269,7 +265,13 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
     private fun editSessionInternet(sessionCodeOld: String, sessionCodeNew: String, position: Int) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
             val call =
-                retrofitSessionImpl.updateSessions(Constants.PHP_TOKEN, sessionCodeOld, sessionCodeNew,al_sessions[position].fk_c_drawerS,  al_sessions[position].amount)
+                retrofitSessionImpl.updateSessions(
+                    Constants.PHP_TOKEN,
+                    sessionCodeOld,
+                    sessionCodeNew,
+                    al_sessions[position].fk_c_drawerS,
+                    al_sessions[position].amount
+                )
             call.enqueue(object : Callback<String> {
                 override fun onResponse(
                     call: Call<String>,
@@ -343,7 +345,11 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
 
     private fun deleteSessionInternet(sessionCode: String, position: Int) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
-            val call = retrofitSessionImpl.deleteSessions(Constants.PHP_TOKEN, sessionCode, al_sessions.get(position).fk_c_drawerS)
+            val call = retrofitSessionImpl.deleteSessions(
+                Constants.PHP_TOKEN,
+                sessionCode,
+                al_sessions.get(position).fk_c_drawerS
+            )
             call.enqueue(object : Callback<String> {
                 override fun onResponse(
                     call: Call<String>,
@@ -387,14 +393,12 @@ class Fragment_Sessions(var c_drawerS : String) : Fragment() {
         binding.refresh.isRefreshing = false
     }
 
-
-
-    fun setOpenSessionListener(openSession: OpenSession){
+    fun setOpenSessionListener(openSession: OpenSession) {
         this.openSession = openSession
     }
 
-    interface OpenSession{
-        fun onSessionClicked(c_sessions : String)
+    interface OpenSession {
+        fun onSessionClicked(c_sessions: String)
     }
 
 }

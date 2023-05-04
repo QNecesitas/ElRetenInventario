@@ -8,7 +8,10 @@ import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.data.ModelSession
 import com.qnecesitas.elreteninventario.databinding.RecyclerSessionsBinding
 
-class AdapterRSessions(private val al_session: ArrayList<ModelSession>, private val context: Context) :
+class AdapterRSessions(
+    private val al_session: ArrayList<ModelSession>,
+    private val context: Context
+) :
     RecyclerView.Adapter<AdapterRSessions.SessionViewHolder>() {
 
     private var editListener: RecyclerClickListener? = null
@@ -33,8 +36,8 @@ class AdapterRSessions(private val al_session: ArrayList<ModelSession>, private 
             binding.rsTvCodigoSession.text = code
             binding.rsCantSession.text = amount
 
-            binding.btnEdit.setOnClickListener { editListener?.onClick(position)}
-            binding.btnDelete.setOnClickListener { deleteListener?.onClick(position)}
+            binding.btnEdit.setOnClickListener { editListener?.onClick(position) }
+            binding.btnDelete.setOnClickListener { deleteListener?.onClick(position) }
             binding.root.setOnClickListener { touchListener?.onClick(position) }
         }
 
@@ -49,7 +52,14 @@ class AdapterRSessions(private val al_session: ArrayList<ModelSession>, private 
     override fun getItemCount() = al_session.size
 
     override fun onBindViewHolder(holder: SessionViewHolder, position: Int) {
-        holder.bind(al_session[position], context, editListener, deleteListener,touchListener, position)
+        holder.bind(
+            al_session[position],
+            context,
+            editListener,
+            deleteListener,
+            touchListener,
+            position
+        )
     }
 
 

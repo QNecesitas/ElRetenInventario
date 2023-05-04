@@ -8,8 +8,6 @@ import java.util.ArrayList
 
 interface IRetrofitProductsS {
 
-
-
     @GET("FetchProductsS.php")
     fun fetchProducts(
         @Query("token") token: String,

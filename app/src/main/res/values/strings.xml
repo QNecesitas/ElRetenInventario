@@ -78,7 +78,9 @@
     <string name="Secciones">Secciones</string>
     <string name="no_hay_secciones_aun">No hay secciones aún</string>
     <string name="_0">0</string>
-    <string name="s_unidades">%s Unidades</string>
+    <string name="s_unidades">%d unidades</string>
     <string name="Buscar_producto">Buscar producto</string>
+    <string name="a_adir_producto">Añadir producto</string>
+    <string name="imagen_del_producto">Imagen del producto</string>
 
 </resources>

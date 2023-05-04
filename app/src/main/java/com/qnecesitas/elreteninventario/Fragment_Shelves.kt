@@ -79,7 +79,6 @@ class Fragment_Shelves : Fragment() {
             binding.refresh.isRefreshing = true
             loadRecyclerInfo()
         }
-        binding.refresh.isRefreshing = true
         loadRecyclerInfo()
         return binding.root
     }
@@ -87,6 +86,7 @@ class Fragment_Shelves : Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
+        binding.refresh.isRefreshing = true
         if (NetworkTools.isOnline(binding.root.context, false)) {
 
             val call = retrofitShelvesImpl.fetchShelves(Constants.PHP_TOKEN)

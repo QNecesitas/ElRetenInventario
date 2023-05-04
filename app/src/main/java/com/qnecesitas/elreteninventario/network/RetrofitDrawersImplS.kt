@@ -32,6 +32,4 @@ class RetrofitDrawersImplS : IRetrofitDrawersS {
     override fun fetchDrawers(token: String, fk_c_shelfS: String): Call<ArrayList<ModelDrawer>> {
         return productApi.fetchDrawers(token,fk_c_shelfS)
     }
-
-
 }

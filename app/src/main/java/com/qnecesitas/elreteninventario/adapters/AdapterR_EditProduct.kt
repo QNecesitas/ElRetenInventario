@@ -19,7 +19,7 @@ class AdapterR_EditProduct(
 ) :
     RecyclerView.Adapter<AdapterR_EditProduct.EditProductViewHolder>() {
 
-    private var touch: RecyclerClickListener? = null
+    private var listener: RecyclerClickListener? = null
     private var al_filter: ArrayList<ModelEditProduct> = ArrayList()
 
     //Custom
@@ -28,12 +28,10 @@ class AdapterR_EditProduct(
         return customFilter
     }
 
-
     init {
         al_filter.addAll(al_editProdut)
         customFilter = CustomFilter(this)
     }
-
 
     //Related with Holders
     class EditProductViewHolder(private val binding: RecyclerEditProductBinding) :
@@ -46,7 +44,7 @@ class AdapterR_EditProduct(
             position: Int
         ) {
             Glide.with(context)
-                .load((Constants.PHP_IMAGES + "Producto_" + position).toString() + ".jpg")
+                .load((Constants.PHP_IMAGES + "Producto_" + position) + ".jpg")
                 .error(R.drawable.shopping_bag_white)
                 .skipMemoryCache(true)
                 .centerCrop()
@@ -54,10 +52,10 @@ class AdapterR_EditProduct(
                 .into(binding.REPIVImageProduct)
 
             val nombre = model.name
-            val cantidad = model.amount
+            val cantidad = context.getString(R.string.s_unidades, model.amount)
 
             binding.REPTVName.text = nombre
-            binding.REPTVCant.text = cantidad.toString()
+            binding.REPTVCant.text = cantidad
 
         }
 
@@ -69,24 +67,20 @@ class AdapterR_EditProduct(
         return EditProductViewHolder(binding)
     }
 
-    override fun getItemCount() = al_editProdut.size
+    override fun getItemCount() = al_filter.size
 
     override fun onBindViewHolder(holder: EditProductViewHolder, position: Int) {
         holder.bind(al_editProdut[position], context, position)
     }
 
+    fun setRecyclerOnClickListener(listener: RecyclerClickListener) {
+        this.listener = listener
+    }
 
     //Recycler listener
     interface RecyclerClickListener {
         fun onClick(position: Int);
     }
-
-
-    //Listener touch
-    fun touchEditListener(touch: AdapterR_EditProduct.RecyclerClickListener) {
-        this.touch = touch
-    }
-
 
     //Class custom
     inner class CustomFilter(adapterR_editProducts: AdapterR_EditProduct) :
@@ -120,5 +114,4 @@ class AdapterR_EditProduct(
             adapterR_editProducts.notifyDataSetChanged()
         }
     }
-
 }

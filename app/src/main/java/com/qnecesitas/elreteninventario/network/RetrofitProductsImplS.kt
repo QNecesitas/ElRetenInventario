@@ -17,7 +17,6 @@ class RetrofitProductsImplS : IRetrofitProductsS {
 
     private val productApi: IRetrofitProductsS = retrofit.create(IRetrofitProductsS::class.java)
 
-
     override fun fetchProducts(
         token: String,
         fk_c_sessionS: String

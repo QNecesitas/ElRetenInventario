@@ -8,4 +8,8 @@
     <dimen name="textSize_s">14sp</dimen>
     <dimen name="textSize_xs">12sp</dimen>
 
+    <dimen name="standard_card_corner_radius">20dp</dimen>
+    <dimen name="standard_card_elevation">8dp</dimen>
+    <dimen name="standard_traslationZ">8dp</dimen>
+
 </resources>
