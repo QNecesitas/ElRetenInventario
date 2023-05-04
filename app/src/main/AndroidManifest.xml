@@ -17,6 +17,9 @@
         android:theme="@style/Theme.ElRetenInventario"
         tools:targetApi="31">
         <activity
+            android:name=".Activity_MenuSelesperson"
+            android:exported="false" />
+        <activity
             android:name=".Activity_EditProduct"
             android:exported="false" />
         <activity

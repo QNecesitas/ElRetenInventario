@@ -66,4 +66,5 @@
     <color name="black_transp_backg">#79000000</color>
     <color name="gray_icon_h">#C1C1C1</color>
     <color name="dark_gray">#6D6D6D</color>
+    <color name="gray_light">#F6F6F6</color>
 </resources>

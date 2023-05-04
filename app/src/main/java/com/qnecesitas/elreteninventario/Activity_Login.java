@@ -103,7 +103,7 @@ public class Activity_Login extends AppCompatActivity {
 
 
     private void checkPassword() {
-        if (!Objects.requireNonNull(binding.ALTIETPassword.getText()).toString().isEmpty()) {
+        if (!binding.ALTIETPassword.getText().toString().isEmpty()) {
 
             String user = binding.ALRBAdministrator.isChecked() ? "Administrador" : "Dependiente";
             String bdPassword;
@@ -117,8 +117,13 @@ public class Activity_Login extends AppCompatActivity {
             String inputPassword = binding.ALTIETPassword.getText().toString();
 
             if (bdPassword.equals(inputPassword)) {
-                Intent intent = new Intent(Activity_Login.this, Activity_MenuAdmin.class);
-                startActivity(intent);
+                if(user.equals("Administrador")) {
+                    Intent intent = new Intent(Activity_Login.this, Activity_MenuAdmin.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(Activity_Login.this, Activity_MenuSelesperson.class);
+                    startActivity(intent);
+                }
             } else {
                 countBadPassword++;
                 binding.ALTILPassword.setError(getString(R.string.Contrasena_incorrecta));

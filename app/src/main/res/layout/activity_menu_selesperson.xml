@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity_MenuAdmin"
+    tools:context=".Activity_MenuSelesperson"
     android:background="@color/gray_light">
 
     <!--CL for header (image and text)-->
@@ -22,7 +22,7 @@
             android:layout_height="300dp"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
-            android:src="@drawable/backg_menu_admin_mobile"
+            android:src="@drawable/backg_menu_salesperson_mobile"
             app:layout_constraintTop_toTopOf="parent"
             />
 
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
-            android:text="@string/text_header_admin"
+            android:text="@string/text_header_salesperson"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="@dimen/textSize_h"
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="12dp"
-            android:text="@string/lee_lacocca"
+            android:text="@string/David_sandler"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_header" />
@@ -68,12 +68,12 @@
 
         <!--Card View Shelf-->
         <androidx.cardview.widget.CardView
-            android:id="@+id/ama_cv_store"
+            android:id="@+id/cv_store"
             android:layout_width="0sp"
             android:layout_height="200dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="6dp"
-            app:layout_constraintEnd_toStartOf="@id/ama_cv_products"
+            app:layout_constraintEnd_toStartOf="@id/cv_counter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -102,15 +102,15 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!--Card View Products-->
+        <!--Card View counter-->
         <androidx.cardview.widget.CardView
-            android:id="@+id/ama_cv_products"
+            android:id="@+id/cv_counter"
             android:layout_width="0sp"
             android:layout_height="200dp"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ama_cv_store"
+            app:layout_constraintStart_toEndOf="@id/cv_store"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -125,67 +125,30 @@
                     android:layout_height="80dp"
                     android:layout_marginTop="40dp"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/baseline_apps_24" />
+                    android:src="@drawable/baseline_point_of_sale_24" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="@string/Productos"
+                    android:text="@string/Mostrador"
                     android:textSize="@dimen/textSize_m" />
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!--Card View statistics-->
+        <!--Card View Order-->
         <androidx.cardview.widget.CardView
-            android:id="@+id/ama_cv_statistics"
+            android:id="@+id/cv_orders"
             android:layout_width="0sp"
             android:layout_height="200dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="6dp"
-            app:layout_constraintEnd_toStartOf="@id/ama_cv_products"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ama_cv_store">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                tools:ignore="UseCompoundDrawables">
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="40dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/baseline_assessment_24" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="@string/Estad_sticas"
-                    android:textSize="@dimen/textSize_m" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!--Card View Orders-->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/ama_cv_orders"
-            android:layout_width="0sp"
-            android:layout_height="200dp"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ama_cv_statistics"
-            app:layout_constraintTop_toBottomOf="@id/ama_cv_products">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cv_store">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -199,7 +162,7 @@
                     android:layout_height="80dp"
                     android:layout_marginTop="40dp"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/baseline_assignment_24" />
+                    android:src="@drawable/baseline_shopping_cart_24" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -211,6 +174,7 @@
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

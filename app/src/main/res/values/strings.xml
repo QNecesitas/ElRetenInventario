@@ -28,8 +28,10 @@
     <string name="no_hay_estantes_aun">No hay estantes aún</string>
     <string name="a_dir_estantes">Añadir estantes</string>
     <string name="Pedidos">Pedidos</string>
-    <string name="text_header">El éxito en los negocios vienen de tener un inventario bien gestionado</string>
+    <string name="text_header_admin">\"El éxito en los negocios vienen de tener un inventario bien gestionado\"</string>
+    <string name="text_header_salesperson">\"La venta no se trata de convencer a una persona para que compre algo, sino de ayudarle a resolver un problema\"</string>
     <string name="lee_lacocca">Lee Lacocca</string>
+    <string name="David_sandler">David Sandler</string>
     <string name="Estanteria">Estantería</string>
     <string name="Productos">Productos</string>
     <string name="Estad_sticas">Estadísticas</string>
@@ -82,5 +84,6 @@
     <string name="Buscar_producto">Buscar producto</string>
     <string name="a_adir_producto">Añadir producto</string>
     <string name="imagen_del_producto">Imagen del producto</string>
+    <string name="Mostrador">Mostrador</string>
 
 </resources>
