@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.ArrayList
 
-class RetrofitShelvesImplS : IRetrofitShelvesS {
+class RetrofitShelvesImplLS : IRetrofitShelvesLS  {
 
     private val retrofit : Retrofit = Retrofit.Builder()
         .baseUrl(Constants.PHP_FILES)
@@ -16,21 +16,25 @@ class RetrofitShelvesImplS : IRetrofitShelvesS {
 
     private val productApi: IRetrofitShelvesS = retrofit.create(IRetrofitShelvesS::class.java)
 
-    override fun updateShelf(token: String, c_shelfSOld: String, c_ShelfSNew: String, amount: Int): Call<String> {
-        return productApi.updateShelf(token, c_shelfSOld, c_ShelfSNew, amount)
+    override fun updateShelf(
+        token: String,
+        c_shelfLSOld: String,
+        c_ShelfLSNew: String,
+        amount: Int
+    ): Call<String> {
+        return productApi.updateShelf(token, c_shelfLSOld, c_ShelfLSNew, amount)
     }
 
-    override fun deleteShelf(token: String, c_shelfS: String): Call<String> {
-        return productApi.deleteShelf(token, c_shelfS)
+    override fun deleteShelf(token: String, c_shelfLS: String): Call<String> {
+        return productApi.deleteShelf(token, c_shelfLS)
     }
 
-    override fun addShelf(token: String, c_shelfS: String): Call<String> {
-        return productApi.addShelf(token, c_shelfS)
+    override fun addShelf(token: String, c_shelfLS: String): Call<String> {
+        return productApi.addShelf(token, c_shelfLS)
     }
 
     override fun fetchShelves(token: String): Call<ArrayList<ModelShelf>> {
         return productApi.fetchShelves(token)
     }
-
 
 }

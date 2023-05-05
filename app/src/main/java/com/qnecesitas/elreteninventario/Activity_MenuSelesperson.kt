@@ -23,7 +23,8 @@ class Activity_MenuSelesperson : AppCompatActivity() {
 
 
     fun toLittleStore(){
-        //TODO Ir a la pantalla LittleStore
+        val intent = Intent(this, Activity_Store::class.java)
+        startActivity(intent)
     }
 
     fun toCounter(){
