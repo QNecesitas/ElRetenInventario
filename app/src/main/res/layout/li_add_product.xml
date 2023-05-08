@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <!--cv_main_content-->
@@ -16,26 +16,30 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_main_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingBottom="15sp">
 
             <!--cv_image-->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_image"
+                app:layout_constraintDimensionRatio="1:1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_margin="10dp"
+                android:translationZ="@dimen/standard_traslationZ"
                 app:cardCornerRadius="@dimen/standard_card_corner_radius"
                 app:cardElevation="@dimen/standard_card_elevation"
-                android:translationZ="@dimen/standard_traslationZ">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/til_name"
+                app:layout_constraintBottom_toBottomOf="@id/til_code">
 
                 <!--image-->
                 <ImageView
                     android:id="@+id/image"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:src="@color/dark_gray"/>
+                    android:src="@drawable/widgets"
+                    android:background="@color/md_theme_light_secondaryContainer"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
@@ -46,43 +50,238 @@
 
             </androidx.cardview.widget.CardView>
 
+
+
+            <!--til_name-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cv_image"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_margin="15dp">
+
+                <!--tiet_name-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiet_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/name"
+                    android:inputType="text"
+                    android:maxLength="100"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <!--til_codigo-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cv_image"
+                app:layout_constraintTop_toBottomOf="@id/til_name"
+                android:layout_margin="15dp">
+
+                <!--tiet_codigo-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiet_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/c_digo"
+                    android:inputType="text"
+                    android:maxLength="50"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <!--til_price_buy-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_price_buy"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="180dp"
+                app:layout_constraintEnd_toStartOf="@id/tv_priceBuy_CUP"
+                app:layout_constraintStart_toStartOf="@+id/cv_image"
+                app:layout_constraintTop_toBottomOf="@id/cv_image"
+                android:layout_margin="15dp">
+
+                <!--tiet_price_buy-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiet_price_buy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/precio_de_compra"
+                    android:inputType="numberDecimal"
+                    android:maxLength="10"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!--Text price buy CUP-->
+            <TextView
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/til_price_buy"
+                android:layout_marginEnd="12sp"
+                android:layout_marginStart="12dp"
+                app:layout_constraintHorizontal_bias="0"
+                android:id="@+id/tv_priceBuy_CUP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/til_price_buy"
+                app:layout_constraintBottom_toBottomOf="@+id/til_price_buy"
+                android:text="@string/cup"/>
+
+
+
+            <!--til_price_sale-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_price_sale"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="220dp"
+                app:layout_constraintEnd_toStartOf="@id/tv_priceSale_CUP"
+                app:layout_constraintStart_toStartOf="@+id/cv_image"
+                app:layout_constraintTop_toBottomOf="@id/til_price_buy"
+                android:layout_margin="15dp">
+
+                <!--tiet_price_buy-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiet_price_sale"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/precio_de_venta"
+                    android:inputType="numberDecimal"
+                    android:maxLength="10"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!--Text price sale CUP-->
+            <TextView
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/til_price_sale"
+                android:layout_marginEnd="12sp"
+                android:layout_marginStart="12dp"
+                app:layout_constraintHorizontal_bias="0"
+                android:id="@+id/tv_priceSale_CUP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/til_price_sale"
+                app:layout_constraintBottom_toBottomOf="@+id/til_price_sale"
+                android:text="@string/cup"/>
+
+
+            <!--til_cant-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_cant"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="190dp"
+                app:layout_constraintEnd_toStartOf="@id/tv_cant_uni"
+                app:layout_constraintStart_toStartOf="@+id/cv_image"
+                app:layout_constraintTop_toBottomOf="@id/til_price_sale"
+                android:layout_margin="15dp">
+
+                <!--tiet_cant-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiet_cant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/cantidad"
+                    android:inputType="number"
+                    android:maxLength="10"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!--Text cant uni-->
+            <TextView
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/til_cant"
+                android:layout_marginEnd="12sp"
+                android:layout_marginStart="12dp"
+                app:layout_constraintHorizontal_bias="0"
+                android:id="@+id/tv_cant_uni"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/til_cant"
+                app:layout_constraintBottom_toBottomOf="@+id/til_cant"
+                android:text="@string/unidades"/>
+
+
+            <!--Desc-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/cv_image"
+                app:layout_constraintTop_toBottomOf="@id/til_cant"
+                android:layout_margin="15dp">
+
+                <!--tiet_cant-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiet_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/descripci_n"
+                    android:inputType="text"
+                    android:maxLength="250"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+
+
 
     <!--cv_buttons-->
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="10dp"
         app:cardCornerRadius="@dimen/standard_card_corner_radius"
-        android:layout_gravity="center"
-         app:cardElevation="20dp">
+        app:cardElevation="20dp"
+        android:layout_marginBottom="30sp">
 
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                style="@style/ToogleStyle"
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="true">
+
+            <Button
+                android:id="@+id/btn_cancel"
+                style="@style/transparent_button_outlined"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:text="@string/CANCEL" />
 
-                <Button
-                    android:id="@+id/btn_accept"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/CANCEL"
-                    style="@style/transparent_button_outlined"/>
+            <Button
+                android:id="@+id/btn_accept"
+                style="@style/transparent_button_outlined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ACCEPT" />
 
-                <Button
-                    android:id="@+id/btn_cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/ACCEPT"
-                    style="@style/transparent_button_outlined"/>
-
-            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
     </androidx.cardview.widget.CardView>
-
-
 
 </LinearLayout>

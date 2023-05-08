@@ -26,21 +26,15 @@ class Activity_Store : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
         binding.ASToolbar.setNavigationOnClickListener { onBack() }
 
-
         //Fragments
         fragmentManager = supportFragmentManager
         showFragmentShelves()
-
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 onBack()
             }
         })
-
-
-
-
     }
 
     private fun showFragmentShelves() {
