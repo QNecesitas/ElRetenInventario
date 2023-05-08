@@ -3,6 +3,7 @@ package com.qnecesitas.elreteninventario
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.databinding.ActivityMenuAdminBinding
 
 class Activity_MenuAdmin : AppCompatActivity() {
@@ -34,6 +35,7 @@ class Activity_MenuAdmin : AppCompatActivity() {
     }
 
     private fun click_products() {
+        FragmentsInfo.LAST_CODE_SESSION_SENDED = "no"
         val intent = Intent(this, Activity_EditProduct::class.java)
         startActivity(intent)
     }

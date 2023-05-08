@@ -58,9 +58,7 @@ class Fragment_Shelves : Fragment() {
         //Refresh
         binding.refresh.setOnRefreshListener( object : SwipeRefreshLayout.OnRefreshListener{
             override fun onRefresh() {
-                binding.refresh.isRefreshing = true
                 loadRecyclerInfo()
-                binding.refresh.isRefreshing = false
             }
         } )
 
@@ -76,7 +74,6 @@ class Fragment_Shelves : Fragment() {
 
         //Internet
         binding.fsRetryConnection.setOnClickListener {
-            binding.refresh.isRefreshing = true
             loadRecyclerInfo()
         }
         loadRecyclerInfo()
@@ -86,15 +83,15 @@ class Fragment_Shelves : Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
-        binding.refresh.isRefreshing = true
         if (NetworkTools.isOnline(binding.root.context, false)) {
-
+            binding.refresh.isRefreshing = true
             val call = retrofitShelvesImpl.fetchShelves(Constants.PHP_TOKEN)
             call.enqueue(object : Callback<ArrayList<ModelShelf>> {
                 override fun onResponse(
                     call: Call<ArrayList<ModelShelf>>,
                     response: Response<java.util.ArrayList<ModelShelf>>
                 ) {
+                    binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
                         binding.fsNotConnection.visibility = View.GONE
                         binding.fsRecycler.visibility = View.VISIBLE
@@ -115,6 +112,7 @@ class Fragment_Shelves : Fragment() {
                     binding.fsNotConnection.visibility = View.VISIBLE
                     binding.fsRecycler.visibility = View.GONE
                     binding.fsNotInfo.visibility = View.GONE
+                    binding.refresh.isRefreshing = false
                 }
             })
 
@@ -124,7 +122,6 @@ class Fragment_Shelves : Fragment() {
             binding.fsRecycler.visibility = View.GONE
             binding.fsNotInfo.visibility = View.GONE
         }
-        binding.refresh.isRefreshing = false
     }
 
     private fun updateRecyclerAdapter() {
@@ -175,7 +172,6 @@ class Fragment_Shelves : Fragment() {
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
             if (tietContent.isNotEmpty()){
-                binding.refresh.isRefreshing = true
                 addNewShelfInternet(tietContent)
                 alertDialog.dismiss()
             }
@@ -192,12 +188,14 @@ class Fragment_Shelves : Fragment() {
 
     private fun addNewShelfInternet(shelfCode: String) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
+            binding.refresh.isRefreshing = true
             val call = retrofitShelvesImpl.addShelf(Constants.PHP_TOKEN, shelfCode)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(
                     call: Call<String>,
                     response: Response<String>
                 ) {
+                    binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
                         val model = ModelShelf(shelfCode, 0)
                         al_shelves.add(model)
@@ -231,10 +229,18 @@ class Fragment_Shelves : Fragment() {
                         FancyToast.ERROR,
                         false
                     ).show()
+                    binding.refresh.isRefreshing = false
                 }
             })
+        }else{
+            FancyToast.makeText(
+                requireContext(),
+                getString(R.string.Revise_su_conexion),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false
+            ).show()
         }
-        binding.refresh.isRefreshing = false
     }
 
 
@@ -255,7 +261,6 @@ class Fragment_Shelves : Fragment() {
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
             if (tiedContent.isNotEmpty()){
-                binding.refresh.isRefreshing = true
                 editShelfInternet(codeShelfOld, tiedContent, position)
                 alertDialog.dismiss()
             }
@@ -272,6 +277,7 @@ class Fragment_Shelves : Fragment() {
 
     private fun editShelfInternet(shelfCodeOld: String, shelfCodeNew: String, position: Int) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
+            binding.refresh.isRefreshing = true
             val call =
                 retrofitShelvesImpl.updateShelf(Constants.PHP_TOKEN, shelfCodeOld, shelfCodeNew, al_shelves[position].amount)
             call.enqueue(object : Callback<String> {
@@ -279,6 +285,7 @@ class Fragment_Shelves : Fragment() {
                     call: Call<String>,
                     response: Response<String>
                 ) {
+                    binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
                         al_shelves[position].c_shelfS = shelfCodeNew
                         updateRecyclerAdapter()
@@ -311,10 +318,18 @@ class Fragment_Shelves : Fragment() {
                         FancyToast.ERROR,
                         false
                     ).show()
+                    binding.refresh.isRefreshing = false
                 }
             })
+        }else{
+            FancyToast.makeText(
+                requireContext(),
+                getString(R.string.Revise_su_conexion),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false
+            ).show()
         }
-        binding.refresh.isRefreshing = false
     }
 
 
@@ -333,11 +348,8 @@ class Fragment_Shelves : Fragment() {
         builder.setPositiveButton(
             R.string.Si
         ) { dialog, _ ->
-            if (NetworkTools.isOnline(requireContext(), true)) {
                 dialog.dismiss()
-                binding.refresh.isRefreshing = true
                 deleteShelfInternet(al_shelves[position].c_shelfS, position)
-            }
         }
         builder.setNegativeButton(R.string.No,
             DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
@@ -348,12 +360,14 @@ class Fragment_Shelves : Fragment() {
 
     private fun deleteShelfInternet(shelfCode: String, position: Int) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
+            binding.refresh.isRefreshing = true
             val call = retrofitShelvesImpl.deleteShelf(Constants.PHP_TOKEN, shelfCode)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(
                     call: Call<String>,
                     response: Response<String>
                 ) {
+                    binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
                         al_shelves.removeAt(position)
                         updateRecyclerAdapter()
@@ -386,10 +400,18 @@ class Fragment_Shelves : Fragment() {
                         FancyToast.ERROR,
                         false
                     ).show()
+                    binding.refresh.isRefreshing = false
                 }
             })
+        }else{
+            FancyToast.makeText(
+                requireContext(),
+                getString(R.string.Revise_su_conexion),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false
+            ).show()
         }
-        binding.refresh.isRefreshing = false
     }
 
     fun setOpenShelfSListener(openShelfS: OpenShelfS) {

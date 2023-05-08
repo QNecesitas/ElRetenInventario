@@ -34,7 +34,7 @@
                 android:layout_height="0sp"
                 android:background="@color/md_theme_light_secondaryContainer"
                 android:contentDescription="@string/imagen_del_producto"
-                android:src="@drawable/shopping_bag_white"
+                android:src="@drawable/widgets"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

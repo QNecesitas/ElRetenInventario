@@ -53,9 +53,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         //Refresh
         binding.refresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
-                binding.refresh.isRefreshing = true
                 loadRecyclerInfo()
-                binding.refresh.isRefreshing = false
             }
         })
 
@@ -71,7 +69,6 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
         //Internet
         binding.fsRetryConnectionSession.setOnClickListener {
-            binding.refresh.isRefreshing = true
             loadRecyclerInfo()
         }
         loadRecyclerInfo()
@@ -81,15 +78,15 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
-        binding.refresh.isRefreshing = true
         if (NetworkTools.isOnline(binding.root.context, false)) {
-
+            binding.refresh.isRefreshing = true
             val call = retrofitSessionImpl.fetchSessions(Constants.PHP_TOKEN, c_drawerS)
             call.enqueue(object : Callback<ArrayList<ModelSession>> {
                 override fun onResponse(
                     call: Call<ArrayList<ModelSession>>,
                     response: Response<java.util.ArrayList<ModelSession>>
                 ) {
+                    binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
                         binding.fsNotConnectionSession.visibility = View.GONE
                         binding.fsRecyclerSession.visibility = View.VISIBLE
@@ -107,6 +104,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
                     call: Call<java.util.ArrayList<ModelSession>>,
                     t: Throwable
                 ) {
+                    binding.refresh.isRefreshing = false
                     binding.fsNotConnectionSession.visibility = View.VISIBLE
                     binding.fsRecyclerSession.visibility = View.GONE
                     binding.fsNotInfoSession.visibility = View.GONE
@@ -119,7 +117,6 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
             binding.fsRecyclerSession.visibility = View.GONE
             binding.fsNotInfoSession.visibility = View.GONE
         }
-        binding.refresh.isRefreshing = false
     }
 
     private fun updateRecyclerAdapter() {
@@ -170,7 +167,6 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
             if (tietContent.isNotEmpty()) {
-                binding.refresh.isRefreshing = true
                 addNewSessionInternet(tietContent)
                 alertDialog.dismiss()
             } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
@@ -186,12 +182,14 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
     private fun addNewSessionInternet(sessionCode: String) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
+            binding.refresh.isRefreshing = true
             val call = retrofitSessionImpl.addSession(Constants.PHP_TOKEN, sessionCode, c_drawerS)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(
                     call: Call<String>,
                     response: Response<String>
                 ) {
+                    binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
                         val model = ModelSession(sessionCode, c_drawerS)
                         al_sessions.add(model)
@@ -218,6 +216,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
                     call: Call<String>,
                     t: Throwable
                 ) {
+                    binding.refresh.isRefreshing = false
                     FancyToast.makeText(
                         requireContext(),
                         getString(R.string.Revise_su_conexion),
@@ -227,8 +226,15 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
                     ).show()
                 }
             })
+        }else{
+            FancyToast.makeText(
+                requireContext(),
+                getString(R.string.Revise_su_conexion),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false
+            ).show()
         }
-        binding.refresh.isRefreshing = false
     }
 
     //Edit session
@@ -248,7 +254,6 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
             if (tiedContent.isNotEmpty()) {
-                binding.refresh.isRefreshing = true
                 editSessionInternet(codeSessionOld, tiedContent, position)
                 alertDialog.dismiss()
             } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
@@ -264,6 +269,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
     private fun editSessionInternet(sessionCodeOld: String, sessionCodeNew: String, position: Int) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
+            binding.refresh.isRefreshing = true
             val call =
                 retrofitSessionImpl.updateSessions(
                     Constants.PHP_TOKEN,
@@ -277,6 +283,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
                     call: Call<String>,
                     response: Response<String>
                 ) {
+                    binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
                         al_sessions[position].c_sessionS = sessionCodeNew
                         updateRecyclerAdapter()
@@ -302,6 +309,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
                     call: Call<String>,
                     t: Throwable
                 ) {
+                    binding.refresh.isRefreshing = false
                     FancyToast.makeText(
                         requireContext(),
                         getString(R.string.Revise_su_conexion),
@@ -311,8 +319,15 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
                     ).show()
                 }
             })
+        }else{
+            FancyToast.makeText(
+                requireContext(),
+                getString(R.string.Revise_su_conexion),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false
+            ).show()
         }
-        binding.refresh.isRefreshing = false
     }
 
     //Delete session
@@ -330,11 +345,8 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         builder.setPositiveButton(
             R.string.Si
         ) { dialog, _ ->
-            if (NetworkTools.isOnline(requireContext(), true)) {
                 dialog.dismiss()
-                binding.refresh.isRefreshing = true
                 deleteSessionInternet(al_sessions[position].c_sessionS, position)
-            }
         }
         builder.setNegativeButton(R.string.No,
             DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
@@ -345,6 +357,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
     private fun deleteSessionInternet(sessionCode: String, position: Int) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
+            binding.refresh.isRefreshing = true
             val call = retrofitSessionImpl.deleteSessions(
                 Constants.PHP_TOKEN,
                 sessionCode,
@@ -355,6 +368,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
                     call: Call<String>,
                     response: Response<String>
                 ) {
+                    binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
                         al_sessions.removeAt(position)
                         updateRecyclerAdapter()
@@ -387,10 +401,18 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
                         FancyToast.ERROR,
                         false
                     ).show()
+                    binding.refresh.isRefreshing = false
                 }
             })
+        }else{
+            FancyToast.makeText(
+                requireContext(),
+                getString(R.string.Revise_su_conexion),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false
+            ).show()
         }
-        binding.refresh.isRefreshing = false
     }
 
     fun setOpenSessionListener(openSession: OpenSession) {

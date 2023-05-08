@@ -1,6 +1,7 @@
 package com.qnecesitas.elreteninventario.adapters
 
 import android.content.Context
+import android.database.sqlite.SQLiteOpenHelper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -34,7 +35,7 @@ class AdapterR_EditProduct(
     }
 
     //Related with Holders
-    class EditProductViewHolder(private val binding: RecyclerEditProductBinding) :
+    inner class EditProductViewHolder(private val binding: RecyclerEditProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
 
@@ -44,11 +45,9 @@ class AdapterR_EditProduct(
             position: Int
         ) {
             Glide.with(context)
-                .load((Constants.PHP_IMAGES + "Producto_" + position) + ".jpg")
-                .error(R.drawable.shopping_bag_white)
-                .skipMemoryCache(true)
+                .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
+                .error(R.drawable.widgets)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(binding.REPIVImageProduct)
 
             val nombre = model.name
@@ -56,6 +55,9 @@ class AdapterR_EditProduct(
 
             binding.REPTVName.text = nombre
             binding.REPTVCant.text = cantidad
+            binding.root.setOnClickListener{
+                this@AdapterR_EditProduct.listener?.onClick(position)
+            }
 
         }
 
@@ -70,7 +72,7 @@ class AdapterR_EditProduct(
     override fun getItemCount() = al_filter.size
 
     override fun onBindViewHolder(holder: EditProductViewHolder, position: Int) {
-        holder.bind(al_editProdut[position], context, position)
+        holder.bind(al_filter[position], context, position)
     }
 
     fun setRecyclerOnClickListener(listener: RecyclerClickListener) {

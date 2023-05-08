@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="@string/Cantidad"
+        android:id="@+id/option_cantidad"
+        />
+    <item
+        android:title="@string/Editar"
+        android:id="@+id/option_editar"
+        />
+    <item
+        android:title="@string/Transferir"
+        android:id="@+id/option_transferir"
+        />
+    <item
+        android:title="@string/Eliminar"
+        android:id="@+id/option_eliminar"
+        />
+</menu>

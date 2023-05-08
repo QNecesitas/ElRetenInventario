@@ -17,6 +17,24 @@ class RetrofitProductsImplS : IRetrofitProductsS {
 
     private val productApi: IRetrofitProductsS = retrofit.create(IRetrofitProductsS::class.java)
 
+    override fun addProduct(token: String, c_productS: String, name: String, c_fk_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String): Call<String>{
+        return productApi.addProduct(token,c_productS,name,c_fk_sessionS,amount,buyPrice,salePrice,descr,file)
+    }
+
+    override fun updateProduct(
+        token: String,
+        c_productS: String,
+        name: String,
+        c_fk_sessionS: String,
+        amount: Int,
+        buyPrice: Double,
+        salePrice: Double,
+        descr: String,
+        file: String
+    ): Call<String> {
+        return productApi.updateProduct(token, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr, file)
+    }
+
     override fun fetchProducts(
         token: String,
         fk_c_sessionS: String
@@ -28,6 +46,14 @@ class RetrofitProductsImplS : IRetrofitProductsS {
         token: String
     ): Call<ArrayList<ModelEditProduct>> {
         return productApi.fetchProductsSAll(token)
+    }
+
+    override fun deleteProduct(
+        token: String,
+        c_productS: String,
+        fk_c_sessionS: String
+    ): Call<String> {
+        return productApi.deleteProduct(token, c_productS, fk_c_sessionS)
     }
 
 

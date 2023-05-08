@@ -7,5 +7,6 @@ class ModelEditProduct(
     var amount: Int,
     var buyPrice: Double,
     var salePrice: Double,
-    var descr: String
+    var descr: String,
+    var statePhoto: Int
 )

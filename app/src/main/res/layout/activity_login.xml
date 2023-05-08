@@ -84,7 +84,7 @@
                 android:maxLength="20"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
-                android:textColorLink="@color/white" />
+                android:textColorLink="@color/white"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
