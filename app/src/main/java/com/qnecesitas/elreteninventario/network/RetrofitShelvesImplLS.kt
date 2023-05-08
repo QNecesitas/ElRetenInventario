@@ -14,7 +14,7 @@ class RetrofitShelvesImplLS : IRetrofitShelvesLS  {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private val productApi: IRetrofitShelvesS = retrofit.create(IRetrofitShelvesS::class.java)
+    private val productApi: IRetrofitShelvesLS = retrofit.create(IRetrofitShelvesLS::class.java)
 
     override fun updateShelf(
         token: String,

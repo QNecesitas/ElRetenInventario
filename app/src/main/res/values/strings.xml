@@ -85,5 +85,10 @@
     <string name="a_adir_producto">Añadir producto</string>
     <string name="imagen_del_producto">Imagen del producto</string>
     <string name="Mostrador">Mostrador</string>
+    <string name="cantidad_producto">Cantidad de productos restantes</string>
+    <string name="no_hay_productos_con_deficit">No hay productos con deficit</string>
+    <string name="Seleccione">Seleccione</string>
+    <string name="qu_cantidad_considera_n_como_deficit">¿Qué cantidad considera\n como deficit?</string>
+    <string name="cantidad_m_nima">Cantidad mínima</string>
 
 </resources>

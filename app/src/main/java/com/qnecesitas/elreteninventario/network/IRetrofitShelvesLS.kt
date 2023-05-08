@@ -19,6 +19,8 @@ interface IRetrofitShelvesLS {
         @Field("c_shelfLSOld") c_shelfLSOld: String,
         @Field("c_shelfLSNew") c_ShelfLSNew: String,
         @Field("amount") amount: Int
+
+
     ) : Call<String>
 
 
@@ -33,7 +35,7 @@ interface IRetrofitShelvesLS {
 
 
     @FormUrlEncoded
-    @POST("AddShelfS.php")
+    @POST("AddShelfLS.php")
     fun addShelf(
         @Field("token") token: String,
         @Field("c_shelfLS") c_shelfLS: String,
@@ -45,6 +47,4 @@ interface IRetrofitShelvesLS {
     fun fetchShelves(
         @Query("token") token: String
     ): Call<ArrayList<ModelShelf>>
-
-
 }

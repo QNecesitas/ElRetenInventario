@@ -23,7 +23,7 @@ class Activity_MenuSelesperson : AppCompatActivity() {
 
 
     fun toLittleStore(){
-        val intent = Intent(this, Activity_Store::class.java)
+        val intent = Intent(this, Activity_LittleStore::class.java)
         startActivity(intent)
     }
 

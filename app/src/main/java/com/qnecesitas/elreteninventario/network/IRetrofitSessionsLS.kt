@@ -43,7 +43,7 @@ interface IRetrofitSessionsLS {
 
 
 
-    @GET("FetchSessionsS.php")
+    @GET("FetchSessionsLS.php")
     fun fetchSessions(
         @Query("token") token: String,
         @Query("fk_c_drawerLS") fk_c_drawerLS: String

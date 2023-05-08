@@ -19,4 +19,11 @@ interface IRetrofitProductsS {
         @Query("token") token: String
     ): Call<ArrayList<ModelEditProduct>>
 
+    @GET("FetchProductsSDeficit.php")
+    fun fetchProductsSDeficit(
+        @Query("token") token: String,
+        @Query("filter") filter: Int,
+        @Query("button") button: String
+    ): Call<ArrayList<ModelEditProduct>>
+
 }

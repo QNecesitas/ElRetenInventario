@@ -1,5 +1,6 @@
 package com.qnecesitas.elreteninventario.network
 
+import android.util.Log
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelSession
 import retrofit2.Call
@@ -14,7 +15,7 @@ class RetrofitSessionsImplLS : IRetrofitSessionsLS {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private val productApi: IRetrofitSessionsS = retrofit.create(IRetrofitSessionsS::class.java)
+    private val productApi: IRetrofitSessionsLS = retrofit.create(IRetrofitSessionsLS::class.java)
 
     override fun updateSessions(
         token: String,

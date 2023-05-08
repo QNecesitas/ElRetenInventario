@@ -31,4 +31,12 @@ class RetrofitProductsImplS : IRetrofitProductsS {
     }
 
 
+    override fun fetchProductsSDeficit(
+        token: String,
+        filter: Int,
+        button: String
+    ): Call<ArrayList<ModelEditProduct>> {
+        return productApi.fetchProductsSDeficit(token,filter,button)
+    }
+
 }
