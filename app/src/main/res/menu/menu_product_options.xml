@@ -16,4 +16,8 @@
         android:title="@string/Eliminar"
         android:id="@+id/option_eliminar"
         />
+    <item
+        android:title="@string/Ubicacion"
+        android:id="@+id/option_ubicacion"
+        />
 </menu>

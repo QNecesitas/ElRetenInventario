@@ -1,7 +1,6 @@
 package com.qnecesitas.elreteninventario
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
@@ -9,6 +8,8 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -31,8 +32,10 @@ import com.qnecesitas.elreteninventario.auxiliary.ImageTools
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.auxiliary.Permissions
 import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelProductPath
 import com.qnecesitas.elreteninventario.databinding.ActivityEditProductBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddProductBinding
+import com.qnecesitas.elreteninventario.databinding.LiAlterAmountBinding
 import com.qnecesitas.elreteninventario.databinding.LiInfoProductBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS
 import com.shashank.sony.fancytoastlib.FancyToast
@@ -51,8 +54,10 @@ class Activity_EditProduct : AppCompatActivity() {
     //Info Product
     private var li_info_binding: LiInfoProductBinding? = null
 
-    //Edit Product
+    //Edit amount
+    private lateinit var li_alter_amount_binding : LiAlterAmountBinding
 
+    //Edit Product
     private lateinit var al_editProduct: ArrayList<ModelEditProduct>
     private lateinit var adapterR_editProducts: AdapterR_EditProduct
 
@@ -84,12 +89,12 @@ class Activity_EditProduct : AppCompatActivity() {
         //Button Add
         if (FragmentsInfo.LAST_CODE_SESSION_SENDED == "no") {
             binding.aepFabAdd.visibility = View.GONE
-            } else binding.aepFabAdd.setOnClickListener { click_add() }
+        } else binding.aepFabAdd.setOnClickListener { click_add() }
 
 
         //Results launchers
         resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult())  { result ->
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 imageReceived(result)
             }
 
@@ -124,7 +129,6 @@ class Activity_EditProduct : AppCompatActivity() {
         }
         loadRecyclerInfo()
     }
-
 
 
     /**Initial thread**/
@@ -179,12 +183,11 @@ class Activity_EditProduct : AppCompatActivity() {
         adapterR_editProducts.setRecyclerOnClickListener(object :
             AdapterR_EditProduct.RecyclerClickListener {
             override fun onClick(position: Int) {
-                li_infoProduct(position);
+                li_infoProduct(position)
             }
         })
         binding.aepRecycler.adapter = adapterR_editProducts
     }
-
 
 
     /** Alerts in the background**/
@@ -220,8 +223,8 @@ class Activity_EditProduct : AppCompatActivity() {
         builder.setMessage(R.string.Desea_eliminar_la_gaveta)
         //set listeners for dialog buttons
         builder.setPositiveButton(R.string.Si) { dialog, _ ->
-                dialog.dismiss()
-                deleteProductInternet(position)
+            dialog.dismiss()
+            deleteProductInternet(position)
         }
         builder.setNegativeButton(R.string.No) { dialog, _ ->
             dialog.dismiss()
@@ -231,6 +234,20 @@ class Activity_EditProduct : AppCompatActivity() {
         builder.create().show()
     }
 
+    private fun showAlertDialogPath(path: String) {
+        //init alert dialog
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setCancelable(true)
+        builder.setTitle(R.string.Ubicacion)
+        builder.setMessage(path)
+        //set listeners for dialog buttons
+        builder.setPositiveButton(R.string.Aceptar) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        //create the alert dialog and show it
+        builder.create().show()
+    }
 
 
     /** Inflated layouts Edit, Add and Info**/
@@ -242,12 +259,12 @@ class Activity_EditProduct : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Init
-        val name = getString(R.string.Nombre_Info,al_editProduct[position].name)
-        val code = getString(R.string.Codigo_Info,al_editProduct[position].c_productS)
-        val amount = getString(R.string.Cantidad_Info,al_editProduct[position].amount)
-        val buyPrice = getString(R.string.PrecioC_Info,al_editProduct[position].buyPrice)
-        val salePrice = getString(R.string.PrecioV_Info,al_editProduct[position].salePrice)
-        val descr = getString(R.string.Descripcion_Info,al_editProduct[position].descr)
+        val name = getString(R.string.Nombre_Info, al_editProduct[position].name)
+        val code = getString(R.string.Codigo_Info, al_editProduct[position].c_productS)
+        val amount = getString(R.string.Cantidad_Info, al_editProduct[position].amount)
+        val buyPrice = getString(R.string.PrecioC_Info, al_editProduct[position].buyPrice)
+        val salePrice = getString(R.string.PrecioV_Info, al_editProduct[position].salePrice)
+        val descr = getString(R.string.Descripcion_Info, al_editProduct[position].descr)
         val codeImage = al_editProduct[position].c_productS
 
         //Fill out
@@ -266,17 +283,18 @@ class Activity_EditProduct : AppCompatActivity() {
         }
 
         //Listeners
-        li_info_binding?.close?.setOnClickListener{alertDialog.dismiss()}
-        li_info_binding?.settings?.setOnClickListener{
+        li_info_binding?.close?.setOnClickListener { alertDialog.dismiss() }
+        li_info_binding?.settings?.setOnClickListener {
             val popupMenu = PopupMenu(applicationContext, li_info_binding?.settings)
             popupMenu.menuInflater.inflate(R.menu.menu_product_options, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 alertDialog.dismiss()
-                when(menuItem.itemId){
-                    R.id.option_cantidad -> li_amount()
+                when (menuItem.itemId) {
+                    R.id.option_cantidad -> li_amount(position)
                     R.id.option_editar -> li_editProduct(position)
-                    R.id.option_transferir -> showClTransfer()
+                    R.id.option_transferir -> showClTransfer(position)
                     R.id.option_eliminar -> showAlertDialogDeleteProducts(position)
+                    R.id.option_ubicacion -> findLocationClick(position)
                 }
                 false
             }
@@ -322,7 +340,6 @@ class Activity_EditProduct : AppCompatActivity() {
         }
 
 
-
         //Listener
         li_add_binding?.image?.setOnClickListener {
             val popupMenu = PopupMenu(applicationContext, li_add_binding?.image)
@@ -348,7 +365,7 @@ class Activity_EditProduct : AppCompatActivity() {
                 val buyPrice = li_add_binding?.tietPriceBuy?.text.toString().toDouble()
                 val salePrice = li_add_binding?.tietPriceSale?.text.toString().toDouble()
                 val descr = li_add_binding?.tietDesc?.text.toString()
-                val statePhoto = if(li_add_binding?.image == null) 0 else 1
+                val statePhoto = if (li_add_binding?.image == null) 0 else 1
 
                 //Fill out
                 li_add_binding?.tietCode?.setText(al_editProduct[position].c_productS)
@@ -359,7 +376,7 @@ class Activity_EditProduct : AppCompatActivity() {
                 li_add_binding?.tietDesc?.setText(al_editProduct[position].descr)
 
                 //Image
-                if(li_add_binding != null) {
+                if (li_add_binding != null) {
                     Glide.with(this@Activity_EditProduct)
                         .load(Constants.PHP_IMAGES + "P_" + al_editProduct[position].c_productS + ".jpg")
                         .error(R.drawable.widgets)
@@ -429,7 +446,7 @@ class Activity_EditProduct : AppCompatActivity() {
                 buyPrice = li_add_binding?.tietPriceBuy?.text.toString().toDouble()
                 salePrice = li_add_binding?.tietPriceSale?.text.toString().toDouble()
                 descr = li_add_binding?.tietDesc?.text.toString()
-                statePhoto = if(li_add_binding?.image == null) 0 else 1
+                statePhoto = if (li_add_binding?.image == null) 0 else 1
 
                 alertDialog.dismiss()
                 addProductInternet(
@@ -451,8 +468,64 @@ class Activity_EditProduct : AppCompatActivity() {
         alertDialog.show()
     }
 
-    private fun li_amount(){
+    private fun li_amount(position: Int) {
+        val inflater = LayoutInflater.from(binding.root.context)
+        li_alter_amount_binding = LiAlterAmountBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(binding.root.context)
+        builder.setView(li_alter_amount_binding.root)
+        val alertDialog = builder.create()
 
+        //Filling and listeners
+        var currentAmount : Int = al_editProduct.get(position).amount
+        li_alter_amount_binding.et.setText(currentAmount.toString())
+
+        li_alter_amount_binding.ivBtnMore.setOnClickListener(View.OnClickListener {
+            if (currentAmount != 99999) {
+                currentAmount++
+                li_alter_amount_binding.et.setText(currentAmount.toString())
+            }
+        })
+
+        li_alter_amount_binding.ivBtnLess.setOnClickListener(View.OnClickListener {
+            if (currentAmount != 1) {
+                currentAmount--
+                li_alter_amount_binding.et.setText(currentAmount.toString())
+            }
+        })
+
+        li_alter_amount_binding.et.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                if (li_alter_amount_binding.et.getText().toString() == "0") {
+                    currentAmount = 1
+                    li_alter_amount_binding.et.setText(currentAmount.toString())
+                } else if (li_alter_amount_binding.et.getText().toString() == "") {
+                    currentAmount = 1
+                } else {
+                    currentAmount = li_alter_amount_binding.et.getText().toString().toInt()
+                }
+            }
+            override fun afterTextChanged(editable: Editable) {}
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        })
+
+        li_alter_amount_binding.btnAccept.setOnClickListener{
+            alertDialog.dismiss()
+            uploadAmountChangesInternet(currentAmount, position)
+        }
+
+        li_alter_amount_binding.btnCancel.setOnClickListener{
+            alertDialog.dismiss()
+        }
+
+        //Finalizado
+        alertDialog.setCancelable(false)
+        alertDialog.window!!.setGravity(Gravity.CENTER)
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+    }
+
+    private fun findLocationClick(position: Int){
+        fetchProductsPathInternet(position)
     }
 
     /**Activity Events**/
@@ -533,7 +606,7 @@ class Activity_EditProduct : AppCompatActivity() {
                 }
 
             })
-        }else{
+        } else {
             FancyToast.makeText(
                 applicationContext,
                 getString(R.string.Revise_su_conexion),
@@ -616,7 +689,7 @@ class Activity_EditProduct : AppCompatActivity() {
                 }
 
             })
-        }else{
+        } else {
             FancyToast.makeText(
                 applicationContext,
                 getString(R.string.Revise_su_conexion),
@@ -627,8 +700,8 @@ class Activity_EditProduct : AppCompatActivity() {
         }
     }
 
-    private fun deleteProductInternet(position: Int){
-        if(NetworkTools.isOnline(this,false)){
+    private fun deleteProductInternet(position: Int) {
+        if (NetworkTools.isOnline(this, false)) {
             binding.aepRefresh.isRefreshing = true
 
             val call = retrofitProductsImplS.deleteProduct(
@@ -638,10 +711,10 @@ class Activity_EditProduct : AppCompatActivity() {
             )
 
 
-            call.enqueue(object : Callback<String>{
+            call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     binding.aepRefresh.isRefreshing = false
-                    if (response.isSuccessful){
+                    if (response.isSuccessful) {
                         FancyToast.makeText(
                             applicationContext,
                             getString(R.string.Operacion_realizada_con_exito),
@@ -651,7 +724,7 @@ class Activity_EditProduct : AppCompatActivity() {
                         ).show()
                         al_editProduct.removeAt(position)
                         updateRecyclerAdapter()
-                    }else{
+                    } else {
                         FancyToast.makeText(
                             applicationContext,
                             getString(R.string.Revise_su_conexion),
@@ -675,7 +748,7 @@ class Activity_EditProduct : AppCompatActivity() {
             })
 
 
-        }else{
+        } else {
             FancyToast.makeText(
                 applicationContext,
                 getString(R.string.Revise_su_conexion),
@@ -686,6 +759,180 @@ class Activity_EditProduct : AppCompatActivity() {
         }
     }
 
+    private fun transferProductInternet(position: Int, codeSession: String) {
+        if (NetworkTools.isOnline(this, false)) {
+            binding.aepRefresh.isRefreshing = true
+            val call = retrofitProductsImplS.transferProducts(
+                Constants.PHP_TOKEN,
+                al_editProduct[position].c_productS,
+                al_editProduct[position].name,
+                al_editProduct[position].fk_c_sessionS,
+                al_editProduct[position].amount,
+                al_editProduct[position].buyPrice,
+                al_editProduct[position].salePrice,
+                al_editProduct[position].descr,
+                al_editProduct[position].statePhoto,
+                codeSession
+            )
+            call.enqueue(object : Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    binding.aepRefresh.isRefreshing = false
+                    if (response.isSuccessful) {
+                        FancyToast.makeText(
+                            applicationContext,
+                            getString(R.string.Operacion_realizada_con_exito),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.SUCCESS,
+                            false
+                        ).show()
+                        al_editProduct.removeAt(position)
+                        updateRecyclerAdapter()
+                    } else {
+                        FancyToast.makeText(
+                            applicationContext,
+                            getString(R.string.Revise_su_conexion),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.ERROR,
+                            false
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<String>,
+                    t: Throwable
+                ) {
+                    FancyToast.makeText(
+                        applicationContext,
+                        getString(R.string.Revise_su_conexion),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.ERROR,
+                        false
+                    ).show()
+                    binding.aepRefresh.isRefreshing = false
+                }
+
+            })
+
+        } else {
+            FancyToast.makeText(
+                applicationContext,
+                getString(R.string.Revise_su_conexion),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false
+            ).show()
+        }
+    }
+
+    private fun uploadAmountChangesInternet(amount: Int, position: Int){
+        if (NetworkTools.isOnline(this, false)) {
+            binding.aepRefresh.isRefreshing = true
+
+            val call = retrofitProductsImplS.alterAmountS(
+                Constants.PHP_TOKEN,
+                al_editProduct[position].c_productS,
+                amount
+            )
+
+
+            call.enqueue(object : Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    binding.aepRefresh.isRefreshing = false
+                    if (response.isSuccessful) {
+                        FancyToast.makeText(
+                            applicationContext,
+                            getString(R.string.Operacion_realizada_con_exito),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.SUCCESS,
+                            false
+                        ).show()
+                        al_editProduct[position].amount = amount
+                        updateRecyclerAdapter()
+                    } else {
+                        FancyToast.makeText(
+                            applicationContext,
+                            getString(R.string.Revise_su_conexion),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.ERROR,
+                            false
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    binding.aepRefresh.isRefreshing = false
+                    FancyToast.makeText(
+                        applicationContext,
+                        getString(R.string.Revise_su_conexion),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.ERROR,
+                        false
+                    ).show()
+                }
+            })
+
+
+        } else {
+            FancyToast.makeText(
+                applicationContext,
+                getString(R.string.Revise_su_conexion),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false
+            ).show()
+        }
+    }
+
+    private fun fetchProductsPathInternet(position: Int){
+        val call = retrofitProductsImplS.fetchProductSPath(
+            Constants.PHP_TOKEN,
+            al_editProduct[position].c_productS
+        )
+
+        call.enqueue(object : Callback<ArrayList<ModelProductPath>> {
+            override fun onResponse(call: Call<ArrayList<ModelProductPath>>, response: Response<ArrayList<ModelProductPath>>) {
+                binding.aepRefresh.isRefreshing = false
+                if (response.isSuccessful) {
+                    FancyToast.makeText(
+                        applicationContext,
+                        getString(R.string.Operacion_realizada_con_exito),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.SUCCESS,
+                        false
+                    ).show()
+                    val al_modelPath = response.body()
+                    val path =
+                        al_modelPath?.get(0)?.fk_c_shelfS + "/"+
+                                al_modelPath?.get(0)?.fk_c_drawerS +"/"+
+                                al_editProduct[position].fk_c_sessionS
+                    showAlertDialogPath(path)
+                    updateRecyclerAdapter()
+                } else {
+                    FancyToast.makeText(
+                        applicationContext,
+                        getString(R.string.Revise_su_conexion),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.ERROR,
+                        false
+                    ).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<ModelProductPath>>, t: Throwable) {
+                binding.aepRefresh.isRefreshing = false
+                FancyToast.makeText(
+                    applicationContext,
+                    getString(R.string.Revise_su_conexion),
+                    FancyToast.LENGTH_LONG,
+                    FancyToast.ERROR,
+                    false
+                ).show()
+            }
+        })
+
+
+    }
 
 
     /**Auxiliary Methods**/
@@ -772,7 +1019,8 @@ class Activity_EditProduct : AppCompatActivity() {
 
     private fun escogerimagenGaleria() {
         if (Permissions.siHayPermisoDeAlmacenamiento(applicationContext)) {
-            val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            val galleryIntent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             resultLauncher.launch(galleryIntent)
         } else {
             Permissions.pedirPermisoDeAlmacenamiento(this@Activity_EditProduct, PERMISO_GALERIA)
@@ -787,9 +1035,9 @@ class Activity_EditProduct : AppCompatActivity() {
                 applicationContext,
                 ImageTools.getHoraActual("yyMMddHHmmss")
             )
-            if (contentUri != null){
+            if (contentUri != null) {
                 recortarImagen(contentUri, Uri.fromFile(file))
-            }else{
+            } else {
                 Toast.makeText(
                     applicationContext,
                     R.string.error_obtener_imagen,
@@ -819,8 +1067,8 @@ class Activity_EditProduct : AppCompatActivity() {
         }
     }
 
-    private fun imageRecorted(data: Intent?){
-        if(data != null) {
+    private fun imageRecorted(data: Intent?) {
+        if (data != null) {
             uriLLegadaRecortada = UCrop.getOutput(data)
             li_add_binding?.image?.setImageURI(uriLLegadaRecortada)
             val bitmap = (li_add_binding?.image?.drawable as BitmapDrawable).bitmap
@@ -828,79 +1076,87 @@ class Activity_EditProduct : AppCompatActivity() {
         }
     }
 
-    //CL Transfer Methods
-    private fun showClTransfer() {
+    /**Transfer System**/
+    private fun showClTransfer(position: Int) {
         binding.aepClTransfer.visibility = View.VISIBLE
         //Toolbar
         setSupportActionBar(binding.clTransferToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
-        binding.clTransferToolbar.setNavigationOnClickListener { onBack() }
+        binding.clTransferToolbar.setNavigationOnClickListener { onBack(position) }
 
         //Fragments
         fragmentManager = supportFragmentManager
-        showFragmentShelves()
+        showFragmentShelvesLS(position)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                onBack()
+                onBack(position)
             }
         })
     }
 
-    private fun showFragmentShelves() {
-        binding.clTransferToolbar.setTitle(R.string.Estantes)
+    private fun showFragmentShelvesLS(position: Int) {
+        binding.clTransferToolbar.setTitle(R.string.Seleccione_Estante)
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SHELVES
-        val fragment_shelves = Fragment_Shelves()
-        fragment_shelves.setOpenShelfSListener(object : Fragment_Shelves.OpenShelfS {
-            override fun onShelfSClicked(c_shelfS: String) {
-                showFragmentDrawers(c_shelfS)
+        val fragment_shelvesLS = Fragment_ShelvesLS()
+        fragment_shelvesLS.setOpenShelfLSListener(object : Fragment_ShelvesLS.OpenShelfLS {
+            override fun onShelfLSClicked(c_shelfLS: String) {
+                showFragmentDrawersLS(c_shelfLS, position)
             }
 
         })
         fragmentManager.beginTransaction()
-            .replace(binding.clTransferFrame.id, fragment_shelves)
+            .replace(binding.clTransferFrame.id, fragment_shelvesLS)
             .commit()
     }
 
-    private fun showFragmentDrawers(c_shelfS: String) {
-        binding.clTransferToolbar.setTitle(R.string.Gavetas)
-        FragmentsInfo.LAST_CODE_SHELVES_SENDED = c_shelfS
+    private fun showFragmentDrawersLS(c_shelfS: String, position: Int) {
+        binding.clTransferToolbar.setTitle(R.string.Seleccione_Gaveta)
+        FragmentsInfo.LAST_CODE_SHELVES_LS_SENDED = c_shelfS
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_DRAWERS
-        val fragment_drawers = Fragment_Drawers(c_shelfS)
-        fragment_drawers.setOpenDrawerSListener(object : Fragment_Drawers.OpenDrawerS {
-            override fun onDrawerSClicked(code: String) {
-                showFragmentSessions(code)
+        val fragment_drawersLS = Fragment_DrawerLS(c_shelfS)
+        fragment_drawersLS.setOpenDrawerLSListener(object : Fragment_DrawerLS.OpenDrawerLS {
+            override fun onDrawerLSClicked(code: String) {
+                showFragmentSessionsLS(code, position)
             }
 
         })
         fragmentManager.beginTransaction()
-            .replace(binding.clTransferFrame.id, fragment_drawers)
+            .replace(binding.clTransferFrame.id, fragment_drawersLS)
             .commit()
     }
 
-    private fun showFragmentSessions(c_drawerS: String) {
+    private fun showFragmentSessionsLS(c_drawerS: String, position: Int) {
         binding.clTransferToolbar.setTitle(R.string.Secciones)
-        FragmentsInfo.LAST_CODE_DRAWER_SENDED = c_drawerS
+        FragmentsInfo.LAST_CODE_DRAWER_LS_SENDED = c_drawerS
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SESSION
-        val fragment_sessions = Fragment_Sessions(c_drawerS)
-        fragment_sessions.setOpenSessionListener(object : Fragment_Sessions.OpenSession {
-            override fun onSessionClicked(c_sessions: String) {
+        val fragment_sessionsLS = Fragment_SessionsLS(c_drawerS)
+        fragment_sessionsLS.setOpenSessionLSListener(object : Fragment_SessionsLS.OpenSessionLS {
+            override fun onSessionLSClicked(c_sessionLS: String) {
                 binding.aepClTransfer.visibility = View.GONE
-
+                transferProductInternet(position, c_sessionLS)
             }
         })
         fragmentManager.beginTransaction()
-            .replace(binding.clTransferFrame.id, fragment_sessions)
+            .replace(binding.clTransferFrame.id, fragment_sessionsLS)
             .commit()
     }
 
-    private fun onBack() {
+
+    private fun onBack(position: Int) {
         when (FragmentsInfo.LAST_FRAGMENT_TOUCHED) {
             FragmentsInfo.Companion.EFragments.FR_SHELVES -> finish()
-            FragmentsInfo.Companion.EFragments.FR_DRAWERS -> showFragmentShelves()
-            FragmentsInfo.Companion.EFragments.FR_SESSION -> showFragmentDrawers(FragmentsInfo.LAST_CODE_SHELVES_SENDED)
-            FragmentsInfo.Companion.EFragments.AC_PRODUCTS -> showFragmentSessions(FragmentsInfo.LAST_CODE_DRAWER_SENDED)
+            FragmentsInfo.Companion.EFragments.FR_DRAWERS -> showFragmentShelvesLS(position)
+            FragmentsInfo.Companion.EFragments.FR_SESSION -> showFragmentDrawersLS(
+                FragmentsInfo.LAST_CODE_SHELVES_SENDED,
+                position
+            )
+
+            FragmentsInfo.Companion.EFragments.AC_PRODUCTS -> showFragmentSessionsLS(
+                FragmentsInfo.LAST_CODE_DRAWER_SENDED,
+                position
+            )
         }
     }
 

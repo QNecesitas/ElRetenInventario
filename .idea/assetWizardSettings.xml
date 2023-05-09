@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../../Markoz/Android-Trabajo/sdk/icons/material/materialicons/more_vert/baseline_more_vert_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../../Markoz/Android-Trabajo/sdk/icons/material/materialicons/check/baseline_check_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="baseline_more_vert_24" />
+                            <entry key="color" value="585858" />
+                            <entry key="outputName" value="baseline_check_24" />
                             <entry key="sourceFile" value="D:\QNecesitas\Operaciones\ElRetenInventario" />
                           </map>
                         </option>

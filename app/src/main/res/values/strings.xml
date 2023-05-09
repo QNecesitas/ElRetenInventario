@@ -113,5 +113,13 @@
     <string name="Seleccione">Seleccione</string>
     <string name="qu_cantidad_considera_n_como_deficit">¿Qué cantidad considera\n como deficit?</string>
     <string name="cantidad_m_nima">Cantidad mínima</string>
+    <string name="Seleccione_Gaveta">Seleccione Gaveta</string>
+    <string name="Seleccione_Estante">Seleccione Estante</string>
+    <string name="elemento_no_vaciado">Elemento no vaciado</string>
+    <string name="debe_eliminar_todo">Debe eliminar todo dentro del elemento para poder eliminarlo. Elementos por eliminar: %d</string>
+    <string name="cambiar_cantidad">Cambiar cantidad</string>
+    <string name="restar">Restar</string>
+    <string name="sumar">Sumar</string>
+    <string name="Ubicacion">Ubicación</string>
 
 </resources>

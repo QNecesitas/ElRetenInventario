@@ -3,13 +3,10 @@ package com.qnecesitas.elreteninventario
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentManager
 import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.databinding.ActivityLittleStoreBinding
-import com.qnecesitas.elreteninventario.databinding.ActivityStoreBinding
 
 class Activity_LittleStore : AppCompatActivity() {
     lateinit var binding: ActivityLittleStoreBinding
