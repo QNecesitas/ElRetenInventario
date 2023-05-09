@@ -1,2 +1,3 @@
 /build
-/src/main/java/com/qnecesitas/elreteninventario/auxiliary
+/.gradle
+/src/main/java/com/qnecesitas/elreteninventario/auxiliary/Constants.kt

@@ -58,8 +58,8 @@ interface IRetrofitProductsS {
             @Field("fk_c_sessionS") fk_c_sessionS: String
         ): Call<String>
 
-    @GET("FetchProductsSDeficit.php")
-    fun fetchProductsSDeficit(
+    @GET("FetchProductsDeficit.php")
+    fun fetchProductsDeficit(
         @Query("token") token: String,
         @Query("filter") filter: Int,
         @Query("button") button: String

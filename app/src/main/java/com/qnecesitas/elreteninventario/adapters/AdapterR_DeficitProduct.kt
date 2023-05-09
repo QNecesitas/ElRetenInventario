@@ -18,7 +18,6 @@ class AdapterR_DeficitProduct(
     private val context: Context
 )  : RecyclerView.Adapter<AdapterR_DeficitProduct.DeficitProductViewHolder>(){
 
-    private var al_filter: ArrayList<ModelEditProduct> = ArrayList()
 
 
     //Related with Holders
@@ -29,14 +28,11 @@ class AdapterR_DeficitProduct(
         fun bind(
             model: ModelEditProduct,
             context: Context,
-            position: Int
         ) {
             Glide.with(context)
-                .load((Constants.PHP_IMAGES + "Producto_" + position) + ".jpg")
+                .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
                 .error(R.drawable.shopping_bag_white)
-                .skipMemoryCache(true)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(binding.rdIvIcon)
 
             val nombre = model.name
@@ -55,10 +51,10 @@ class AdapterR_DeficitProduct(
         return DeficitProductViewHolder(binding)
     }
 
-    override fun getItemCount() = al_filter.size
+    override fun getItemCount() = al_deficitProdut.size
 
     override fun onBindViewHolder(holder: DeficitProductViewHolder, position: Int) {
-        holder.bind(al_deficitProdut[position], context, position)
+        holder.bind(al_deficitProdut[position], context)
     }
 
 
