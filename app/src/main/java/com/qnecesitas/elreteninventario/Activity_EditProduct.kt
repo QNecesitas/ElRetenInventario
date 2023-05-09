@@ -316,6 +316,7 @@ class Activity_EditProduct : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Init
+        imageFile = "no"
         val name = al_editProduct[position].name
         val code = al_editProduct[position].c_productS
         val amount = al_editProduct[position].amount
@@ -349,50 +350,28 @@ class Activity_EditProduct : AppCompatActivity() {
                     escogerimagenGaleria()
                 } else if (menuItem.itemId == R.id.menu_image_del) {
                     li_add_binding?.image?.setImageDrawable(null)
-                    imageFile = "no"
+                    imageFile = "delete"
                 }
                 false
             }
             popupMenu.show()
         }
-        li_add_binding?.btnCancel?.setOnClickListener(View.OnClickListener { alertDialog.dismiss() })
+        li_add_binding?.btnCancel?.setOnClickListener(View.OnClickListener {
+            alertDialog.dismiss()
+            imageFile = "no"
+        })
         li_add_binding?.btnAccept?.setOnClickListener(View.OnClickListener {
             if (checkInfoDataAdd()) {
-                //Declaraciones
-                val c_Product = li_add_binding?.tietCode?.text.toString()
-                val n_Product = li_add_binding?.tietName?.text.toString()
-                val amount = li_add_binding?.tietCant?.text.toString().toInt()
-                val buyPrice = li_add_binding?.tietPriceBuy?.text.toString().toDouble()
-                val salePrice = li_add_binding?.tietPriceSale?.text.toString().toDouble()
-                val descr = li_add_binding?.tietDesc?.text.toString()
-                val statePhoto = if (li_add_binding?.image == null) 0 else 1
-
-                //Fill out
-                li_add_binding?.tietCode?.setText(al_editProduct[position].c_productS)
-                li_add_binding?.tietName?.setText(al_editProduct[position].name)
-                li_add_binding?.tietCant?.setText(al_editProduct[position].amount)
-                li_add_binding?.tietPriceBuy?.setText(al_editProduct[position].buyPrice.toString())
-                li_add_binding?.tietPriceSale?.setText(al_editProduct[position].salePrice.toString())
-                li_add_binding?.tietDesc?.setText(al_editProduct[position].descr)
-
-                //Image
-                if (li_add_binding != null) {
-                    Glide.with(this@Activity_EditProduct)
-                        .load(Constants.PHP_IMAGES + "P_" + al_editProduct[position].c_productS + ".jpg")
-                        .error(R.drawable.widgets)
-                        .centerCrop()
-                        .into(li_add_binding!!.image)
-                }
-
                 alertDialog.dismiss()
                 updateProductInternet(
-                    c_Product,
-                    n_Product,
-                    amount,
-                    buyPrice,
-                    salePrice,
-                    descr,
-                    statePhoto,
+                    al_editProduct[position].c_productS,
+                    li_add_binding?.tietCode?.text.toString(),
+                    li_add_binding?.tietName?.text.toString(),
+                    li_add_binding?.tietCant?.text.toString().toInt(),
+                    li_add_binding?.tietPriceBuy?.text.toString().toDouble(),
+                    li_add_binding?.tietPriceSale?.text.toString().toDouble(),
+                    li_add_binding?.tietDesc?.text.toString(),
+                    if (li_add_binding?.image == null) 0 else 1,
                     position
                 )
             }
@@ -413,6 +392,7 @@ class Activity_EditProduct : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Variables
+        imageFile = "no"
         var c_Product: String
         var n_Product: String
         var amount: Int
@@ -618,8 +598,9 @@ class Activity_EditProduct : AppCompatActivity() {
     }
 
     private fun updateProductInternet(
+        c_ProductOld: String,
         c_Product: String,
-        n_Product: String,
+        name: String,
         amount: Int,
         buyPrice: Double,
         salePrice: Double,
@@ -631,14 +612,15 @@ class Activity_EditProduct : AppCompatActivity() {
             binding.aepRefresh.isRefreshing = true
             val call = retrofitProductsImplS.updateProduct(
                 Constants.PHP_TOKEN,
+                c_ProductOld,
+                imageFile,
                 c_Product,
-                n_Product,
+                name,
                 FragmentsInfo.LAST_CODE_SESSION_SENDED,
                 amount,
                 buyPrice,
                 salePrice,
                 descr,
-                imageFile,
             )
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -646,7 +628,7 @@ class Activity_EditProduct : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val model = ModelEditProduct(
                             c_Product,
-                            n_Product,
+                            name,
                             FragmentsInfo.LAST_CODE_SESSION_SENDED,
                             amount,
                             buyPrice,

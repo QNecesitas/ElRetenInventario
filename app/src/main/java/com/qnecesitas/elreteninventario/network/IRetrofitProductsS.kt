@@ -30,6 +30,8 @@ interface IRetrofitProductsS {
     @POST("UpdateProduct.php")
     fun updateProduct(
         @Field("token") token: String,
+        @Field("c_productSOld") c_productSOld : String,
+        @Field("file") file: String,
         @Field("c_productS") c_productS : String,
         @Field("name") name : String,
         @Field("fk_c_sessionS") c_fk_sessionS: String,
@@ -37,7 +39,6 @@ interface IRetrofitProductsS {
         @Field("buyPrice") buyPrice: Double,
         @Field("salePrice") salePrice: Double,
         @Field("descr") descr: String,
-        @Field("file") file: String
     ) : Call<String>
 
     @GET("FetchProductsS.php")
