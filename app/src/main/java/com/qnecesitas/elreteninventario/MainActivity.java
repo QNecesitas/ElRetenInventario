@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message message){
                 if(message.arg1==1){
-                    Intent intent=new Intent(MainActivity.this,Activity_Deficit.class);
+                    Intent intent=new Intent(MainActivity.this,Activity_Login.class);
                     startActivity(intent);
                 }
             }

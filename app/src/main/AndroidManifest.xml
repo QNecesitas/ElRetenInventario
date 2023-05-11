@@ -4,7 +4,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"  />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +17,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ElRetenInventario"
         tools:targetApi="31">
+        <activity
+            android:name=".Activity_Settings"
+            android:exported="false" />
+
+        <service android:name=".DeficitService" />
+
+        <receiver
+            android:name=".NetworkChangeBroadcast"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="check_network_connection" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".Activity_Deficit"
             android:exported="false" />

@@ -1,11 +1,11 @@
 package com.qnecesitas.elreteninventario
 
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
-import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentManager
 import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.databinding.ActivityStoreBinding
@@ -35,6 +35,10 @@ class Activity_Store : AppCompatActivity() {
                 onBack()
             }
         })
+
+        val brNetworkChange : NetworkChangeBroadcast = NetworkChangeBroadcast()
+        val filter : IntentFilter  = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(brNetworkChange,filter)
     }
 
     private fun showFragmentShelves() {
@@ -85,6 +89,13 @@ class Activity_Store : AppCompatActivity() {
         fragmentManager.beginTransaction()
             .replace(binding.asFrame.id, fragment_sessions)
             .commit()
+    }
+
+    override fun onDestroy() {
+        var broadcastIntent : Intent  = Intent(this@Activity_Store, BroadcastRestartService::class.java)
+        broadcastIntent.action = "restart_service"
+        sendBroadcast(broadcastIntent)
+        super.onDestroy()
     }
 
     private fun onBack() {
