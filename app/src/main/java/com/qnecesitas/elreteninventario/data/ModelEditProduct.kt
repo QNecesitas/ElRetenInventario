@@ -1,6 +1,6 @@
 package com.qnecesitas.elreteninventario.data
 
-class ModelEditProduct(
+data class ModelEditProduct(
     var c_productS: String,
     var name: String,
     var fk_c_sessionS: String,
@@ -9,4 +9,8 @@ class ModelEditProduct(
     var salePrice: Double,
     var descr: String,
     var statePhoto: Int
-)
+): Cloneable{
+    public override fun clone(): ModelEditProduct{
+        return super.clone() as ModelEditProduct
+    }
+}

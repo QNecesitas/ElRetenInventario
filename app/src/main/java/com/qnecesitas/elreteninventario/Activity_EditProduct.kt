@@ -1,6 +1,7 @@
 package com.qnecesitas.elreteninventario
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
@@ -25,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.adapters.AdapterR_EditProduct
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
@@ -40,6 +42,8 @@ import com.qnecesitas.elreteninventario.databinding.LiInfoProductBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -337,6 +341,8 @@ class Activity_EditProduct : AppCompatActivity() {
                 .load(Constants.PHP_IMAGES + "P_" + codeImage + ".jpg")
                 .error(R.drawable.widgets)
                 .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(it)
         }
 
@@ -1086,7 +1092,6 @@ class Activity_EditProduct : AppCompatActivity() {
             override fun onShelfLSClicked(c_shelfLS: String) {
                 showFragmentDrawersLS(c_shelfLS, position)
             }
-
         })
         fragmentManager.beginTransaction()
             .replace(binding.clTransferFrame.id, fragment_shelvesLS)
@@ -1102,7 +1107,6 @@ class Activity_EditProduct : AppCompatActivity() {
             override fun onDrawerLSClicked(code: String) {
                 showFragmentSessionsLS(code, position)
             }
-
         })
         fragmentManager.beginTransaction()
             .replace(binding.clTransferFrame.id, fragment_drawersLS)
@@ -1124,7 +1128,6 @@ class Activity_EditProduct : AppCompatActivity() {
             .replace(binding.clTransferFrame.id, fragment_sessionsLS)
             .commit()
     }
-
 
     private fun onBack(position: Int) {
         when (FragmentsInfo.LAST_FRAGMENT_TOUCHED) {

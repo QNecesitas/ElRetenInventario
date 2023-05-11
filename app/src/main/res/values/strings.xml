@@ -57,7 +57,6 @@
     <string name="price_default">0.00</string>
     <string name="little_description">Descripción del producto....</string>
     <string name="Edit_Produt">Editar Producto</string>
-
     <string name="sobre_nosotros">Sobre nosotros:</string>
     <string name="negocio_particular">Negocio particular</string>
     <string name="_53_58419241">+53 58419241</string>
@@ -103,8 +102,8 @@
     <string name="seleccione_la_ubicaci_n_a_transferir">Seleccione la ubicación a transferir</string>
     <string name="Nombre_Info"><b>Nombre:</b> %s</string>
     <string name="Codigo_Info"><b>Código:</b> %s</string>
-    <string name="PrecioV_Info"><b>P. de venta:</b> %.1f CUP</string>
-    <string name="PrecioC_Info"><b>P. de compra:</b> %.1f CUP</string>
+    <string name="PrecioV_Info"><b>Precio de venta:</b> %.1f CUP</string>
+    <string name="PrecioC_Info"><b>Precio de compra:</b> %.1f CUP</string>
     <string name="Cantidad_Info"><b>Cantidad disponible:</b> %d unidades</string>
     <string name="Descripcion_Info"><b>Descripción:</b> %s</string>
     <string name="options">Options</string>
@@ -121,5 +120,15 @@
     <string name="restar">Restar</string>
     <string name="sumar">Sumar</string>
     <string name="Ubicacion">Ubicación</string>
-
+    <string name="Menos">menos</string>
+    <string name="Mas">agregar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="info">Información</string>
+    <string name="Enviar_pedido">Enviar pedido</string>
+    <string name="_1">1</string>
+    <string name="carrito">Carrito</string>
+    <string name="no_elementos_carrito">No hay elementos en el carrito</string>
+    <string name="registrar_venta">Registrar venta</string>
+    <string name="tiene_seguridad_de_registrar">¿Tiene seguridad de registrar esta venta?</string>
+    <string name="no_puede_acceder_con_0">Tiene 0 unidades de este elemento</string>
 </resources>
