@@ -2,7 +2,7 @@ package com.qnecesitas.elreteninventario.network
 
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelEditProduct
-import com.qnecesitas.elreteninventario.data.ModelSession
+import com.qnecesitas.elreteninventario.data.ModelProductPath
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,17 +23,21 @@ class RetrofitProductsImplS : IRetrofitProductsS {
 
     override fun updateProduct(
         token: String,
+        c_productSOld: String,
+        file: String,
         c_productS: String,
         name: String,
         c_fk_sessionS: String,
         amount: Int,
         buyPrice: Double,
         salePrice: Double,
-        descr: String,
-        file: String
+        descr: String
     ): Call<String> {
-        return productApi.updateProduct(token, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr, file)
+        return productApi.updateProduct(
+            token, c_productSOld, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr
+        )
     }
+
 
     override fun fetchProducts(
         token: String,
@@ -64,5 +68,29 @@ class RetrofitProductsImplS : IRetrofitProductsS {
     ): Call<ArrayList<ModelEditProduct>> {
         return productApi.fetchProductsDeficit(token,filter,button)
     }
+
+    override fun transferProducts(
+        token : String,
+        c_productS: String,
+        name: String,
+        fk_c_sessionS: String,
+        amount: Int,
+        buyPrice: Double,
+        salePrice: Double,
+        descr: String,
+        statePhoto : Int,
+        c_sessionLS: String
+    ): Call<String> {
+        return productApi.transferProducts(token, c_productS, name, fk_c_sessionS, amount, buyPrice, salePrice, descr, statePhoto, c_sessionLS)
+    }
+
+    override fun alterAmountS(token: String, c_productS: String, amount: Int): Call<String> {
+        return  productApi.alterAmountS(token, c_productS, amount)
+    }
+
+    override fun fetchProductSPath(token: String, c_productS: String): Call<ArrayList<ModelProductPath>> {
+        return  productApi.fetchProductSPath(token, c_productS)
+    }
+
 
 }

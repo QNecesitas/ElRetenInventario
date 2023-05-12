@@ -28,11 +28,13 @@ class Activity_MenuSelesperson : AppCompatActivity() {
     }
 
     fun toCounter(){
-        //TODO Ir a la pantalla Counter
+        val intent = Intent(this,Activity_Counter:: class.java )
+        startActivity(intent)
     }
 
     fun toOrders(){
-        //TODO Ir a la pantalla Orders
+        val intent = Intent(this,Activity_Counter:: class.java )
+        startActivity(intent)
     }
 
 

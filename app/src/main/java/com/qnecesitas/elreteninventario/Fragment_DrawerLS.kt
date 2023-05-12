@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.qnecesitas.elreteninventario.adapters.AdapterRDrawers
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
@@ -317,7 +318,12 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
 
     //Delete drawer
     private fun click_delete(position: Int) {
-        showAlertDialogDeleteDrawer(position)
+        val amount = al_drawers[position].amount
+        if(amount == 0) {
+            showAlertDialogDeleteDrawer(position)
+        }else{
+            showAlertDialogNotEmpty(amount)
+        }
     }
 
     private fun showAlertDialogDeleteDrawer(position: Int) {
@@ -341,6 +347,18 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
 
         //create the alert dialog and show it
         builder.create().show()
+    }
+
+    private fun showAlertDialogNotEmpty(amount: Int) {
+        //init alert dialog
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.elemento_no_vaciado))
+            .setMessage(getString(R.string.debe_eliminar_todo,amount))
+            .setPositiveButton(R.string.Aceptar) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun deleteDrawerInternet(drawerCode: String, position: Int) {

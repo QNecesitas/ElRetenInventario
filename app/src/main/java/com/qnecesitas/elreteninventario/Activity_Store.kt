@@ -35,6 +35,16 @@ class Activity_Store : AppCompatActivity() {
                 onBack()
             }
         })
+
+        val intentService : Intent = Intent(this,ServiceExample::class.java)
+        startService(intentService)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val broadcastIntent = Intent(this, BroadcastRestartService::class.java)
+        broadcastIntent.action = "restart_service"
+        sendBroadcast(broadcastIntent)
     }
 
     private fun showFragmentShelves() {
@@ -45,7 +55,6 @@ class Activity_Store : AppCompatActivity() {
             override fun onShelfSClicked(c_shelfS: String) {
                 showFragmentDrawers(c_shelfS)
             }
-
         })
         fragmentManager.beginTransaction()
             .replace(binding.asFrame.id, fragment_shelves)

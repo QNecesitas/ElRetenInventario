@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.qnecesitas.elreteninventario.adapters.AdapterRShelves
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
@@ -335,7 +336,24 @@ class Fragment_Shelves : Fragment() {
 
     //Delete shelf
     private fun click_delete(position: Int) {
-        showAlertDialogDeleteShelf(position)
+        val amount = al_shelves[position].amount
+        if(amount == 0) {
+            showAlertDialogDeleteShelf(position)
+        }else{
+            showAlertDialogNotEmpty(amount)
+        }
+    }
+
+    private fun showAlertDialogNotEmpty(amount: Int) {
+        //init alert dialog
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.elemento_no_vaciado))
+            .setMessage(getString(R.string.debe_eliminar_todo,amount))
+            .setPositiveButton(R.string.Aceptar) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun showAlertDialogDeleteShelf(position: Int) {

@@ -48,6 +48,8 @@ class AdapterR_EditProduct(
                 .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
                 .error(R.drawable.widgets)
                 .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(binding.REPIVImageProduct)
 
             val nombre = model.name
@@ -56,7 +58,7 @@ class AdapterR_EditProduct(
             binding.REPTVName.text = nombre
             binding.REPTVCant.text = cantidad
             binding.root.setOnClickListener{
-                this@AdapterR_EditProduct.listener?.onClick(position)
+                this@AdapterR_EditProduct.listener?.onClick(getRealPosition(position))
             }
 
         }
@@ -116,4 +118,16 @@ class AdapterR_EditProduct(
             adapterR_editProducts.notifyDataSetChanged()
         }
     }
+
+    //Real position
+    private fun getRealPosition(irealPosition: Int): Int{
+        for((index, model) in al_editProdut.withIndex()){
+            if(model == al_filter[irealPosition]){
+                return index
+            }
+        }
+        return 0
+    }
+
+
 }

@@ -120,5 +120,23 @@
     <string name="Contrase_a_confirmar">Confirme la nueva</string>
     <string name="Configuraci_n">Configuración</string>
     <string name="los_campos_no_coinciden">No coinciden la contraseña a confirmar y la nueva</string>
-
+    <string name="Seleccione_Gaveta">Seleccione Gaveta</string>
+    <string name="Seleccione_Estante">Seleccione Estante</string>
+    <string name="elemento_no_vaciado">Elemento no vaciado</string>
+    <string name="debe_eliminar_todo">Debe eliminar todo dentro del elemento para poder eliminarlo. Elementos por eliminar: %d</string>
+    <string name="cambiar_cantidad">Cambiar cantidad</string>
+    <string name="restar">Restar</string>
+    <string name="sumar">Sumar</string>
+    <string name="Ubicacion">Ubicación</string>
+    <string name="Menos">menos</string>
+    <string name="Mas">agregar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="info">Información</string>
+    <string name="Enviar_pedido">Enviar pedido</string>
+    <string name="_1">1</string>
+    <string name="carrito">Carrito</string>
+    <string name="no_elementos_carrito">No hay elementos en el carrito</string>
+    <string name="registrar_venta">Registrar venta</string>
+    <string name="tiene_seguridad_de_registrar">¿Tiene seguridad de registrar esta venta?</string>
+    <string name="no_puede_acceder_con_0">Tiene 0 unidades de este elemento</string>
 </resources>

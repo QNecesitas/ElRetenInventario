@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.qnecesitas.elreteninventario.adapters.AdapterRSessions
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
@@ -332,7 +333,24 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
     //Delete session
     private fun click_delete(position: Int) {
-        showAlertDialogDeleteSession(position)
+        val amount = al_sessions[position].amount
+        if(amount == 0) {
+            showAlertDialogDeleteSession(position)
+        }else{
+            showAlertDialogNotEmpty(amount)
+        }
+    }
+
+    private fun showAlertDialogNotEmpty(amount: Int) {
+        //init alert dialog
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.elemento_no_vaciado))
+            .setMessage(getString(R.string.debe_eliminar_todo,amount))
+            .setPositiveButton(R.string.Aceptar) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun showAlertDialogDeleteSession(position: Int) {

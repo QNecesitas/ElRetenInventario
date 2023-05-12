@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment_Cart">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--CV superior-->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_top_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/md_theme_light_primary"
+            android:translationZ="4sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!--TV carrito-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12sp"
+                android:layout_marginTop="5sp"
+                android:layout_marginBottom="5sp"
+                android:text="@string/carrito"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_m"
+                android:textStyle="bold" />
+
+            <!--IV borrar all-->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_deleteAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="5sp"
+                android:layout_marginEnd="10sp"
+                android:layout_marginBottom="5sp"
+                android:src="@drawable/baseline_delete_forever_24"
+                android:tint="@color/white" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!--Recycler and Not Connection-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_info_content"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            app:layout_constraintBottom_toTopOf="@id/cv_bottom_recycler"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cv_top_recycler">
+
+            <ProgressBar
+                android:visibility="gone"
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <!--Recycler-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/progress" />
+
+            <!-- LL Not info -->
+            <LinearLayout
+                android:id="@+id/not_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/baseline_shopping_cart_24"
+                    app:tint="@color/gray_icon_h" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/No_hay_productos"
+                    android:textColor="@color/gray_icon_h"
+                    android:textSize="@dimen/textSize_h"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--CV inferior-->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_bottom_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/md_theme_light_primary"
+            android:translationZ="4sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_info_content">
+
+            <!--Button aceptar-->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_acceptProduct"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="12dp"
+                android:minWidth="30sp"
+                android:minHeight="30sp"
+                android:paddingStart="5sp"
+                android:paddingEnd="5sp"
+                android:text="@string/Enviar_pedido"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_xs"
+                android:textStyle="bold" />
+
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
