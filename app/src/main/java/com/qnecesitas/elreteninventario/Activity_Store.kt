@@ -35,9 +35,6 @@ class Activity_Store : AppCompatActivity() {
                 onBack()
             }
         })
-
-        val intentService : Intent  = Intent(this@Activity_Store,DeficitService::class.java)
-        startService(intentService)
     }
 
     private fun showFragmentShelves() {
@@ -88,13 +85,6 @@ class Activity_Store : AppCompatActivity() {
         fragmentManager.beginTransaction()
             .replace(binding.asFrame.id, fragment_sessions)
             .commit()
-    }
-
-    override fun onDestroy() {
-        var broadcastIntent : Intent  = Intent(this@Activity_Store, BroadcastRestartService::class.java)
-        broadcastIntent.action = "restart_service"
-        sendBroadcast(broadcastIntent)
-        super.onDestroy()
     }
 
     private fun onBack() {

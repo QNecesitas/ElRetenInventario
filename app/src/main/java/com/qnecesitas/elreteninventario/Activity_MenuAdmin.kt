@@ -14,7 +14,6 @@ class Activity_MenuAdmin : AppCompatActivity() {
         binding = ActivityMenuAdminBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         binding.amaCvStore.setOnClickListener { click_store() }
 
         binding.amaCvProducts.setOnClickListener { click_products() }
