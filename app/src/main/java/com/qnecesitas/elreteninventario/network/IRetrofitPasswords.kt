@@ -18,7 +18,7 @@ interface IRetrofitPasswords {
         @Field("token") token: String,
         @Field("password") password: String,
         @Field("user") user: String
-    ) : Call<Boolean>
+    ) : Call<String>
 
 
     @GET("FetchAccounts.php")

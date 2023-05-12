@@ -18,7 +18,7 @@ class RetrofitPasswords: IRetrofitPasswords{
 
     private val productApi: IRetrofitPasswords = retrofit.create(IRetrofitPasswords::class.java)
 
-    override fun updateAccount(token: String, password: String, user: String): Call<Boolean> {
+    override fun updateAccount(token: String, password: String, user: String): Call<String> {
         return productApi.updateAccount(token, password,user)
     }
 

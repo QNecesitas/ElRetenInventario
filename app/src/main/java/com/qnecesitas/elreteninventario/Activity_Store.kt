@@ -36,9 +36,8 @@ class Activity_Store : AppCompatActivity() {
             }
         })
 
-        val brNetworkChange : NetworkChangeBroadcast = NetworkChangeBroadcast()
-        val filter : IntentFilter  = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(brNetworkChange,filter)
+        val intentService : Intent  = Intent(this@Activity_Store,DeficitService::class.java)
+        startService(intentService)
     }
 
     private fun showFragmentShelves() {

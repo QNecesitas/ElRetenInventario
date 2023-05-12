@@ -113,5 +113,12 @@
     <string name="Seleccione">Seleccione</string>
     <string name="qu_cantidad_considera_n_como_deficit">¿Qué cantidad considera\n como deficit?</string>
     <string name="cantidad_m_nima">Cantidad mínima</string>
+    <string name="Cambiar_contrase_as_dependiente">Cambiar contraseña de dependientes</string>
+    <string name="Cambiar_contrase_as_admin">Cambiar contraseña de administrador</string>
+    <string name="Contrase_a_actual">Contraseña actual</string>
+    <string name="Contrase_nueva">Contraseña nueva</string>
+    <string name="Contrase_a_confirmar">Confirme la nueva</string>
+    <string name="Configuraci_n">Configuración</string>
+    <string name="los_campos_no_coinciden">No coinciden la contraseña a confirmar y la nueva</string>
 
 </resources>

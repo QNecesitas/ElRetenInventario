@@ -23,6 +23,8 @@ class Activity_MenuAdmin : AppCompatActivity() {
 
         binding.amaCvOrders.setOnClickListener { click_orders() }
 
+        binding.settings.setOnClickListener{click_settings()}
+
     }
 
     private fun click_store() {
@@ -44,4 +46,8 @@ class Activity_MenuAdmin : AppCompatActivity() {
         //TODO Aun no creado
     }
 
+    private fun click_settings(){
+        val intent = Intent(this, Activity_Settings::class.java)
+        startActivity(intent)
+    }
 }

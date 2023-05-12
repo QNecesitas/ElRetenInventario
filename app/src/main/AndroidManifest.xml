@@ -24,10 +24,10 @@
         <service android:name=".DeficitService" />
 
         <receiver
-            android:name=".NetworkChangeBroadcast"
+            android:name=".BroadcastRestartService"
             android:exported="true">
             <intent-filter>
-                <action android:name="check_network_connection" />
+                <action android:name="restart_service" />
             </intent-filter>
         </receiver>
 
