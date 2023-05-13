@@ -13,9 +13,9 @@ class Activity_MenuSelesperson : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.cvCounter.setOnClickListener{toCounter()}
+        binding.cvProduct.setOnClickListener{toProduct()}
 
-        binding.cvOrders.setOnClickListener{toOrders()}
+        binding.cvCounter.setOnClickListener{toCounter()}
 
         binding.cvStore.setOnClickListener{toLittleStore()}
 
@@ -32,8 +32,8 @@ class Activity_MenuSelesperson : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun toOrders(){
-        val intent = Intent(this,Activity_Counter:: class.java )
+    fun toProduct(){
+        val intent = Intent(this,Activity_EditProductLS:: class.java )
         startActivity(intent)
     }
 

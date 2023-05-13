@@ -66,14 +66,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_header">
 
-        <!--Card View Shelf-->
+        <!--Card View Store-->
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_store"
             android:layout_width="0sp"
             android:layout_height="200dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="6dp"
-            app:layout_constraintEnd_toStartOf="@id/cv_counter"
+            app:layout_constraintEnd_toStartOf="@id/cv_product"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -102,9 +102,9 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!--Card View counter-->
+        <!--Card View products-->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cv_counter"
+            android:id="@+id/cv_product"
             android:layout_width="0sp"
             android:layout_height="200dp"
             android:layout_marginStart="6dp"
@@ -125,24 +125,25 @@
                     android:layout_height="80dp"
                     android:layout_marginTop="40dp"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/baseline_point_of_sale_24" />
+                    android:src="@drawable/baseline_apps_24" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="@string/Mostrador"
+                    android:text="@string/Productos"
                     android:textSize="@dimen/textSize_m" />
 
             </LinearLayout>
+
 
         </androidx.cardview.widget.CardView>
 
         <!--Card View Order-->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cv_orders"
+            android:id="@+id/cv_Counter"
             android:layout_width="0sp"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="6dp"
@@ -160,15 +161,15 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="25dp"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/baseline_shopping_cart_24" />
+                    android:src="@drawable/baseline_point_of_sale_24" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="@string/Pedidos"
+                    android:text="@string/Mostrador"
                     android:textSize="@dimen/textSize_m" />
 
             </LinearLayout>

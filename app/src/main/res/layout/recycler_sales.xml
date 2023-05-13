@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <!--CV container-->
+    <androidx.cardview.widget.CardView
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:cardCornerRadius="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:translationZ="4dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!--CL container-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--tv number order-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_numero_venta"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/numeral"
+                android:textSize="@dimen/textSize_h"
+                android:textStyle="bold" />
+
+            <!--tv name-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_nomb_venta"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@id/tv_numero_venta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nombre"
+                android:textSize="@dimen/textSize_h"/>
+
+
+            <!--tv date-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_fecha_venta"
+                app:layout_constraintTop_toBottomOf="@+id/tv_nomb_venta"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@id/tv_numero_venta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Fecha"
+                android:textSize="@dimen/textSize_h"/>
+
+
+            <!--tv rebaja-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:visibility="gone"
+                android:id="@+id/tv_rebaja_venta"
+                app:layout_constraintTop_toBottomOf="@+id/tv_fecha_venta"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@id/tv_numero_venta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rebaja"
+                android:textSize="@dimen/textSize_h"/>
+
+
+            <!--tv price total-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:visibility="gone"
+                android:id="@+id/tv_priceTotal_venta"
+                app:layout_constraintTop_toBottomOf="@+id/tv_rebaja_venta"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@id/tv_numero_venta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/precioTotal"
+                android:textSize="@dimen/textSize_h"/>
+
+
+            <!--tv order-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:visibility="gone"
+                android:id="@+id/tv_order_venta"
+                app:layout_constraintTop_toBottomOf="@+id/tv_priceTotal_venta"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@id/tv_numero_venta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Orden"
+                android:textSize="@dimen/textSize_h"/>
+
+
+            <!--iv arrow-->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_arrow"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/baseline_arrow_down_24"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
+                android:rotation="0"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,7 @@
     <string name="codigo_s">Código: %s</string>
     <string name="cant_gavetas">%s gavetas</string>
     <string name="cant_secciones">%s secciones</string>
-    <string name="cant_producto">%s producto</string>
+    <string name="cant_producto">%s productos</string>
     <string name="Dependent">Dependiente</string>
     <string name="Administrator">Administrador</string>
     <string name="Password">Contraseña</string>
@@ -139,4 +139,18 @@
     <string name="registrar_venta">Registrar venta</string>
     <string name="tiene_seguridad_de_registrar">¿Tiene seguridad de registrar esta venta?</string>
     <string name="no_puede_acceder_con_0">Tiene 0 unidades de este elemento</string>
+    <string name="Ventas">Ventas</string>
+    <string name="numeral">#</string>
+    <string name="nombre_del_producto">Nombre del producto</string>
+    <string name="nombre"><b>Nombre:</b> %s</string>
+    <string name="Fecha"><b>Fecha:</b> %s/%s/%s</string>
+    <string name="rebaja"><b>Descuento:</b> %s</string>
+    <string name="precioTotal"><b>Precio Total:</b> %s</string>
+    <string name="Orden"><b>Orden:</b> \n<i> %s</i></string>
+    <string name="_10_5_2023">10/5/2023</string>
+    <string name="No_hay_ventas">No hay ventas aún</string>
+    <string name="Dia">Día</string>
+    <string name="Mes">Mes</string>
+    <string name="Anno">Año</string>
+    <string name="todo">Todo</string>
 </resources>
