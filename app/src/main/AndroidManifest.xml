@@ -24,7 +24,7 @@
             android:name=".Activity_Settings"
             android:exported="false" />
 
-        <service android:name=".DeficitService" />
+
 
         <receiver
             android:name=".BroadcastRestartService"
