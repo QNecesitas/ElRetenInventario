@@ -32,7 +32,8 @@ class Activity_MenuAdmin : AppCompatActivity() {
     }
 
     private fun click_statistics() {
-        //TODO Aun no creado
+        val intent = Intent(this, Statistics::class.java)
+        startActivity(intent)
     }
 
     private fun click_products() {

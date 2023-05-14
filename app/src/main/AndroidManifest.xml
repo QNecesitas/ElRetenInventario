@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -16,23 +17,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ElRetenInventario"
         tools:targetApi="31">
+        <activity
+            android:name=".Statistics"
+            android:exported="false" />
+        <activity
+            android:name=".Activity_Settings"
+            android:exported="false" />
 
-        <service
-            android:name=".ServiceExample"
-            android:exported="true" />
+        <service android:name=".DeficitService" />
 
         <receiver
             android:name=".BroadcastRestartService"
-            android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="restart_service"/>
+                <action android:name="restart_service" />
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".Activity_Counter"
-            android:exported="false" />
         <activity
             android:name=".Activity_Deficit"
             android:exported="false" />
@@ -64,9 +65,6 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activity_Settings"
-            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

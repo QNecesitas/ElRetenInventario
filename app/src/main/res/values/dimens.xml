@@ -4,6 +4,7 @@
 
     <!--Text sizes-->
     <dimen name="textSize_h">20sp</dimen>
+    <dimen name="textSize_mh">18sp</dimen>
     <dimen name="textSize_m">16sp</dimen>
     <dimen name="textSize_s">14sp</dimen>
     <dimen name="textSize_xs">12sp</dimen>

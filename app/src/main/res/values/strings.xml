@@ -87,7 +87,7 @@
     <string name="Mostrador">Mostrador</string>
     <string name="c_digo">Código</string>
     <string name="name">Nombre</string>
-    <string name="precio_de_compra">Precio de compra</string>
+    <string name="precio_de_compra">Coste del producto:</string>
     <string name="precio_de_venta">Precio de venta</string>
     <string name="cantidad">Cantidad</string>
     <string name="descripci_n">Descripción</string>
@@ -103,8 +103,8 @@
     <string name="seleccione_la_ubicaci_n_a_transferir">Seleccione la ubicación a transferir</string>
     <string name="Nombre_Info"><b>Nombre:</b> %s</string>
     <string name="Codigo_Info"><b>Código:</b> %s</string>
-    <string name="PrecioV_Info"><b>P. de venta:</b> %.1f CUP</string>
-    <string name="PrecioC_Info"><b>P. de compra:</b> %.1f CUP</string>
+    <string name="PrecioV_Info"><b>Precio de venta:</b> %.1f CUP</string>
+    <string name="PrecioC_Info"><b>Coste del producto:</b> %.1f CUP</string>
     <string name="Cantidad_Info"><b>Cantidad disponible:</b> %d unidades</string>
     <string name="Descripcion_Info"><b>Descripción:</b> %s</string>
     <string name="options">Options</string>
