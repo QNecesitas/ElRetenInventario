@@ -2,6 +2,7 @@ package com.qnecesitas.elreteninventario
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
@@ -29,6 +30,15 @@ class Activity_Settings : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Toolbar
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {finish()}
+
+        //Refresh
+        binding.refresh.setOnRefreshListener { loadPasswordInternet {} }
+
         binding.btnAdminAccept.setOnClickListener{clickAcceptAdmin()}
 
         binding.btnSalespAccept.setOnClickListener{clickAcceptSalesperson()}
@@ -36,9 +46,6 @@ class Activity_Settings : AppCompatActivity() {
         //Internet
         alPassword = ArrayList()
         retrofitPasswords = RetrofitPasswords()
-
-
-
     }
 
     /*Listeners
@@ -92,14 +99,15 @@ class Activity_Settings : AppCompatActivity() {
             binding.tietPasswAdminConfirm.error = null
         }
 
-        if(binding.tietPasswAdminConfirm.text.toString() ==
+        if(binding.tietPasswAdminConfirm.text.toString() !=
             binding.tietPasswAdminNew.text.toString()){
             result =false
             binding.tietPasswAdminConfirm.error = getString(R.string.los_campos_no_coinciden)
         }else{
-            binding.tietPasswAdminConfirm.error = null
+            if(binding.tietPasswAdminConfirm.text?.isNotEmpty()==true){
+                binding.tietPasswAdminConfirm.error = null
+            }
         }
-
         return result
     }
 
