@@ -24,6 +24,8 @@ class Activity_MenuAdmin : AppCompatActivity() {
 
         binding.settings.setOnClickListener{click_settings()}
 
+        binding.cvProductsLs.setOnClickListener{click_products_ls()}
+
     }
 
     private fun click_store() {
@@ -50,4 +52,10 @@ class Activity_MenuAdmin : AppCompatActivity() {
         val intent = Intent(this, Activity_Settings::class.java)
         startActivity(intent)
     }
+
+    private fun click_products_ls(){
+        val intent = Intent(this, Activity_EditProductLS::class.java)
+        startActivity(intent)
+    }
+
 }

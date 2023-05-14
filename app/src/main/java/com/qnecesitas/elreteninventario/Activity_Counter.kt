@@ -137,6 +137,7 @@ class Activity_Counter : AppCompatActivity() {
         } else {
             alertNotElements(false)
         }
+
         adapterCounter = AdapterR_CounterProductShow(alCounter, binding.root.context)
 
         //Listeners

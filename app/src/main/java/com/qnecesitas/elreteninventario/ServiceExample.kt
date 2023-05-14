@@ -21,7 +21,7 @@ class ServiceExample : IntentService("ServiceExample") {
     override fun onHandleIntent(p0: Intent?) {
         while (true){
             if (isConnected()){
-                TODO(" fALTA PONER EL CODIGO QUE REVISA SI HAY PRODUCTOS EN DEFICIT")
+
             }
             Thread.sleep(30000)
         }

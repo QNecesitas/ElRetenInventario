@@ -7,228 +7,284 @@
     tools:context=".Activity_MenuAdmin"
     android:background="@color/gray_light">
 
-    <!--CL for header (image and text)-->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <!--Background-->
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:importantForAccessibility="no"
-            android:scaleType="centerCrop"
-            android:src="@drawable/backg_menu_admin_mobile"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-
-        <!--Filter-->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@color/black_transp_backg"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!--Phrase-->
-        <TextView
-            android:id="@+id/text_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:text="@string/text_header_admin"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/textSize_h"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!--Autor-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="12dp"
-            android:text="@string/lee_lacocca"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_header" />
-
-        <!--Settings-->
-        <ImageView
-            android:id="@+id/settings"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/baseline_settings_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="12dp"/>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--CL for options-->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="-40dp"
+    <ScrollView
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_header">
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
 
-        <!--Card View Shelf-->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/ama_cv_store"
-            android:layout_width="0sp"
-            android:layout_height="200dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="6dp"
-            app:layout_constraintEnd_toStartOf="@id/ama_cv_products"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <LinearLayout
+            <!--CL for header (image and text)-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_header"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                tools:ignore="UseCompoundDrawables">
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
+                <!--Background-->
                 <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="40dp"
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_inventory_24" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/backg_menu_admin_mobile"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
+                <!--Filter-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:background="@color/black_transp_backg"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!--Phrase-->
+                <TextView
+                    android:id="@+id/text_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/text_header_admin"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/textSize_h"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!--Autor-->
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="@string/Almacen"
-                    android:textSize="@dimen/textSize_m" />
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/lee_lacocca"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_header" />
 
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!--Card View Products-->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/ama_cv_products"
-            android:layout_width="0sp"
-            android:layout_height="200dp"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ama_cv_store"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                tools:ignore="UseCompoundDrawables">
-
+                <!--Settings-->
                 <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="40dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/baseline_apps_24" />
+                    android:id="@+id/settings"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/baseline_settings_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="@string/Productos"
-                    android:textSize="@dimen/textSize_m" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.cardview.widget.CardView>
-
-        <!--Card View statistics-->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/ama_cv_statistics"
-            android:layout_width="0sp"
-            android:layout_height="200dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="6dp"
-            app:layout_constraintEnd_toStartOf="@id/ama_cv_products"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ama_cv_store">
-
-            <LinearLayout
+            <!--CL for options-->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                tools:ignore="UseCompoundDrawables">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-40dp">
 
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="40dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/baseline_assessment_24" />
+                <!--Card View Shelf-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/ama_cv_store"
+                    android:layout_width="0sp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toStartOf="@id/ama_cv_products"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="@string/Estad_sticas"
-                    android:textSize="@dimen/textSize_m" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        tools:ignore="UseCompoundDrawables">
 
-            </LinearLayout>
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_marginTop="30dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_inventory_24" />
 
-        </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/Almacen"
+                            android:textSize="@dimen/textSize_m" />
 
-        <!--Card View Orders-->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/ama_cv_orders"
-            android:layout_width="0sp"
-            android:layout_height="200dp"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ama_cv_statistics"
-            app:layout_constraintTop_toBottomOf="@id/ama_cv_products">
+                    </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                tools:ignore="UseCompoundDrawables">
+                </androidx.cardview.widget.CardView>
 
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="40dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/baseline_assignment_24" />
+                <!--Card View Products-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/ama_cv_products"
+                    android:layout_width="0sp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ama_cv_store"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="@string/Pedidos"
-                    android:textSize="@dimen/textSize_m" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        tools:ignore="UseCompoundDrawables">
 
-            </LinearLayout>
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_marginTop="30dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/baseline_apps_24" />
 
-        </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/Productos"
+                            android:textSize="@dimen/textSize_m" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!--Card View statistics-->
+                <androidx.cardview.widget.CardView
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:id="@+id/ama_cv_statistics"
+                    android:layout_width="0sp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="10sp"
+                    app:layout_constraintEnd_toStartOf="@id/ama_cv_products"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cv_products_ls">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_marginTop="30dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/baseline_assessment_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/Estad_sticas"
+                            android:textSize="@dimen/textSize_m" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!--Card View Orders-->
+                <androidx.cardview.widget.CardView
+                    android:layout_marginBottom="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:id="@+id/ama_cv_orders"
+                    android:layout_width="0sp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ama_cv_statistics"
+                    app:layout_constraintTop_toBottomOf="@id/cv_products_ls">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_marginTop="30dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/baseline_assignment_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/Ventas"
+                            android:textSize="@dimen/textSize_m" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!--Card View Store Ls-->
+                <androidx.cardview.widget.CardView
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:id="@+id/cv_products_ls"
+                    app:layout_constraintTop_toBottomOf="@+id/ama_cv_store"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_width="0sp"
+                    android:layout_height="130dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_marginTop="20dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/baseline_blur_on_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/Productos"
+                            android:textSize="@dimen/textSize_m" />
+
+                    </LinearLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
