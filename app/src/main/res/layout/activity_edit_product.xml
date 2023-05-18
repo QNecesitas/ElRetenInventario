@@ -37,11 +37,23 @@
                     android:queryBackground="@drawable/almostredonded_price_white"
                     android:queryHint="@string/Buscar_producto"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/aep_iv_contract"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginEnd="12dp"/>
 
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/aep_iv_contract"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:layout_constraintStart_toEndOf="@id/aep_search"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:tint="@color/white"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/baseline_format_list_bulleted_24"
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

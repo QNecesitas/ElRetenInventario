@@ -22,24 +22,24 @@
             <!--cv_image-->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_image"
-                app:layout_constraintDimensionRatio="1:1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:translationZ="@dimen/standard_traslationZ"
                 app:cardCornerRadius="@dimen/standard_card_corner_radius"
                 app:cardElevation="@dimen/standard_card_elevation"
+                app:layout_constraintBottom_toBottomOf="@id/til_code"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/til_name"
-                app:layout_constraintBottom_toBottomOf="@id/til_code">
+                app:layout_constraintTop_toTopOf="@id/til_name">
 
                 <!--image-->
                 <ImageView
                     android:id="@+id/image"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:src="@drawable/widgets"
-                    android:background="@color/md_theme_light_secondaryContainer"/>
+                    android:background="@color/md_theme_light_secondaryContainer"
+                    android:src="@drawable/widgets" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
@@ -51,16 +51,15 @@
             </androidx.cardview.widget.CardView>
 
 
-
             <!--til_name-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cv_image"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_margin="15dp">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <!--tiet_name-->
                 <com.google.android.material.textfield.TextInputEditText
@@ -69,10 +68,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/name"
                     android:inputType="text"
-                    android:maxLength="100"/>
+                    android:maxLength="100" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
 
 
             <!--til_codigo-->
@@ -80,10 +78,10 @@
                 android:id="@+id/til_code"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cv_image"
-                app:layout_constraintTop_toBottomOf="@id/til_name"
-                android:layout_margin="15dp">
+                app:layout_constraintTop_toBottomOf="@id/til_name">
 
                 <!--tiet_codigo-->
                 <com.google.android.material.textfield.TextInputEditText
@@ -92,24 +90,23 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/c_digo"
                     android:inputType="text"
-                    android:maxLength="50"/>
+                    android:maxLength="50" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
 
 
             <!--til_price_buy-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_price_buy"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintHorizontal_chainStyle="packed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 android:minWidth="180dp"
                 app:layout_constraintEnd_toStartOf="@id/tv_priceBuy_CUP"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="@+id/cv_image"
-                app:layout_constraintTop_toBottomOf="@id/cv_image"
-                android:layout_margin="15dp">
+                app:layout_constraintTop_toBottomOf="@id/cv_image">
 
                 <!--tiet_price_buy-->
                 <com.google.android.material.textfield.TextInputEditText
@@ -118,40 +115,39 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/precio_de_compra"
                     android:inputType="numberDecimal"
-                    android:maxLength="10"/>
+                    android:maxLength="10" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <!--Text price buy CUP-->
             <TextView
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/til_price_buy"
-                android:layout_marginEnd="12sp"
-                android:layout_marginStart="12dp"
-                app:layout_constraintHorizontal_bias="0"
                 android:id="@+id/tv_priceBuy_CUP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/til_price_buy"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12sp"
+                android:text="@string/cup"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/til_price_buy"
-                android:text="@string/cup"/>
-
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/til_price_buy"
+                app:layout_constraintTop_toTopOf="@+id/til_price_buy" />
 
 
             <!--til_price_sale-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_price_sale"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintHorizontal_chainStyle="packed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 android:minWidth="220dp"
                 app:layout_constraintEnd_toStartOf="@id/tv_priceSale_CUP"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="@+id/cv_image"
-                app:layout_constraintTop_toBottomOf="@id/til_price_buy"
-                android:layout_margin="15dp">
+                app:layout_constraintTop_toBottomOf="@id/til_price_buy">
 
                 <!--tiet_price_buy-->
                 <com.google.android.material.textfield.TextInputEditText
@@ -160,39 +156,39 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/precio_de_venta"
                     android:inputType="numberDecimal"
-                    android:maxLength="10"/>
+                    android:maxLength="10" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <!--Text price sale CUP-->
             <TextView
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/til_price_sale"
-                android:layout_marginEnd="12sp"
-                android:layout_marginStart="12dp"
-                app:layout_constraintHorizontal_bias="0"
                 android:id="@+id/tv_priceSale_CUP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/til_price_sale"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12sp"
+                android:text="@string/cup"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/til_price_sale"
-                android:text="@string/cup"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/til_price_sale"
+                app:layout_constraintTop_toTopOf="@+id/til_price_sale" />
 
 
             <!--til_cant-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_cant"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintHorizontal_chainStyle="packed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 android:minWidth="190dp"
                 app:layout_constraintEnd_toStartOf="@id/tv_cant_uni"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="@+id/cv_image"
-                app:layout_constraintTop_toBottomOf="@id/til_price_sale"
-                android:layout_margin="15dp">
+                app:layout_constraintTop_toBottomOf="@id/til_price_sale">
 
                 <!--tiet_cant-->
                 <com.google.android.material.textfield.TextInputEditText
@@ -201,25 +197,66 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/cantidad"
                     android:inputType="number"
-                    android:maxLength="10"/>
+                    android:maxLength="10" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <!--Text cant uni-->
             <TextView
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/til_cant"
-                android:layout_marginEnd="12sp"
-                android:layout_marginStart="12dp"
-                app:layout_constraintHorizontal_bias="0"
                 android:id="@+id/tv_cant_uni"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/til_cant"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12sp"
+                android:text="@string/unidades"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/til_cant"
-                android:text="@string/unidades"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/til_cant"
+                app:layout_constraintTop_toTopOf="@+id/til_cant" />
+
+
+            <!--til_deficit-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_deficit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:minWidth="190dp"
+                app:layout_constraintEnd_toStartOf="@id/tv_cant_uni"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="@+id/cv_image"
+                app:layout_constraintTop_toBottomOf="@id/til_cant">
+
+                <!--tiet_deficit-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiet_deficit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/deficit"
+                    android:inputType="number"
+                    android:maxLength="10" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!--Text deficit-->
+            <TextView
+                android:id="@+id/tv_deficit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12sp"
+                android:text="@string/unidades"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/til_deficit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/til_cant"
+                app:layout_constraintTop_toTopOf="@+id/til_deficit" />
 
 
             <!--Desc-->
@@ -227,10 +264,10 @@
                 android:id="@+id/til_desc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/cv_image"
-                app:layout_constraintTop_toBottomOf="@id/til_cant"
-                android:layout_margin="15dp">
+                app:layout_constraintTop_toBottomOf="@id/til_deficit">
 
                 <!--tiet_cant-->
                 <com.google.android.material.textfield.TextInputEditText
@@ -239,7 +276,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/descripci_n"
                     android:inputType="text"
-                    android:maxLength="250"/>
+                    android:maxLength="250" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -249,7 +286,6 @@
     </androidx.cardview.widget.CardView>
 
 
-
     <!--cv_buttons-->
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_buttons"
@@ -257,9 +293,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="30sp"
         app:cardCornerRadius="@dimen/standard_card_corner_radius"
-        app:cardElevation="20dp"
-        android:layout_marginBottom="30sp">
+        app:cardElevation="20dp">
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:layout_width="wrap_content"

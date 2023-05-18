@@ -17,8 +17,8 @@ class RetrofitProductsImplS : IRetrofitProductsS {
 
     private val productApi: IRetrofitProductsS = retrofit.create(IRetrofitProductsS::class.java)
 
-    override fun addProduct(token: String, c_productS: String, name: String, c_fk_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String): Call<String>{
-        return productApi.addProduct(token,c_productS,name,c_fk_sessionS,amount,buyPrice,salePrice,descr,file)
+    override fun addProduct(token: String, c_productS: String, name: String, c_fk_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int): Call<String>{
+        return productApi.addProduct(token,c_productS,name,c_fk_sessionS,amount,buyPrice,salePrice,descr,file,deficit)
     }
 
     override fun updateProduct(
@@ -31,10 +31,11 @@ class RetrofitProductsImplS : IRetrofitProductsS {
         amount: Int,
         buyPrice: Double,
         salePrice: Double,
-        descr: String
+        descr: String,
+        deficit: Int
     ): Call<String> {
         return productApi.updateProduct(
-            token, c_productSOld, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr
+            token, c_productSOld, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr,deficit
         )
     }
 
@@ -79,9 +80,12 @@ class RetrofitProductsImplS : IRetrofitProductsS {
         salePrice: Double,
         descr: String,
         statePhoto : Int,
-        c_sessionLS: String
+        c_sessionLS: String,
+        deficit: Int,
+        exists: Boolean,
+        sendAll: Boolean
     ): Call<String> {
-        return productApi.transferProducts(token, c_productS, name, fk_c_sessionS, amount, buyPrice, salePrice, descr, statePhoto, c_sessionLS)
+        return productApi.transferProducts(token, c_productS, name, fk_c_sessionS, amount, buyPrice, salePrice, descr, statePhoto, c_sessionLS,deficit, exists, sendAll)
     }
 
     override fun alterAmountS(token: String, c_productS: String, amount: Int): Call<String> {

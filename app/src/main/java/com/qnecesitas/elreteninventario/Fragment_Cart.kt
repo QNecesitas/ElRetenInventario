@@ -1,31 +1,43 @@
 package com.qnecesitas.elreteninventario
 
-import android.app.ProgressDialog
-import android.content.Context
-import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductAdd
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelCart
 import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelSale
 import com.qnecesitas.elreteninventario.databinding.FragmentCartBinding
+import com.qnecesitas.elreteninventario.databinding.LiCartAceptBinding
+import com.qnecesitas.elreteninventario.databinding.LiVoucherBinding
 import com.qnecesitas.elreteninventario.network.RetrofitCartImpl
+import com.qnecesitas.elreteninventario.network.RetrofitProductsImplLS
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.awaitResponse
+import java.util.Calendar
 
 
 class Fragment_Cart : Fragment() {
 
     //Binding
     private lateinit var binding: FragmentCartBinding
+    private var li_cartAccept_binding: LiCartAceptBinding? = null
+    private var li_voucher_binding: LiVoucherBinding? = null
 
     //Recycler
     private lateinit var alCart: ArrayList<ModelCart>
@@ -37,6 +49,11 @@ class Fragment_Cart : Fragment() {
 
     //Internet
     private lateinit var retrofitCart: RetrofitCartImpl
+    private lateinit var retrofitProducts: RetrofitProductsImplLS
+
+    //Value
+    private var lastModelSale: ModelSale? = null
+    private var precioT: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,14 +71,16 @@ class Fragment_Cart : Fragment() {
 
         //Internet
         retrofitCart = RetrofitCartImpl()
+        retrofitProducts = RetrofitProductsImplLS()
 
         //Listener
-        binding.ivDeleteAll.setOnClickListener{
+        binding.btnDeleteProduct.setOnClickListener{
             alCart.clear()
+            precioT = 0.0
             listenerReload?.onReload()
             updateRecyclerAdapter()
         }
-        binding.btnAcceptProduct.setOnClickListener{sendOrder()}
+        binding.btnAcceptProduct.setOnClickListener{liSendOrder()}
 
         updateRecyclerAdapter()
 
@@ -79,12 +98,14 @@ class Fragment_Cart : Fragment() {
                 amount
             )
         )
+        precioT += amount * modelEditProduct.salePrice
         updateRecyclerAdapter()
     }
 
 
     private fun deleteProduct(position: Int) {
-        listenerDelete?.onDeleteProduct(alCart[position].product.c_productS,alCart[position].amout)
+        listenerDelete?.onDeleteProduct(alCart[position].product.c_productS,alCart[position].amount)
+        precioT -= alCart[position].product.salePrice * alCart[position].amount
         alCart.removeAt(position)
         updateRecyclerAdapter()
     }
@@ -97,6 +118,8 @@ class Fragment_Cart : Fragment() {
         }
         adapterCart = AdapterR_CounterProductAdd(alCart, binding.root.context)
 
+        binding.tvPrecioT.text = precioT.toString()
+
         adapterCart.setCancelListener(object : AdapterR_CounterProductAdd.RecyclerClickListener {
             override fun onClick(position: Int) {
                 deleteProduct(position)
@@ -107,6 +130,7 @@ class Fragment_Cart : Fragment() {
         binding.recycler.adapter = adapterCart
     }
 
+    fun isEmpty() = alCart.isEmpty()
 
     /*Alerts
    * ---------------------------------
@@ -122,22 +146,58 @@ class Fragment_Cart : Fragment() {
     }
 
 
-    /*Other Listeners
+    /*Internet
     * ---------------------------------
     * */
-    private fun sendOrder() {
+    private fun liSendOrder() {
         if (alCart.isNotEmpty()) {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.registrar_venta))
-                .setMessage(getString(R.string.tiene_seguridad_de_registrar))
-                .setCancelable(false)
-                .setPositiveButton(R.string.Aceptar) { dialogInterface, _ ->
-                    dialogInterface.dismiss()
-                    addOrderInternet()
+            val inflater = LayoutInflater.from(binding.root.context)
+            li_cartAccept_binding = LiCartAceptBinding.inflate(inflater)
+            val builder = AlertDialog.Builder(binding.root.context)
+            builder.setView(li_cartAccept_binding?.root)
+            val alertDialog = builder.create()
+
+
+            //Listeners
+            li_cartAccept_binding?.btnCancelar?.setOnClickListener(View.OnClickListener {
+                alertDialog.dismiss()
+            })
+
+            li_cartAccept_binding?.btnAceptar?.setOnClickListener(View.OnClickListener {
+                if(checkinfo()){
+                    val name = li_cartAccept_binding?.tietNombClient?.text.toString()
+                    val discount = li_cartAccept_binding?.tietDescuento?.text.toString().toDouble()
+                    val calendar = Calendar.getInstance()
+                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+                    val month = calendar.get(Calendar.MONTH)
+                    val year = calendar.get(Calendar.YEAR)
+
+                    //model
+                    lastModelSale = ModelSale(
+                        1,
+                        name,
+                        makeProducts(),
+                        binding.tvPrecioT.text.toString().toDouble(),
+                        1.0,
+                        discount,
+                        day,
+                        month,
+                        year
+                        )
+
+
+                    alertDialog.dismiss()
+                    startCoroutines(name, discount)
                 }
-                .setNegativeButton(R.string.cancelar){dialogInterface, _ ->
-                    dialogInterface.dismiss()
-                }
+            })
+
+
+            //Finalizado
+            alertDialog.setCancelable(false)
+            alertDialog.window!!.setGravity(Gravity.CENTER)
+            alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            alertDialog.show()
+
         } else {
             FancyToast.makeText(
                 requireContext(),
@@ -145,14 +205,89 @@ class Fragment_Cart : Fragment() {
                 FancyToast.LENGTH_LONG,
                 FancyToast.INFO,
                 false
-            );
+            ).show()
         }
     }
 
-    private fun addOrderInternet(){
+    private fun liVoucher(){
+        val inflater = LayoutInflater.from(binding.root.context)
+        li_voucher_binding = LiVoucherBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(binding.root.context)
+        builder.setView(li_voucher_binding?.root)
+        val alertDialog = builder.create()
+
+
+        li_voucher_binding?.tvNombreX?.text = lastModelSale?.name
+        li_voucher_binding?.tvFechaX?.text = getString(R.string.Fecha,lastModelSale?.day.toString(),
+         lastModelSale?.month.toString(),lastModelSale?.year.toString())
+        li_voucher_binding?.tvTotalPX?.text = lastModelSale?.totalPrice.toString()
+        li_voucher_binding?.tvDiscountX?.text = lastModelSale?.discount.toString()
+        li_voucher_binding?.tvProductX?.text = lastModelSale?.products?.replace("--n--", "\n")
+            ?.replace("--s--", "   ")
+
+        li_voucher_binding?.ivClose?.setOnClickListener{
+            alertDialog.dismiss()
+        }
+
+
+        //Finalizado
+        alertDialog.setCancelable(false)
+        alertDialog.window!!.setGravity(Gravity.CENTER)
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+    }
+
+    private fun startCoroutines(name: String, discount: Double){
+        binding.progress.visibility = View.VISIBLE
+        binding.progress.max = alCart.size+1
+        var progress = 0;
+
+        CoroutineScope(Dispatchers.Default).launch {
+            alCart.forEach {
+                val response = updateProductInternet(it)
+
+                if(response.isSuccessful){
+                    progress++
+                    withContext(Dispatchers.Main){
+                        binding.progress.progress = progress
+                    }
+                    if(progress == alCart.size){
+                        addOrderInternet(name,discount)
+                    }
+                }else{
+                    progress = 0
+                    withContext(Dispatchers.Main){
+                        binding.progress.progress = progress
+                        binding.progress.progress = progress
+                        binding.progress.visibility = View.GONE
+                        FancyToast.makeText(
+                            requireContext(),
+                            getString(R.string.Revise_su_conexion),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.ERROR,
+                            false
+                        ).show()
+                    }
+                }
+
+            }
+        }
+    }
+
+    private suspend fun updateProductInternet(model: ModelCart): Response<String>{
+        val call = retrofitProducts.alterAmountSLS(
+            Constants.PHP_TOKEN,
+            model.product.c_productS,
+            model.product.amount - model.amount
+        )
+
+        return call.awaitResponse()
+    }
+
+    private fun addOrderInternet(nomb: String, descuento: Double){
         if(NetworkTools.isOnline(binding.root.context, false)){
             binding.progress.visibility = View.VISIBLE
-            val call = retrofitCart.addOrder(Constants.PHP_TOKEN,makeProducts(),makeTotalPrice(),"añadir aqui telefono")
+            val call = retrofitCart.addOrder(Constants.PHP_TOKEN,nomb,makeProducts(),makeTotalPrice(), makeTotalInv(), descuento)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     binding.progress.visibility = View.GONE
@@ -165,7 +300,12 @@ class Fragment_Cart : Fragment() {
                             false
                         ).show()
                         alCart.clear()
+                        binding.progress.progress = binding.progress.max
+                        binding.progress.visibility = View.GONE
+                        binding.progress.progress = 0
+                        precioT = 0.0
                         updateRecyclerAdapter()
+                        liVoucher()
                     } else {
                         FancyToast.makeText(
                             requireContext(),
@@ -174,6 +314,8 @@ class Fragment_Cart : Fragment() {
                             FancyToast.ERROR,
                             false
                         ).show()
+                        binding.progress.progress = 0
+                        binding.progress.visibility = View.GONE
                     }
                 }
 
@@ -186,9 +328,10 @@ class Fragment_Cart : Fragment() {
                         FancyToast.ERROR,
                         false
                     ).show()
+                    binding.progress.progress = 0
+                    binding.progress.visibility = View.GONE
                 }
             })
-
 
         }else{
             FancyToast.makeText(
@@ -198,14 +341,20 @@ class Fragment_Cart : Fragment() {
                 FancyToast.ERROR,
                 false
             ).show()
+            binding.progress.progress = 0
+            binding.progress.visibility = View.GONE
         }
 
 
     }
 
+
+
+
     /*Auxuliary
     * ---------------------------------
     * */
+
     private fun makeProducts(): String{
         var productsStr = ""
         var pos = 0
@@ -213,10 +362,10 @@ class Fragment_Cart : Fragment() {
             pos++
             productsStr += pos.toString() + product.product.name
             productsStr += "--n--"
-            productsStr += "--s--Cantidad: " + product.amout
+            productsStr += "--s--Cantidad: " + product.amount
             productsStr += "--n--"
             productsStr += "--s--Precio total: "
-            productsStr += (product.amout * product.product.salePrice).toString()
+            productsStr += (product.amount * product.product.salePrice).toString()
             productsStr += " CUP"
             productsStr += "--n--"
         }
@@ -229,6 +378,14 @@ class Fragment_Cart : Fragment() {
             price += it.product.salePrice
         }
         return price
+    }
+
+    private fun makeTotalInv(): Double{
+        var inv= 0.0
+        for (it in alCart){
+            inv += it.product.buyPrice
+        }
+        return inv
     }
 
     /*Listener
@@ -248,6 +405,24 @@ class Fragment_Cart : Fragment() {
 
     fun setListenerDelete(listenerDelete: IDeleteProduct){
         this.listenerDelete = listenerDelete
+    }
+
+    fun checkinfo(): Boolean{
+        var  amount = 0
+
+        if(li_cartAccept_binding?.tietNombClient?.text?.isNotEmpty() == true){
+            amount++
+        }else{
+            li_cartAccept_binding?.tilNombClient?.error = getString(R.string.este_campo_no_debe_vacio)
+        }
+
+        if (li_cartAccept_binding?.tietDescuento?.text?.isNotEmpty() ==true){
+            amount++
+        }else{
+            li_cartAccept_binding?.tilDescuento?.error = getString(R.string.este_campo_no_debe_vacio)
+        }
+
+        return amount == 2
     }
 
 }

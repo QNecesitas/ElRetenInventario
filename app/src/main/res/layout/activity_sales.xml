@@ -27,6 +27,7 @@
 
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:visibility="visible"
                 android:id="@+id/iv_icon_search"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -47,6 +48,7 @@
                     android:iconifiedByDefault="false"
                     android:queryBackground="@drawable/almostredonded_price_white"
                     android:queryHint="@string/Buscar_producto"
+                    app:layout_constraintEnd_toStartOf="@id/iv_close_search"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -103,9 +105,10 @@
                 app:layout_constraintTop_toTopOf="@+id/iv_filter" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_date"
                 android:textStyle="italic"
-                android:text="@string/_10_5_2023"
-                android:textSize="@dimen/textSize_h"
+                android:text="@string/fecha"
+                android:textSize="@dimen/textSize_m"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/iv_date"
@@ -115,10 +118,11 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_date"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/baseline_date_range_24"/>

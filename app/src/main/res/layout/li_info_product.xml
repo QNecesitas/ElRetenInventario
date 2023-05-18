@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/Nombre_Info"
+                    android:text="@string/Producto_Info"
                     android:textSize="@dimen/textSize_m"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"

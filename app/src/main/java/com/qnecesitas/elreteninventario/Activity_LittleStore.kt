@@ -82,7 +82,7 @@ class Activity_LittleStore : AppCompatActivity() {
         fragment_sessions.setOpenSessionLSListener(object : Fragment_SessionsLS.OpenSessionLS {
             override fun onSessionLSClicked(c_sessionsLS: String) {
                 FragmentsInfo.LAST_CODE_SESSION_LS_SENDED = c_sessionsLS
-                val intent = Intent(this@Activity_LittleStore, Activity_EditProduct::class.java)
+                val intent = Intent(this@Activity_LittleStore, Activity_EditProductLS::class.java)
                 intent.putExtra("C_session", c_sessionsLS)
                 startActivity(intent)
             }

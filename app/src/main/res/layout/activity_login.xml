@@ -117,4 +117,49 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <LinearLayout
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+
+        <!--tv About developers-->
+        <TextView
+            android:id="@+id/tv_aboutDev"
+            android:textSize="@dimen/textSize_s"
+            android:textColor="@color/white"
+            android:text="@string/about_dev"
+            android:layout_marginStart="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <!--View separator-->
+        <View
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:id="@+id/View_s"
+            android:background="@color/white"
+            android:layout_marginBottom="4dp"
+            android:layout_width="1dp"
+            android:layout_height="20dp"/>
+
+
+        <!--tv About us-->
+        <TextView
+            android:id="@+id/tv_aboutUs"
+            android:textSize="@dimen/textSize_s"
+            android:textColor="@color/white"
+            android:text="@string/sobre_nosotrosx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

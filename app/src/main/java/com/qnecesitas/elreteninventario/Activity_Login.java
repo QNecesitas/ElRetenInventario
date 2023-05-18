@@ -46,6 +46,9 @@ public class Activity_Login extends AppCompatActivity {
         binding.ALBTNStartSession.setOnClickListener(view
                 -> click_login());
 
+        binding.tvAboutDev.setOnClickListener(view -> click_dev());
+
+        binding.tvAboutUs.setOnClickListener(view -> click_us());
 
     }
 
@@ -120,6 +123,7 @@ public class Activity_Login extends AppCompatActivity {
                 if(user.equals("Administrador")) {
                     Intent intent = new Intent(Activity_Login.this, Activity_MenuAdmin.class);
                     startActivity(intent);
+                    binding.ALTILPassword.setError(null);
                 }else{
                     Intent intent = new Intent(Activity_Login.this, Activity_MenuSelesperson.class);
                     startActivity(intent);
@@ -178,6 +182,16 @@ public class Activity_Login extends AppCompatActivity {
         });
         //create the alert dialog and show it
         builder.create().show();
+    }
+
+    private void click_us(){
+        Intent intent = new Intent(Activity_Login.this, Activity_AboutUs.class);
+        startActivity(intent);
+    }
+
+    private void click_dev(){
+        Intent intent = new Intent(Activity_Login.this, Activity_AboutDev.class);
+        startActivity(intent);
     }
 
 

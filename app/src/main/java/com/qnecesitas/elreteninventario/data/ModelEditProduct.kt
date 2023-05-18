@@ -8,7 +8,8 @@ data class ModelEditProduct(
     var buyPrice: Double,
     var salePrice: Double,
     var descr: String,
-    var statePhoto: Int
+    var statePhoto: Int,
+    var deficit: Int
 ): Cloneable{
     public override fun clone(): ModelEditProduct{
         return super.clone() as ModelEditProduct

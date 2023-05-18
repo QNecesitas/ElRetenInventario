@@ -10,7 +10,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
@@ -22,7 +21,7 @@ import com.qnecesitas.elreteninventario.data.ModelEditProduct
 import com.qnecesitas.elreteninventario.databinding.ActivityCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiShowProductBinding
-import com.qnecesitas.elreteninventario.network.RetrofitCounterImpl
+import com.qnecesitas.elreteninventario.network.RetrofitProductsImplLS
 import com.shashank.sony.fancytoastlib.FancyToast
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,7 +43,7 @@ class Activity_Counter : AppCompatActivity() {
     lateinit var fragmentManager: FragmentManager
 
     //Internet
-    private lateinit var retrofitImp: RetrofitCounterImpl
+    private lateinit var retrofitImp: RetrofitProductsImplLS
 
     //Fragment
     lateinit var fragment_carrito: Fragment_Cart
@@ -83,11 +82,14 @@ class Activity_Counter : AppCompatActivity() {
         binding.rvProductsShow.adapter = adapterCounter
 
         //Internet
-        retrofitImp = RetrofitCounterImpl()
+        retrofitImp = RetrofitProductsImplLS()
         binding.retryConnection.setOnClickListener {
             loadRecyclerInfo()
         }
-        binding.refresh.setOnRefreshListener { loadRecyclerInfo() }
+        binding.refresh.setOnRefreshListener {
+            if(fragment_carrito.isEmpty()){ loadRecyclerInfo()
+            }else{ binding.refresh.isRefreshing = false}
+        }
 
         //Start
         loadRecyclerInfo()
@@ -102,7 +104,7 @@ class Activity_Counter : AppCompatActivity() {
         if (NetworkTools.isOnline(binding.root.context, false)) {
             binding.refresh.isRefreshing = true
 
-            val call = retrofitImp.fetchProducts(Constants.PHP_TOKEN)
+            val call = retrofitImp.fetchProductsSAllLS(Constants.PHP_TOKEN)
             call.enqueue(object : Callback<ArrayList<ModelEditProduct>> {
                 override fun onResponse(
                     call: Call<ArrayList<ModelEditProduct>>,
@@ -153,13 +155,7 @@ class Activity_Counter : AppCompatActivity() {
             }
 
         })
-        adapterCounter.setClickTransfListener(object :
-            AdapterR_CounterProductShow.RecyclerClickListener {
-            override fun onClick(position: Int) {
-                transfRecyclerClick(position)
-            }
 
-        })
 
         binding.rvProductsShow.adapter = adapterCounter
     }
@@ -234,10 +230,6 @@ class Activity_Counter : AppCompatActivity() {
         li_infoProduct(position)
     }
 
-    private fun transfRecyclerClick(position: Int) {
-        //TODO("Not implemented yet")
-    }
-
     /*Inflated Layouts
     * ---------------------------------
     * */
@@ -249,7 +241,7 @@ class Activity_Counter : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Init
-        val name = getString(R.string.Nombre_Info, alCounter[position].name)
+        val name = getString(R.string.Producto_Info, alCounter[position].name)
         val code = getString(R.string.Codigo_Info, alCounter[position].c_productS)
         val amount = getString(R.string.Cantidad_Info, alCounter[position].amount)
         val salePrice = getString(R.string.PrecioV_Info, alCounter[position].salePrice)
