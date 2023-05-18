@@ -129,6 +129,15 @@ public class Activity_Login extends AppCompatActivity {
         }
     }
 
+    private void click_dev(){
+        Intent intent = new Intent(this, Activity_AboutDev.class);
+        startActivity(intent);
+    }
+
+    private void click_us(){
+        Intent intent = new Intent(this, Activity_AboutUs.class);
+        startActivity(intent);
+    }
 
     private void checkPassword() {
         if (!binding.ALTIETPassword.getText().toString().isEmpty()) {
