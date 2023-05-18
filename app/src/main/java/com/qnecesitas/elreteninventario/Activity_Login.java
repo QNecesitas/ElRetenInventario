@@ -1,6 +1,13 @@
 package com.qnecesitas.elreteninventario;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -8,13 +15,16 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.qnecesitas.elreteninventario.auxiliary.Constants;
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools;
+import com.qnecesitas.elreteninventario.data.ModelEditProduct;
 import com.qnecesitas.elreteninventario.data.ModelPassword;
 import com.qnecesitas.elreteninventario.databinding.ActivityLoginBinding;
 import com.qnecesitas.elreteninventario.network.RetrofitPasswords;
+import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -30,6 +40,16 @@ public class Activity_Login extends AppCompatActivity {
     private ArrayList<ModelPassword> al_password;
     private int countBadPassword = 0;
 
+    //Deficit
+    private RetrofitProductsImplS retrofitProductsImplS;
+    private ArrayList<ModelEditProduct> alProductsDeficitS;
+    private ArrayList<ModelEditProduct> alProductsDeficitLS;
+
+    //Notification
+    private final String CHANNEL_ID = "ELReten";
+    private final String CHANNEL_NAME = "EL Retén";
+    private final int NOTIFICATION_ID1 = 123;
+    private final int NOTIFICATION_ID2 = 234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +66,9 @@ public class Activity_Login extends AppCompatActivity {
         binding.ALBTNStartSession.setOnClickListener(view
                 -> click_login());
 
+        retrofitProductsImplS = new RetrofitProductsImplS();
+        alProductsDeficitS = new ArrayList<>();
+        alProductsDeficitLS = new ArrayList<>();
 
     }
 
@@ -76,17 +99,17 @@ public class Activity_Login extends AppCompatActivity {
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<ArrayList<ModelPassword>> call, @NonNull Response<ArrayList<ModelPassword>> response) {
-
-                    binding.ALPBCargando.setVisibility(View.GONE);
                     if (response.isSuccessful()) {
                         al_password = response.body();
                         if (al_password != null) {
                             checkPassword();
                         } else {
                             Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
+                            binding.ALPBCargando.setVisibility(View.GONE);
                         }
                     } else {
                         Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
+                        binding.ALPBCargando.setVisibility(View.GONE);
                     }
                 }
 
@@ -100,7 +123,6 @@ public class Activity_Login extends AppCompatActivity {
             Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
         }
     }
-
 
     private void checkPassword() {
         if (!binding.ALTIETPassword.getText().toString().isEmpty()) {
@@ -118,9 +140,9 @@ public class Activity_Login extends AppCompatActivity {
 
             if (bdPassword.equals(inputPassword)) {
                 if(user.equals("Administrador")) {
-                    Intent intent = new Intent(Activity_Login.this, Activity_MenuAdmin.class);
-                    startActivity(intent);
+                    loadDeficitInternetS();
                 }else{
+                    binding.ALPBCargando.setVisibility(View.GONE);
                     Intent intent = new Intent(Activity_Login.this, Activity_MenuSelesperson.class);
                     startActivity(intent);
                 }
@@ -134,6 +156,129 @@ public class Activity_Login extends AppCompatActivity {
         } else {
             binding.ALTILPassword.setError(getString(R.string.este_campo_no_debe_vacio));
         }
+    }
+
+    private void loadDeficitInternetS(){
+        if (NetworkTools.isOnline(Activity_Login.this, false)) {
+
+            Call<ArrayList<ModelEditProduct>> call = retrofitProductsImplS.fetchProductsDeficit(Constants.PHP_TOKEN, "Almacén");
+            call.enqueue(new Callback<ArrayList<ModelEditProduct>>() {
+                @Override
+                public void onResponse(Call<ArrayList<ModelEditProduct>> call, Response<ArrayList<ModelEditProduct>> response) {
+                    if(response.isSuccessful()){
+                        alProductsDeficitS = response.body();
+                        loadDeficitInternetLS();
+                    }else{
+                        Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
+                        binding.ALPBCargando.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<ModelEditProduct>> call, Throwable t) {
+                    Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
+                    binding.ALPBCargando.setVisibility(View.GONE);
+                }
+            });
+        }else{
+            Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
+            binding.ALPBCargando.setVisibility(View.GONE);
+        }
+    }
+
+    private void loadDeficitInternetLS(){
+        if (NetworkTools.isOnline(Activity_Login.this, false)) {
+
+            Call<ArrayList<ModelEditProduct>> call = retrofitProductsImplS.fetchProductsDeficit(Constants.PHP_TOKEN, "Mostrador");
+            call.enqueue(new Callback<ArrayList<ModelEditProduct>>() {
+                @Override
+                public void onResponse(Call<ArrayList<ModelEditProduct>> call, Response<ArrayList<ModelEditProduct>> response) {
+                    binding.ALPBCargando.setVisibility(View.GONE);
+                    if(response.isSuccessful()){
+                        alProductsDeficitLS = response.body();
+                        notifyNews();
+                    }else{
+                        Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<ModelEditProduct>> call, Throwable t) {
+                    Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
+                    binding.ALPBCargando.setVisibility(View.GONE);
+                }
+            });
+        }else{
+            Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
+            binding.ALPBCargando.setVisibility(View.GONE);
+        }
+    }
+
+    private void notifyNews(){
+        int amountS = 0;
+        int amountLS = 0;
+
+        if(!alProductsDeficitS.isEmpty()){
+            displayNotificationS(alProductsDeficitS.size());
+        }
+
+        if(!alProductsDeficitLS.isEmpty()){
+            displayNotificationLS(alProductsDeficitLS.size());
+        }
+
+        //Finish activity
+        Intent intent = new Intent(Activity_Login.this, Activity_MenuAdmin.class);
+        startActivity(intent);
+    }
+
+    private void displayNotificationS(int amount){
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel =new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription(getString(R.string.channel_decr));
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Intent intent = new Intent(getApplicationContext(), Activity_Deficit.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setContentTitle(getString(R.string.Productos_en_deficit))
+                .setContentText(getString(R.string.deficit_almacen_admin,amount))
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setAutoCancel(true)
+                .addAction(android.R.drawable.ic_menu_view,getString(R.string.ver_deficit), pendingIntent);
+
+        notificationManager.notify(NOTIFICATION_ID1, builder.build());
+    }
+
+    private void displayNotificationLS(int amount){
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel =new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription(getString(R.string.channel_decr));
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Intent intent = new Intent(getApplicationContext(), Activity_Deficit.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setContentTitle(getString(R.string.Productos_en_deficit))
+                .setContentText(getString(R.string.deficit_almacen_salesperson,amount))
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setAutoCancel(true)
+                .addAction(android.R.drawable.ic_menu_view,getString(R.string.ver_deficit), pendingIntent);
+
+        notificationManager.notify(NOTIFICATION_ID2, builder.build());
     }
 
     @Override

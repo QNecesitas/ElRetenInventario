@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Statistics">
+    tools:context=".Statistics"
+    android:id="@+id/refresh">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -19,11 +20,13 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
+                android:theme="@style/ToolbarIcons"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/Estad_sticas"
-                app:titleTextColor="@color/white" />
+                app:titleTextColor="@color/white"
+                />
         </com.google.android.material.appbar.AppBarLayout>
 
         <!--Grafica-->
@@ -33,8 +36,17 @@
             android:layout_height="wrap_content"
             android:background="@color/gray_light"
             android:minHeight="250dp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appbar">
 
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -99,7 +111,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
-                            android:text="response"
+                            android:text="@string/empty_text"
+                            android:visibility="gone"
                             android:textSize="@dimen/textSize_mh" />
 
                     </LinearLayout>
@@ -131,7 +144,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
-                            android:text="response"
+                            android:text="@string/empty_text"
+                            android:visibility="gone"
                             android:textSize="@dimen/textSize_mh" />
 
                     </LinearLayout>
@@ -165,7 +179,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
-                            android:text="response"
+                            android:text="@string/empty_text"
+                            android:visibility="gone"
                             android:textSize="@dimen/textSize_mh" />
 
                     </LinearLayout>
@@ -233,7 +248,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
-                            android:text="response"
+                            android:text="@string/empty_text"
+                            android:visibility="gone"
                             android:textSize="@dimen/textSize_mh" />
 
                     </LinearLayout>
@@ -266,7 +282,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
-                            android:text="response"
+                            android:text="@string/empty_text"
+                            android:visibility="gone"
                             android:textSize="@dimen/textSize_mh" />
 
                     </LinearLayout>
@@ -300,7 +317,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
-                            android:text="response"
+                            android:text="@string/empty_text"
+                            android:visibility="gone"
                             android:textSize="@dimen/textSize_mh" />
 
                     </LinearLayout>

@@ -136,7 +136,6 @@ class Activity_Deficit : AppCompatActivity() {
 
                 val call = retrofitProductsImplS.fetchProductsDeficit(
                     Constants.PHP_TOKEN,
-                    filter,
                     selectButton
                 )
                 call.enqueue(object : Callback<ArrayList<ModelEditProduct>> {

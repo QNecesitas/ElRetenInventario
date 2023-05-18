@@ -64,7 +64,6 @@ interface IRetrofitProductsS {
     @GET("FetchProductsDeficit.php")
     fun fetchProductsDeficit(
         @Query("token") token: String,
-        @Query("filter") filter: Int,
         @Query("button") button: String
     ): Call<ArrayList<ModelEditProduct>>
 

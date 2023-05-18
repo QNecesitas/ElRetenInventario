@@ -24,15 +24,9 @@
             android:name=".Activity_Settings"
             android:exported="false" />
 
-
-
-        <receiver
-            android:name=".BroadcastRestartService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="restart_service" />
-            </intent-filter>
-        </receiver>
+        <activity
+            android:name=".Activity_Counter"
+            android:exported="false" />
 
         <activity
             android:name=".Activity_Deficit"
@@ -65,6 +59,12 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity_EditProductLS"
+            android:exported="false" />
+        <activity
+            android:name=".Activity_Sales"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

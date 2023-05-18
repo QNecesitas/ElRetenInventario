@@ -28,6 +28,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:theme="@style/ToolbarIcons"
                     app:title="@string/Configuraci_n"
                     app:titleTextColor="@color/white" />
             </com.google.android.material.appbar.AppBarLayout>

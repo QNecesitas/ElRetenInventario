@@ -36,15 +36,6 @@ class Activity_Store : AppCompatActivity() {
             }
         })
 
-        val intentService : Intent = Intent(this,ServiceExample::class.java)
-        startService(intentService)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        val broadcastIntent = Intent(this, BroadcastRestartService::class.java)
-        broadcastIntent.action = "restart_service"
-        sendBroadcast(broadcastIntent)
     }
 
     private fun showFragmentShelves() {

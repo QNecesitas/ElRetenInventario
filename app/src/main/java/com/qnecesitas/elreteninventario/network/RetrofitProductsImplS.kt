@@ -63,10 +63,9 @@ class RetrofitProductsImplS : IRetrofitProductsS {
 
     override fun fetchProductsDeficit(
         token: String,
-        filter: Int,
         button: String
     ): Call<ArrayList<ModelEditProduct>> {
-        return productApi.fetchProductsDeficit(token,filter,button)
+        return productApi.fetchProductsDeficit(token,button)
     }
 
     override fun transferProducts(
