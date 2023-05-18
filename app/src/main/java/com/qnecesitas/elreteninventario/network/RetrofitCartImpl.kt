@@ -18,10 +18,12 @@ class RetrofitCartImpl : IRetrofitProductsCart {
 
     override fun addOrder(
         token: String,
+        name: String,
         products: String,
         totalPrice: Double,
-        customerPhone : String
+        totalInv: Double,
+        discount: Double
     ): Call<String> {
-        return productApi.addOrder(token, products, totalPrice,customerPhone)
+        return productApi.addOrder(token, name, products, totalPrice, totalInv,discount)
     }
 }

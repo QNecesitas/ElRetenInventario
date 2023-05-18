@@ -4,6 +4,7 @@ class FragmentsInfo {
     companion object{
 
         enum class EFragments { FR_SHELVES, FR_DRAWERS, FR_SESSION, AC_PRODUCTS }
+        enum class EAccess { Admin, Salesperson }
         var LAST_FRAGMENT_TOUCHED: EFragments = EFragments.FR_SHELVES
 
         /**Note: this CODE constants are doing references to the code sent to the next fragmente
@@ -16,6 +17,8 @@ class FragmentsInfo {
         var LAST_CODE_SHELVES_LS_SENDED: String = "no"
         var LAST_CODE_DRAWER_LS_SENDED: String = "no"
         var LAST_CODE_SESSION_LS_SENDED: String = "no"
+
+        var STORE_ACCESS = EAccess.Salesperson
 
     }
 }

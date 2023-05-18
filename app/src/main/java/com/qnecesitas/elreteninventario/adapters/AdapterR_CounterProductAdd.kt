@@ -9,7 +9,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelCart
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
 import com.qnecesitas.elreteninventario.databinding.RecyclerCounterProductAddBinding
 
 class AdapterR_CounterProductAdd(
@@ -38,7 +37,7 @@ class AdapterR_CounterProductAdd(
                 .into(binding.IVImageProduct)
 
             val name = model.product.name
-            val cantidad = context.getString(R.string.s_unidades, model.amout)
+            val cantidad = context.getString(R.string.s_unidades, model.amount)
 
             binding.TVName.text = name
             binding.tvCant.text = cantidad

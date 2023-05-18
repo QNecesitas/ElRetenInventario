@@ -15,10 +15,10 @@ interface IRetrofitProductsCart {
     @POST("AddOrder.php")
     fun addOrder(
         @Field("token") token: String,
+        @Field("name") name: String,
         @Field("products") products: String,
         @Field("totalPrice") totalPrice: Double,
-        @Field("customerPhone") customerPhone: String
+        @Field("totalInv") totalInv: Double,
+        @Field("discount") discount: Double
     ): Call<String>
 }
-
-//ve a la hora en q se llama al metodo este donde dice call = .... y mira a ver como añades el telefono al final

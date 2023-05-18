@@ -28,7 +28,7 @@
                 android:textAlignment="center"
                 android:layout_margin="20sp"/>
 
-            <!--LL Timer-->
+            <!--LL Timer Year-->
             <LinearLayout
                 android:layout_marginTop="12dp"
                 android:id="@+id/il_ll_Anno"
@@ -45,18 +45,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/Anno"
-                    android:textSize="@dimen/textSize_h"
+                    android:textSize="@dimen/textSize_m"
                     android:layout_marginEnd="5sp"/>
 
                 <NumberPicker
                     android:id="@+id/il_np_annos"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20sp"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
-            <!--LL Timer-->
+            <!--LL Timer Month-->
             <LinearLayout
                 android:layout_marginTop="12dp"
                 android:id="@+id/il_ll_Month"
@@ -71,20 +70,19 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="22dp"
+                    android:layout_marginEnd="5sp"
                     android:text="@string/Mes"
-                    android:textSize="@dimen/textSize_h"
-                    android:layout_marginEnd="5sp"/>
+                    android:textSize="@dimen/textSize_m" />
 
                 <NumberPicker
                     android:id="@+id/il_np_month"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20sp"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
-            <!--LL Timer-->
+            <!--LL Timer Day-->
             <LinearLayout
                 android:layout_marginTop="12dp"
                 android:id="@+id/il_ll_Day"
@@ -101,14 +99,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/Dia"
-                    android:textSize="@dimen/textSize_h"
+                    android:textSize="@dimen/textSize_m"
                     android:layout_marginEnd="5sp"/>
 
                 <NumberPicker
                     android:id="@+id/il_np_day"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20sp"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 

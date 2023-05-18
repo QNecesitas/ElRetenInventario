@@ -3,6 +3,8 @@ package com.qnecesitas.elreteninventario
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.qnecesitas.elreteninventario.auxiliary.Constants
+import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.databinding.ActivityMenuSelespersonBinding
 
 class Activity_MenuSelesperson : AppCompatActivity() {
@@ -23,6 +25,7 @@ class Activity_MenuSelesperson : AppCompatActivity() {
 
 
     fun toLittleStore(){
+        FragmentsInfo.STORE_ACCESS = FragmentsInfo.Companion.EAccess.Salesperson
         val intent = Intent(this, Activity_LittleStore::class.java)
         startActivity(intent)
     }
@@ -33,6 +36,7 @@ class Activity_MenuSelesperson : AppCompatActivity() {
     }
 
     fun toProduct(){
+        FragmentsInfo.LAST_CODE_SESSION_LS_SENDED = "no"
         val intent = Intent(this,Activity_EditProductLS:: class.java )
         startActivity(intent)
     }

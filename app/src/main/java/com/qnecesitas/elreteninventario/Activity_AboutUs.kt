@@ -13,7 +13,7 @@ class Activity_AboutUs : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAboutUsBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_about_us)
+        setContentView(binding.root)
 
 
 

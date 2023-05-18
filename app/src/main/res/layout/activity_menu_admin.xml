@@ -112,15 +112,18 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginTop="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_inventory_24" />
 
                         <TextView
+                            android:layout_marginEnd="12dp"
+                            android:layout_marginStart="12dp"
+                            android:textAlignment="center"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:text="@string/Almacen"
+                            android:text="@string/AlmacenA"
                             android:textSize="@dimen/textSize_m" />
 
                     </LinearLayout>
@@ -148,15 +151,18 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginTop="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/baseline_apps_24" />
 
                         <TextView
+                            android:textAlignment="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:text="@string/Productos"
+                            android:text="@string/EProductos"
                             android:textSize="@dimen/textSize_m" />
 
                     </LinearLayout>
@@ -173,7 +179,7 @@
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="6dp"
                     android:layout_marginBottom="10sp"
-                    app:layout_constraintEnd_toStartOf="@id/ama_cv_products"
+                    app:layout_constraintEnd_toStartOf="@id/ama_cv_orders"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cv_products_ls">
 
@@ -187,11 +193,14 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginTop="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/baseline_assessment_24" />
 
                         <TextView
+                            android:textAlignment="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
@@ -226,11 +235,14 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginTop="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/baseline_assignment_24" />
 
                         <TextView
+                            android:textAlignment="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
@@ -244,14 +256,14 @@
                 <!--Card View Store Ls-->
                 <androidx.cardview.widget.CardView
                     android:layout_marginTop="12dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginStart="12dp"
                     android:id="@+id/cv_products_ls"
                     app:layout_constraintTop_toBottomOf="@+id/ama_cv_store"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/ama_cv_deficit"
                     android:layout_width="0sp"
-                    android:layout_height="130dp">
+                    android:layout_height="150dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -268,14 +280,58 @@
                             android:src="@drawable/baseline_blur_on_24" />
 
                         <TextView
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:textAlignment="center"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:text="@string/Productos"
+                            android:text="@string/OrganizacionD"
                             android:textSize="@dimen/textSize_m" />
 
                     </LinearLayout>
 
+
+                </androidx.cardview.widget.CardView>
+
+
+                <!--Card View Products-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/ama_cv_deficit"
+                    android:layout_width="0sp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/cv_products_ls"
+                    app:layout_constraintTop_toBottomOf="@id/ama_cv_products">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_marginTop="20dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/baseline_deficit_24" />
+
+                        <TextView
+                            android:textAlignment="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/Deficit"
+                            android:textSize="@dimen/textSize_m" />
+
+                    </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 

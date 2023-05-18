@@ -3,8 +3,10 @@ package com.qnecesitas.elreteninventario.adapters
 import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
+import androidx.core.view.marginTop
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -16,7 +18,8 @@ import java.util.Locale
 
 class AdapterR_EditProduct(
     private val al_editProdut: ArrayList<ModelEditProduct>,
-    private val context: Context
+    private val context: Context,
+    private val isContracted: Boolean
 ) :
     RecyclerView.Adapter<AdapterR_EditProduct.EditProductViewHolder>() {
 
@@ -59,6 +62,12 @@ class AdapterR_EditProduct(
             binding.REPTVCant.text = cantidad
             binding.root.setOnClickListener{
                 this@AdapterR_EditProduct.listener?.onClick(getRealPosition(position))
+            }
+
+            if(isContracted){
+                binding.REPIVImageProduct.visibility = View.GONE
+            }else{
+                binding.REPIVImageProduct.visibility = View.VISIBLE
             }
 
         }
@@ -105,6 +114,8 @@ class AdapterR_EditProduct(
                     charSequence.toString().lowercase(Locale.getDefault()).trim { it <= ' ' }
                 for (product in al_editProdut) {
                     if (product.name.lowercase(Locale.ROOT).trim().contains(filterPattern)) {
+                        al_filter.add(product)
+                    }else if(product.c_productS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         al_filter.add(product)
                     }
                 }

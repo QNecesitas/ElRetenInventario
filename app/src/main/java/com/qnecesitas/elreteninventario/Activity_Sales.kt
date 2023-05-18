@@ -1,20 +1,29 @@
 package com.qnecesitas.elreteninventario
 
 import android.app.DatePickerDialog
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.PopupMenu
 import android.widget.SearchView
-import com.google.android.material.snackbar.Snackbar
-import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductShow
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.qnecesitas.elreteninventario.adapters.AdapterR_Sales
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
 import com.qnecesitas.elreteninventario.data.ModelSale
 import com.qnecesitas.elreteninventario.databinding.ActivitySalesBinding
+import com.qnecesitas.elreteninventario.databinding.LiAddProductBinding
+import com.qnecesitas.elreteninventario.databinding.LiDateYBinding
+import com.qnecesitas.elreteninventario.databinding.LiDateYmBinding
+import com.qnecesitas.elreteninventario.databinding.LiDateYmdBinding
 import com.qnecesitas.elreteninventario.network.RetrofitSalesImpl
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,13 +43,12 @@ class Activity_Sales : AppCompatActivity() {
     private lateinit var retrofitImp: RetrofitSalesImpl
 
     //Date
+    private var dateSelected = "Todo"
     private var year = 0
     private var month = 0
     private var day = 0
 
-    //Refresh
-    private var refre = "All"
-
+    //ON CREATE
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySalesBinding.inflate(layoutInflater)
@@ -53,6 +61,17 @@ class Activity_Sales : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
         binding.toolbar.setNavigationOnClickListener { finish() }
 
+
+        //Date
+        val calendar = Calendar.getInstance()
+        year = calendar.get(Calendar.YEAR)
+        month = calendar.get(Calendar.MONTH)
+        day = calendar.get(Calendar.DAY_OF_MONTH)
+        binding.ivDate.setOnClickListener(View.OnClickListener {
+            select_datePick()
+        })
+
+
         //Spinner
         val alSpinner = arrayListOf(getString(R.string.todo),getString(R.string.Dia),getString(R.string.Mes), getString(R.string.Anno))
         val adapterSpinner = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, alSpinner);
@@ -60,10 +79,28 @@ class Activity_Sales : AppCompatActivity() {
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, long: Long) {
                 val value: String = parent?.getItemAtPosition(position).toString()
-                when(value){
-                    "Día" -> loadRecyclerInfoDay()
-                    "Mes" -> loadRecyclerInfoMonth()
-                    "Año" -> loadRecyclerInfoYear()
+                dateSelected = value
+                when(value) {
+                    "Todo"-> {
+                        binding.ivDate.visibility = View.GONE
+                        binding.tvDate.visibility = View.GONE
+                        loadRecyclerInfoAll()
+                    }
+                    "Día" ->{
+                        binding.ivDate.visibility = View.VISIBLE
+                        binding.tvDate.visibility = View.VISIBLE
+                        loadRecyclerInfoDay()
+                    }
+                    "Mes" ->{
+                        binding.ivDate.visibility = View.VISIBLE
+                        binding.tvDate.visibility = View.VISIBLE
+                        loadRecyclerInfoMonth()
+                    }
+                    "Año" ->{
+                        binding.ivDate.visibility = View.VISIBLE
+                        binding.tvDate.visibility = View.VISIBLE
+                        loadRecyclerInfoYear()
+                    }
                 }
             }
 
@@ -72,6 +109,8 @@ class Activity_Sales : AppCompatActivity() {
             }
 
         }
+
+
 
         //SearchView
         binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
@@ -94,21 +133,18 @@ class Activity_Sales : AppCompatActivity() {
             binding.ivIconSearch.visibility = View.VISIBLE
         })
 
+
+
         //Refresh
         binding.refresh.setOnRefreshListener {
-            when(refre){
-                "All" -> loadRecyclerInfoAll()
-                "Year" -> loadRecyclerInfoYear()
-                "Month" -> loadRecyclerInfoMonth()
-                "Day" -> loadRecyclerInfoDay()
+            when(dateSelected){
+                "Todo" -> loadRecyclerInfoAll()
+                "Año" -> loadRecyclerInfoYear()
+                "Mes" -> loadRecyclerInfoMonth()
+                "Día" -> loadRecyclerInfoDay()
             }
         }
 
-        //Date
-        val calendar = Calendar.getInstance()
-        year = calendar.get(Calendar.YEAR)
-        month = calendar.get(Calendar.MONTH)
-        day = calendar.get(Calendar.DAY_OF_MONTH)
 
         //Recycler
         al_sales = ArrayList()
@@ -116,11 +152,13 @@ class Activity_Sales : AppCompatActivity() {
         binding.rvSales.adapter = adapterrSales
 
 
+
         //Internet
         retrofitImp = RetrofitSalesImpl()
         binding.retryConnection.setOnClickListener{
             loadRecyclerInfoAll()
         }
+
 
         //Recycler
         loadRecyclerInfoAll()
@@ -133,7 +171,7 @@ class Activity_Sales : AppCompatActivity() {
     private fun loadRecyclerInfoAll() {
         if (NetworkTools.isOnline(binding.root.context, false)) {
             binding.refresh.isRefreshing = true
-            refre = "All"
+            dateSelected = "Todo"
             val call = retrofitImp.fetchOrdersAll(Constants.PHP_TOKEN)
             call.enqueue(object : Callback<ArrayList<ModelSale>> {
                 override fun onResponse(
@@ -166,7 +204,6 @@ class Activity_Sales : AppCompatActivity() {
     private fun loadRecyclerInfoYear() {
         if (NetworkTools.isOnline(binding.root.context, false)) {
             binding.refresh.isRefreshing = true
-            refre = "Year"
             val call = retrofitImp.fetchOrdersY(Constants.PHP_TOKEN,year)
             call.enqueue(object : Callback<ArrayList<ModelSale>> {
                 override fun onResponse(
@@ -199,7 +236,6 @@ class Activity_Sales : AppCompatActivity() {
     private fun loadRecyclerInfoMonth() {
         if (NetworkTools.isOnline(binding.root.context, false)) {
             binding.refresh.isRefreshing = true
-            refre = "Month"
             val call = retrofitImp.fetchOrdersM(Constants.PHP_TOKEN,year,month)
             call.enqueue(object : Callback<ArrayList<ModelSale>> {
                 override fun onResponse(
@@ -232,7 +268,6 @@ class Activity_Sales : AppCompatActivity() {
     private fun loadRecyclerInfoDay() {
         if (NetworkTools.isOnline(binding.root.context, false)) {
             binding.refresh.isRefreshing = true
-            refre = "Day"
             val call = retrofitImp.fetchOrdersD(Constants.PHP_TOKEN,year,month,day)
             call.enqueue(object : Callback<ArrayList<ModelSale>> {
                 override fun onResponse(
@@ -261,7 +296,6 @@ class Activity_Sales : AppCompatActivity() {
             alertNotInternet(true)
         }
     }
-
 
     private fun updateRecyclerAdapter() {
         if (al_sales.isEmpty()) {
@@ -309,22 +343,122 @@ class Activity_Sales : AppCompatActivity() {
     }
 
 
-    //Date
-    fun showDateDialog(){
+    /*Date Pickers
+    * ---------------------------------
+    * */
+    fun select_datePick() {
+        when (dateSelected) {
+            "Todo" -> li_dateYear()
+            "Día" -> li_dateDay()
+            "Mes" -> li_dateMonth()
+            "Año" -> li_dateYear()
+        }
+    }
 
-        val datePickerDialog = DatePickerDialog(this,DatePickerDialog.OnDateSetListener{ view, year, monthOfYear,dayOfMonth ->
-            sendDate(year,monthOfYear,dayOfMonth)
-        },year,month,day)
+    fun li_dateYear(){
+        val inflater = LayoutInflater.from(binding.root.context)
+        val liBinding = LiDateYBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(binding.root.context)
+        builder.setView(liBinding.root)
+        val alertDialog = builder.create()
 
-        datePickerDialog.show()
+        //Declare
+        liBinding.ilNpAnno.maxValue = 2050
+        liBinding.ilNpAnno.minValue = 2020
+
+        //Listeners
+        liBinding.btnCancel.setOnClickListener{
+            alertDialog.dismiss()
+        }
+        liBinding.btnAcept.setOnClickListener{
+            alertDialog.dismiss()
+            year = liBinding.ilNpAnno.value
+            binding.tvDate.text = year.toString()
+            loadRecyclerInfoYear()
+        }
+
+        //Finish
+        alertDialog.setCancelable(false)
+        alertDialog.window!!.setGravity(Gravity.CENTER)
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
 
     }
 
-    fun sendDate(year: Int, month: Int, day: Int){
-        filterDate()
+    fun li_dateMonth(){
+
+        val inflater = LayoutInflater.from(binding.root.context)
+        val liBinding = LiDateYmBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(binding.root.context)
+        builder.setView(liBinding.root)
+        val alertDialog = builder.create()
+
+        //Declare
+        liBinding.ilNpAnnos.maxValue = 2050
+        liBinding.ilNpAnnos.minValue = 2020
+        liBinding.ilNpMonth.maxValue = 11
+        liBinding.ilNpMonth.minValue = 0
+        val months = arrayOf("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre")
+        liBinding.ilNpMonth.displayedValues = months
+
+        //Listeners
+        liBinding.btnCancel.setOnClickListener{
+            alertDialog.dismiss()
+        }
+        liBinding.btnAcept.setOnClickListener{
+            alertDialog.dismiss()
+            year = liBinding.ilNpAnnos.value
+            month = liBinding.ilNpMonth.value+1
+            val dateDisplay="${year}/${month}"
+            binding.tvDate.text = dateDisplay
+            loadRecyclerInfoMonth()
+        }
+
+        //Finish
+        alertDialog.setCancelable(false)
+        alertDialog.window!!.setGravity(Gravity.CENTER)
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
     }
 
-    fun filterDate(){
+    fun li_dateDay(){
+
+        val inflater = LayoutInflater.from(binding.root.context)
+        val liBinding = LiDateYmdBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(binding.root.context)
+        builder.setView(liBinding.root)
+        val alertDialog = builder.create()
+
+        //Declare
+        liBinding.ilNpAnnos.maxValue = 2050
+        liBinding.ilNpAnnos.minValue = 2020
+        liBinding.ilNpMonth.maxValue = 11
+        liBinding.ilNpMonth.minValue = 0
+        liBinding.ilNpDay.minValue = 1
+        liBinding.ilNpDay.maxValue = 31
+        val months = arrayOf("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre")
+        liBinding.ilNpMonth.displayedValues = months
+
+        //Listeners
+        liBinding.btnCancel.setOnClickListener{
+            alertDialog.dismiss()
+        }
+        liBinding.btnAcept.setOnClickListener{
+            alertDialog.dismiss()
+            year = liBinding.ilNpAnnos.value
+            month = liBinding.ilNpMonth.value + 1
+            day = liBinding.ilNpDay.value
+            val dateDisplay="${year}/${month}/${day}"
+            binding.tvDate.text = dateDisplay
+            loadRecyclerInfoDay()
+        }
+
+        //Finish
+        alertDialog.setCancelable(false)
+        alertDialog.window!!.setGravity(Gravity.CENTER)
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
 
     }
 

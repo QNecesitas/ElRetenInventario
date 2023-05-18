@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/Anno"
-                    android:textSize="@dimen/textSize_h"
+                    android:textSize="@dimen/textSize_m"
                     android:layout_marginEnd="5sp"/>
 
                 <NumberPicker

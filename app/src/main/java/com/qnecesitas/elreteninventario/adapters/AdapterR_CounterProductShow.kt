@@ -25,8 +25,6 @@ class AdapterR_CounterProductShow(
 
     private var clickListener: RecyclerClickListener? = null
 
-    private var transfListener: RecyclerClickListener? = null
-
     private var infoListener: RecyclerClickListener? = null
 
     private var customFilter: AdapterR_CounterProductShow.CustomFilter? = null
@@ -44,7 +42,6 @@ class AdapterR_CounterProductShow(
             model: ModelEditProduct,
             context: Context,
             clickListener: RecyclerClickListener?,
-            transfListener: RecyclerClickListener?,
             infoListener: RecyclerClickListener?,
             position: Int
         ) {
@@ -78,7 +75,6 @@ class AdapterR_CounterProductShow(
                 popupMenu.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.cProd_info -> infoListener?.onClick(getRealPosition(position))
-                        R.id.cProd_tranfer -> transfListener?.onClick(getRealPosition(position))
                     }
                     false
                 }
@@ -103,7 +99,7 @@ class AdapterR_CounterProductShow(
 
     override fun onBindViewHolder(holder: CounterProductShowViewHolder, position: Int) {
         holder.bind(
-            alFilter[position], context, clickListener, transfListener, infoListener, position
+            alFilter[position], context, clickListener, infoListener, position
         )
     }
 
@@ -113,10 +109,6 @@ class AdapterR_CounterProductShow(
 
     fun setClickListener(clickListener: RecyclerClickListener) {
         this.clickListener = clickListener
-    }
-
-    fun setClickTransfListener(transfListener: RecyclerClickListener) {
-        this.transfListener = transfListener
     }
 
     fun setClickInfoListener(infoListener: RecyclerClickListener) {
@@ -150,6 +142,8 @@ class AdapterR_CounterProductShow(
                     charSequence.toString().lowercase(Locale.getDefault()).trim { it <= ' ' }
                 for (product in al_CPShow) {
                     if (product.name.lowercase(Locale.ROOT).trim().contains(filterPattern)) {
+                        alFilter.add(product)
+                    }else if(product.c_productS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         alFilter.add(product)
                     }
                 }

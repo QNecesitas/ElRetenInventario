@@ -31,7 +31,7 @@ class AdapterR_DeficitProduct(
         ) {
             Glide.with(context)
                 .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
-                .error(R.drawable.shopping_bag_white)
+                .error(R.drawable.widgets)
                 .centerCrop()
                 .into(binding.rdIvIcon)
 

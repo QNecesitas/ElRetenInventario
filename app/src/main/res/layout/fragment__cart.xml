@@ -22,6 +22,21 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <!--TV carrito-->
+            <TextView
+                android:id="@+id/tv_precioT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/PrecioTotal"
+                android:layout_gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:textSize="@dimen/textSize_m"
+                android:textColor="@color/white"
+                android:layout_marginEnd="12dp"
+                android:textStyle="bold"/>
+
+
+            <!--TV carrito-->
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -33,17 +48,6 @@
                 android:textSize="@dimen/textSize_m"
                 android:textStyle="bold" />
 
-            <!--IV borrar all-->
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_deleteAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="5sp"
-                android:layout_marginEnd="10sp"
-                android:layout_marginBottom="5sp"
-                android:src="@drawable/baseline_delete_forever_24"
-                android:tint="@color/white" />
 
         </androidx.cardview.widget.CardView>
 
@@ -58,12 +62,13 @@
             app:layout_constraintTop_toBottomOf="@id/cv_top_recycler">
 
             <ProgressBar
+                android:layout_marginTop="-7dp"
                 android:visibility="gone"
                 android:id="@+id/progress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!--Recycler-->
             <androidx.recyclerview.widget.RecyclerView
@@ -123,6 +128,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_info_content">
+
+
+            <!--Button delete-->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_deleteProduct"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="12dp"
+                android:minWidth="30sp"
+                android:minHeight="30sp"
+                android:paddingStart="5sp"
+                android:paddingEnd="5sp"
+                android:text="@string/borrar_pedido"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_xs"
+                android:textStyle="bold" />
 
             <!--Button aceptar-->
             <androidx.appcompat.widget.AppCompatButton

@@ -17,8 +17,8 @@ class RetrofitProductsImplLS : IRetrofitProductsLS {
 
     private val productApi: IRetrofitProductsLS = retrofit.create(IRetrofitProductsLS::class.java)
 
-    override fun addProductLS(token: String, c_productS: String, name: String, c_fk_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String): Call<String>{
-        return productApi.addProductLS(token,c_productS,name,c_fk_sessionS,amount,buyPrice,salePrice,descr,file)
+    override fun addProductLS(token: String, c_productS: String, name: String, c_fk_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String,deficit: Int): Call<String>{
+        return productApi.addProductLS(token,c_productS,name,c_fk_sessionS,amount,buyPrice,salePrice,descr,file,deficit)
     }
 
     override fun updateProductLS(
@@ -31,10 +31,11 @@ class RetrofitProductsImplLS : IRetrofitProductsLS {
         amount: Int,
         buyPrice: Double,
         salePrice: Double,
-        descr: String
+        descr: String,
+        deficit: Int
     ): Call<String> {
         return productApi.updateProductLS(
-            token, c_productSOld, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr
+            token, c_productSOld, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr,deficit
         )
     }
 
@@ -67,9 +68,12 @@ class RetrofitProductsImplLS : IRetrofitProductsLS {
         salePrice: Double,
         descr: String,
         statePhoto : Int,
-        c_sessionLS: String
+        c_sessionLS: String,
+        deficit: Int,
+        exists: Boolean,
+        sendAll: Boolean
     ): Call<String> {
-        return productApi.transferProductsLS(token, c_productS, name, fk_c_sessionS, amount, buyPrice, salePrice, descr, statePhoto, c_sessionLS)
+        return productApi.transferProductsLS(token, c_productS, name, fk_c_sessionS, amount, buyPrice, salePrice, descr, statePhoto, c_sessionLS,deficit, exists,sendAll)
     }
 
     override fun alterAmountSLS(token: String, c_productS: String, amount: Int): Call<String> {

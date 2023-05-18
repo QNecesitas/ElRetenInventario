@@ -23,31 +23,35 @@ interface IRetrofitProductsLS {
         @Field("buyPrice") buyPrice: Double,
         @Field("salePrice") salePrice: Double,
         @Field("descr") descr: String,
-        @Field("file") file: String
+        @Field("file") file: String,
+        @Field("deficit") deficit: Int
     ) : Call<String>
 
 
     @FormUrlEncoded
-    @POST("TransferProductSLS.php")
+    @POST("TransferProductLS_S.php")
     fun transferProductsLS(
         @Field("token") token : String,
-        @Field("c_productS")c_productS: String,
+        @Field("c_productLS")c_productS: String,
         @Field("name") name: String,
-        @Field("fk_c_sessionS") fk_c_sessionS: String,
+        @Field("fk_c_sessionLS") fk_c_sessionS: String,
         @Field("amount") amount: Int,
         @Field("buyPrice") buyPrice: Double,
         @Field("salePrice") salePrice: Double,
         @Field("descr") descr: String,
         @Field("statePhoto") statePhoto: Int,
-        @Field("c_sessionLS") c_sessionLS: String
+        @Field("c_sessionS") c_sessionLS: String,
+        @Field("deficit") deficit: Int,
+        @Field("exists") exists: Boolean,
+        @Field("sendAll") sendAll: Boolean
     ): Call<String>
 
 
     @FormUrlEncoded
-    @POST("AlterAmountSLS.php")
+    @POST("AlterAmountLS.php")
     fun alterAmountSLS(
         @Field("token")token: String,
-        @Field("c_productS")c_productS: String,
+        @Field("c_productLS")c_productS: String,
         @Field("amount")amount: Int
     ): Call<String>
 
@@ -56,15 +60,16 @@ interface IRetrofitProductsLS {
     @POST("UpdateProductLS.php")
     fun updateProductLS(
         @Field("token") token: String,
-        @Field("c_productSOld") c_productSOld : String,
+        @Field("c_productLSOld") c_productSOld : String,
         @Field("file") file: String,
-        @Field("c_productS") c_productS : String,
+        @Field("c_productLS") c_productS : String,
         @Field("name") name : String,
-        @Field("fk_c_sessionS") c_fk_sessionS: String,
+        @Field("fk_c_sessionLS") c_fk_sessionS: String,
         @Field("amount") amount: Int,
         @Field("buyPrice") buyPrice: Double,
         @Field("salePrice") salePrice: Double,
         @Field("descr") descr: String,
+        @Field("deficit") deficit: Int
     ) : Call<String>
 
 
@@ -72,8 +77,8 @@ interface IRetrofitProductsLS {
     @POST("DeleteProductLS.php")
     fun deleteProductLS(
         @Field("token") token: String,
-        @Field("c_productS") c_productS: String,
-        @Field("fk_c_sessionS") fk_c_sessionS: String
+        @Field("c_productLS") c_productS: String,
+        @Field("fk_c_sessionLS") fk_c_sessionS: String
     ): Call<String>
 
 
@@ -90,10 +95,10 @@ interface IRetrofitProductsLS {
     ): Call<ArrayList<ModelEditProduct>>
 
 
-    @GET("FetchProductSLSPath.php")
+    @GET("FetchProductLSPath.php")
     fun fetchProductSPathLS(
         @Query("token")token: String,
-        @Query("c_productS")c_productS: String
+        @Query("c_productLS")c_productS: String
     ): Call<ArrayList<ModelProductPath>>
 
 }
