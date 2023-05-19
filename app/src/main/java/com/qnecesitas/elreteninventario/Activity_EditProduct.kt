@@ -24,12 +24,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.marginTop
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.adapters.AdapterR_EditProduct
@@ -1215,7 +1212,7 @@ class Activity_EditProduct : AppCompatActivity() {
         //set listeners for dialog buttons
         builder.setPositiveButton(
             R.string.Si
-        ) { dialog, which -> dialog.dismiss() }
+        ) { dialog, _ -> dialog.dismiss() }
         //create the alert dialog and show it
         builder.create().show()
     }
@@ -1389,9 +1386,9 @@ class Activity_EditProduct : AppCompatActivity() {
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SESSION
         val fragment_sessionsLS = Fragment_SessionsLS(c_drawerS)
         fragment_sessionsLS.setOpenSessionLSListener(object : Fragment_SessionsLS.OpenSessionLS {
-            override fun onSessionLSClicked(c_sessionLS: String) {
+            override fun onSessionLSClicked(c_sessionsLS: String) {
                 binding.aepClTransfer.visibility = View.GONE
-                transferProductInternet(position, c_sessionLS)
+                transferProductInternet(position, c_sessionsLS)
             }
         })
         fragmentManager.beginTransaction()

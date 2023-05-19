@@ -63,7 +63,7 @@ class Activity_Deficit : AppCompatActivity() {
 
 
         //Radio Group
-        binding.rg.setOnCheckedChangeListener { group, id ->
+        binding.rg.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.rb_almacen -> {
                     selectButton = "Almacén"

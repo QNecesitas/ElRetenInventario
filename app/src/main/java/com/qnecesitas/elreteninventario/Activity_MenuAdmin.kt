@@ -15,6 +15,12 @@ class Activity_MenuAdmin : AppCompatActivity() {
         binding = ActivityMenuAdminBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Toolbar
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {finish()}
+
         binding.amaCvStore.setOnClickListener { click_store() }
 
         binding.amaCvProducts.setOnClickListener { click_products() }

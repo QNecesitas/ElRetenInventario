@@ -194,4 +194,7 @@
     <string name="ver_deficit">Ver deficit</string>
     <string name="days">Días</string>
     <string name="profit_month">Ganancias en el mes</string>
+    <string name="direccion_negocio">Calzada de Luyanó, municipio 10 de Octubre, #727, e/ Concha y Porvenir, La Habana</string>
+    <string name="Menu_admin">Menú Administrador</string>
+    <string name="Menu_salesperson">Menú Dependiente</string>
 </resources>

@@ -158,6 +158,7 @@ public class Activity_Login extends AppCompatActivity {
                     loadDeficitInternetS();
                     binding.ALTILPassword.setError(null);
                 }else{
+                    binding.ALTILPassword.setError(null);
                     binding.ALPBCargando.setVisibility(View.GONE);
                     Intent intent = new Intent(Activity_Login.this, Activity_MenuSelesperson.class);
                     startActivity(intent);

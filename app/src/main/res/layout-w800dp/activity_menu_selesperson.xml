@@ -48,7 +48,7 @@
                     android:layout_height="300dp"
                     android:importantForAccessibility="no"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/backg_menu_salesperson_mobile"
+                    android:src="@drawable/backg_menu_salesperson_pc"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -98,7 +98,9 @@
                     android:layout_marginEnd="6dp"
                     app:layout_constraintEnd_toStartOf="@id/cv_product"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="12dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -131,10 +133,12 @@
                     android:layout_width="0sp"
                     android:layout_height="200dp"
                     android:layout_marginStart="6dp"
-                    android:layout_marginEnd="12dp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintEnd_toStartOf="@id/cv_Counter"
                     app:layout_constraintStart_toEndOf="@id/cv_store"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginBottom="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -166,13 +170,14 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_Counter"
                     android:layout_width="0sp"
-                    android:layout_height="150dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="6dp"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cv_store">
+                    app:layout_constraintStart_toEndOf="@id/cv_product"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginBottom="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
                     <LinearLayout
                         android:layout_width="match_parent"

@@ -1270,8 +1270,8 @@ class Activity_EditProductLS : AppCompatActivity() {
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SHELVES
         val fragment_shelvesS = Fragment_Shelves()
         fragment_shelvesS.setOpenShelfSListener(object : Fragment_Shelves.OpenShelfS {
-            override fun onShelfSClicked(c_shelfLS: String) {
-                showFragmentDrawersS(c_shelfLS, position)
+            override fun onShelfSClicked(c_shelfS: String) {
+                showFragmentDrawersS(c_shelfS, position)
             }
         })
         fragmentManager.beginTransaction()

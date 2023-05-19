@@ -15,6 +15,12 @@ class Activity_MenuSelesperson : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        //Toolbar
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        binding.toolbar.setNavigationOnClickListener {finish()}
+
         binding.cvProduct.setOnClickListener{toProduct()}
 
         binding.cvCounter.setOnClickListener{toCounter()}

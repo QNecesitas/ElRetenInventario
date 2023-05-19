@@ -30,10 +30,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".Activity_Counter"
-            android:exported="false" />
-
-        <activity
             android:name=".Activity_EditProductLS"
             android:exported="false"/>
 
@@ -70,12 +66,6 @@
             android:screenOrientation="portrait" />
         <activity android:name=".Activity_Sales"
             android:exported="true"/>
-        <activity
-            android:name=".Activity_EditProductLS"
-            android:exported="false" />
-        <activity
-            android:name=".Activity_Sales"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
