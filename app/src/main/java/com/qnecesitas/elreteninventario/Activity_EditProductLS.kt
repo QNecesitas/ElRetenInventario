@@ -11,6 +11,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -75,8 +77,8 @@ class Activity_EditProductLS : AppCompatActivity() {
     private var imageFile = "no"
     private var uriLLegadaRecortada: Uri? = null
     private var lastTranferAmount = 0
-    private var lastTransferExist = false
-    private var lastTransferAllFill = false
+    private var lastTransferExist = 0
+    private var lastTransferAllFill = 0
 
     //Results launchers
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
@@ -252,7 +254,14 @@ class Activity_EditProductLS : AppCompatActivity() {
             binding.aepRecycler.layoutManager = LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL,false)
         }else{
-            binding.aepRecycler.layoutManager = GridLayoutManager(this, 2)
+            val displayMetrics = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+            val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
+            if(screenWidthDp >= 600){
+                binding.aepRecycler.layoutManager = GridLayoutManager(this, 7)
+            }else {
+                binding.aepRecycler.layoutManager = GridLayoutManager(this, 2)
+            }
         }
     }
 
@@ -333,6 +342,8 @@ class Activity_EditProductLS : AppCompatActivity() {
         val buyPrice = getString(R.string.PrecioC_Info, al_editProduct[position].buyPrice)
         val salePrice = getString(R.string.PrecioV_Info, al_editProduct[position].salePrice)
         val descr = getString(R.string.Descripcion_Info, al_editProduct[position].descr)
+        val size = getString(R.string.Size_Info, al_editProduct[position].size)
+        val brand = getString(R.string.Brand_Info, al_editProduct[position].brand)
         val codeImage = al_editProduct[position].c_productS
 
         //Fill out
@@ -342,6 +353,8 @@ class Activity_EditProductLS : AppCompatActivity() {
         li_info_binding?.infoPriceB?.text = buyPrice
         li_info_binding?.infoPriceS?.text = salePrice
         li_info_binding?.infoDescr?.text = descr
+        li_info_binding?.infoSize?.text = size
+        li_info_binding?.infoBrand?.text = brand
         li_info_binding?.image?.let {
             Glide.with(applicationContext)
                 .load(Constants.PHP_IMAGES + "P_" + codeImage + ".jpg")
@@ -359,23 +372,61 @@ class Activity_EditProductLS : AppCompatActivity() {
             popupMenu.menuInflater.inflate(R.menu.menu_product_options, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 alertDialog.dismiss()
-                if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
                     when (menuItem.itemId) {
-                        R.id.option_cantidad -> li_amount(position)
-                        R.id.option_editar -> li_editProduct(position)
-                        R.id.option_transferir -> li_amountTransf(position)
-                        R.id.option_eliminar -> showAlertDialogDeleteProducts(position)
+                        R.id.option_cantidad -> {
+                            if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
+                                li_amount(position)
+                            }else{
+                                FancyToast.makeText(
+                                    applicationContext,
+                                    getString(R.string.No_acceso),
+                                    FancyToast.LENGTH_LONG,
+                                    FancyToast.WARNING,
+                                    false
+                                ).show()
+                            }
+                        }
+                        R.id.option_editar -> {
+                            if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
+                                li_editProduct(position)
+                            }else{
+                                FancyToast.makeText(
+                                    applicationContext,
+                                    getString(R.string.No_acceso),
+                                    FancyToast.LENGTH_LONG,
+                                    FancyToast.WARNING,
+                                    false
+                                ).show()
+                            }
+                        }
+                        R.id.option_transferir -> {
+                            if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
+                                li_amountTransf(position)
+                            }else{
+                                FancyToast.makeText(
+                                    applicationContext,
+                                    getString(R.string.No_acceso),
+                                    FancyToast.LENGTH_LONG,
+                                    FancyToast.WARNING,
+                                    false
+                                ).show()
+                            }
+                        }
+                        R.id.option_eliminar -> {
+                            if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
+                                showAlertDialogDeleteProducts(position)
+                            }else{
+                                FancyToast.makeText(
+                                    applicationContext,
+                                    getString(R.string.No_acceso),
+                                    FancyToast.LENGTH_LONG,
+                                    FancyToast.WARNING,
+                                    false
+                                ).show()
+                            }
+                        }
                         R.id.option_ubicacion -> findLocationClick(position)
                     }
-                }else{
-                    FancyToast.makeText(
-                        applicationContext,
-                        getString(R.string.No_acceso),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.WARNING,
-                        false
-                    ).show()
-                }
                 false
             }
             popupMenu.show()
@@ -405,6 +456,8 @@ class Activity_EditProductLS : AppCompatActivity() {
         val descr = al_editProduct[position].descr
         val codeImage = al_editProduct[position].c_productS
         val deficit = al_editProduct[position].deficit
+        val size = al_editProduct[position].size
+        val brand = al_editProduct[position].brand
 
         //Fill out
         li_add_binding?.tietName?.setText(name)
@@ -413,6 +466,8 @@ class Activity_EditProductLS : AppCompatActivity() {
         li_add_binding?.tietPriceBuy?.setText(buyPrice.toString())
         li_add_binding?.tietPriceSale?.setText(salePrice.toString())
         li_add_binding?.tietDesc?.setText(descr)
+        li_add_binding?.tietSize?.setText(size)
+        li_add_binding?.tietBrand?.setText(brand)
         li_add_binding?.image?.let {
             Glide.with(applicationContext)
                 .load(Constants.PHP_IMAGES + "P_" + codeImage + ".jpg")
@@ -458,7 +513,9 @@ class Activity_EditProductLS : AppCompatActivity() {
                     li_add_binding?.tietDesc?.text.toString(),
                     if (li_add_binding?.image == null) 0 else 1,
                     position,
-                    li_add_binding?.tietDeficit?.text.toString().toInt()
+                    li_add_binding?.tietDeficit?.text.toString().toInt(),
+                    li_add_binding?.tietSize?.text.toString(),
+                    li_add_binding?.tietBrand?.text.toString()
                 )
             }
         })
@@ -487,6 +544,8 @@ class Activity_EditProductLS : AppCompatActivity() {
         var descr: String
         var statePhoto: Int
         var deficit: Int
+        var size: String
+        var brand : String
 
         //Listener
         li_add_binding?.image?.setOnClickListener {
@@ -515,6 +574,8 @@ class Activity_EditProductLS : AppCompatActivity() {
                 descr = li_add_binding?.tietDesc?.text.toString()
                 statePhoto = if (li_add_binding?.image == null) 0 else 1
                 deficit = li_add_binding?.tietDeficit?.text.toString().toInt()
+                size = li_add_binding?.tietSize?.text.toString()
+                brand = li_add_binding?.tietBrand?.text.toString()
 
                 alertDialog.dismiss()
                 addProductInternet(
@@ -525,7 +586,9 @@ class Activity_EditProductLS : AppCompatActivity() {
                     salePrice,
                     descr,
                     statePhoto,
-                    deficit
+                    deficit,
+                    size,
+                    brand
                 )
             }
         })
@@ -642,7 +705,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         li_alter_amount_binding.btnAccept.setOnClickListener{
             alertDialog.dismiss()
             if(li_alter_amount_binding.et.text.toString().isNotEmpty()) {
-                lastTranferAmount = currentAmount
+                lastTranferAmount = li_alter_amount_binding.et.text.toString().toInt()
                 checkIfExistIfAllSended(position);
                 showClTransfer(position)
             }else{
@@ -662,14 +725,17 @@ class Activity_EditProductLS : AppCompatActivity() {
     }
 
     private fun checkIfExistIfAllSended(position: Int) {
+        lastTransferAllFill = 0
+        lastTransferExist = 0
+
         for (it in al_editProductSAll){
             if(it.c_productS == al_editProduct[position].c_productS ){
-                lastTransferExist = true
+                lastTransferExist = 1
             }
         }
 
         if(al_editProduct[position].amount == lastTranferAmount){
-            lastTransferAllFill = true
+            lastTransferAllFill = 1
         }
 
 
@@ -694,7 +760,9 @@ class Activity_EditProductLS : AppCompatActivity() {
         salePrice: Double,
         descr: String,
         statePhoto: Int,
-        deficit: Int
+        deficit: Int,
+        size: String,
+        brand : String
     ) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
             binding.aepRefresh.isRefreshing = true
@@ -708,7 +776,9 @@ class Activity_EditProductLS : AppCompatActivity() {
                 salePrice,
                 descr,
                 imageFile,
-                deficit
+                deficit,
+                size,
+                brand
             )
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -723,7 +793,9 @@ class Activity_EditProductLS : AppCompatActivity() {
                             salePrice,
                             descr,
                             statePhoto,
-                            deficit
+                            deficit,
+                            size,
+                            brand
                         )
                         al_editProduct.add(model)
                         updateRecyclerAdapter()
@@ -781,7 +853,9 @@ class Activity_EditProductLS : AppCompatActivity() {
         descr: String,
         statePhoto: Int,
         position: Int,
-        deficit: Int
+        deficit: Int,
+        size: String,
+        brand : String
     ) {
         if (NetworkTools.isOnline(this, false)) {
             binding.aepRefresh.isRefreshing = true
@@ -796,7 +870,9 @@ class Activity_EditProductLS : AppCompatActivity() {
                 buyPrice,
                 salePrice,
                 descr,
-                deficit
+                deficit,
+                size,
+                brand
             )
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -811,7 +887,9 @@ class Activity_EditProductLS : AppCompatActivity() {
                             salePrice,
                             descr,
                             statePhoto,
-                            deficit
+                            deficit,
+                            size,
+                            brand
                         )
                         al_editProduct[position] = model
                         updateRecyclerAdapter()
@@ -927,7 +1005,7 @@ class Activity_EditProductLS : AppCompatActivity() {
                 al_editProduct[position].c_productS,
                 al_editProduct[position].name,
                 al_editProduct[position].fk_c_sessionS,
-                al_editProduct[position].amount,
+                lastTranferAmount,
                 al_editProduct[position].buyPrice,
                 al_editProduct[position].salePrice,
                 al_editProduct[position].descr,
@@ -935,7 +1013,9 @@ class Activity_EditProductLS : AppCompatActivity() {
                 codeSession,
                 al_editProduct[position].deficit,
                 lastTransferExist,
-                lastTransferAllFill
+                lastTransferAllFill,
+                al_editProduct[position].size,
+                al_editProduct[position].brand
             )
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -948,8 +1028,8 @@ class Activity_EditProductLS : AppCompatActivity() {
                             FancyToast.SUCCESS,
                             false
                         ).show()
-                        al_editProduct.removeAt(position)
-                        updateRecyclerAdapter()
+                        Log.e("XXXXXXX",response.body()!!)
+                        loadRecyclerInfo()
                     } else {
                         FancyToast.makeText(
                             this@Activity_EditProductLS,
@@ -1156,6 +1236,7 @@ class Activity_EditProductLS : AppCompatActivity() {
             li_add_binding?.tilPriceBuy?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
+
         //PriceSale
         if (li_add_binding?.tietPriceSale?.text!!.isNotEmpty()) {
             amountTrue++
@@ -1170,20 +1251,14 @@ class Activity_EditProductLS : AppCompatActivity() {
             li_add_binding?.tilCant?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
+        //Deficit
         if (li_add_binding?.tietDeficit?.text?.isNotEmpty() == true) {
             amountTrue++
         } else {
             li_add_binding?.tilDeficit?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
-        //Desc
-        if (li_add_binding?.tietDesc?.text?.isNotEmpty() == true) {
-            amountTrue++
-        } else {
-            li_add_binding?.tilDesc?.error = getString(R.string.este_campo_no_debe_vacio)
-        }
-
-        return amountTrue == 7
+        return amountTrue == 6
     }
 
     private fun escogerimagenGaleria() {

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <!--cv_main_content-->
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_main_content"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardCornerRadius="@dimen/standard_card_corner_radius">
 
@@ -22,12 +22,13 @@
             <!--image-->
             <ImageView
                 android:id="@+id/image"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_height="0sp"
                 android:background="@color/md_theme_light_secondaryContainer"
                 android:importantForAccessibility="no"
                 android:src="@drawable/widgets"
                 app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!--Information-->
@@ -38,10 +39,11 @@
                 android:layout_marginTop="8dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/settings"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/image"
-                app:layout_constraintEnd_toStartOf="@id/settings">
+                app:layout_constraintTop_toBottomOf="@id/image">
 
+                <!--Nombre del producto-->
                 <TextView
                     android:id="@+id/info_name"
                     android:layout_width="wrap_content"
@@ -56,6 +58,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <!--Codigo del product-->
                 <TextView
                     android:id="@+id/info_code"
                     android:layout_width="wrap_content"
@@ -69,18 +72,48 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/info_name" />
 
+                <!--Precio de venta-->
                 <TextView
                     android:id="@+id/info_priceS"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="8dp"
-                     android:text="@string/PrecioV_Info"
+                    android:text="@string/PrecioV_Info"
                     android:textSize="@dimen/textSize_s"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/info_code"
-                    app:layout_constraintHorizontal_bias="0" />
+                    app:layout_constraintTop_toBottomOf="@id/info_brand" />
 
+                <!--Medida-->
+                <TextView
+                    android:id="@+id/info_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/Medida_Info"
+                    android:textSize="@dimen/textSize_s"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/info_code" />
+
+
+                <!--Marca o Modelo-->
+                <TextView
+                    android:id="@+id/info_brand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/Modelo_Info"
+                    android:textSize="@dimen/textSize_s"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/info_size" />
+
+
+                <!--Precio del producto-->
                 <TextView
                     android:id="@+id/info_priceB"
                     android:layout_width="wrap_content"
@@ -89,10 +122,11 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/PrecioC_Info"
                     android:textSize="@dimen/textSize_s"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/info_priceS"
-                    app:layout_constraintHorizontal_bias="0" />
+                    app:layout_constraintTop_toBottomOf="@id/info_priceS" />
 
+                <!--Cantidad disponible-->
                 <TextView
                     android:id="@+id/info_amount"
                     android:layout_width="wrap_content"
@@ -106,6 +140,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/info_priceB" />
 
+                <!--Descripcion del producto-->
                 <TextView
                     android:id="@+id/info_descr"
                     android:layout_width="wrap_content"
@@ -137,18 +172,18 @@
 
             <!--Options buttom-->
             <ImageView
-                android:layout_marginStart="12dp"
                 android:id="@+id/settings"
-                app:layout_constraintHorizontal_bias="1"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="12dp"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="@string/options"
                 android:src="@drawable/baseline_more_vert_24"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/image"
+                app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toEndOf="@id/cl_info"
-                android:contentDescription="@string/options" />
+                app:layout_constraintTop_toBottomOf="@id/image" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

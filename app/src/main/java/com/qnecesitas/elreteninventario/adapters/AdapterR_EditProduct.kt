@@ -57,9 +57,11 @@ class AdapterR_EditProduct(
 
             val nombre = model.name
             val cantidad = context.getString(R.string.s_unidades, model.amount)
+            val size = model.size
 
             binding.REPTVName.text = nombre
             binding.REPTVCant.text = cantidad
+            binding.REPTVSize.text = size
             binding.root.setOnClickListener{
                 this@AdapterR_EditProduct.listener?.onClick(getRealPosition(position))
             }

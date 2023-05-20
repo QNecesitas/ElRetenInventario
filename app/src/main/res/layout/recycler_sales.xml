@@ -137,7 +137,7 @@
                 app:layout_constraintStart_toEndOf="@id/tv_priceTotal_venta_s"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/precioTotal"
+                android:text="@string/precio_f"
                 android:textSize="@dimen/textSize_m"/>
 
 

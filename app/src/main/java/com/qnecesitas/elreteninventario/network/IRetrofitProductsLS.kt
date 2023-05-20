@@ -24,7 +24,9 @@ interface IRetrofitProductsLS {
         @Field("salePrice") salePrice: Double,
         @Field("descr") descr: String,
         @Field("file") file: String,
-        @Field("deficit") deficit: Int
+        @Field("deficit") deficit: Int,
+        @Field("size") size: String,
+        @Field("brand") brand: String
     ) : Call<String>
 
 
@@ -42,8 +44,10 @@ interface IRetrofitProductsLS {
         @Field("statePhoto") statePhoto: Int,
         @Field("c_sessionS") c_sessionLS: String,
         @Field("deficit") deficit: Int,
-        @Field("exists") exists: Boolean,
-        @Field("sendAll") sendAll: Boolean
+        @Field("exists") exists: Int,
+        @Field("sendAll") sendAll: Int,
+        @Field("size") size: String,
+        @Field("brand") brand: String
     ): Call<String>
 
 
@@ -69,7 +73,9 @@ interface IRetrofitProductsLS {
         @Field("buyPrice") buyPrice: Double,
         @Field("salePrice") salePrice: Double,
         @Field("descr") descr: String,
-        @Field("deficit") deficit: Int
+        @Field("deficit") deficit: Int,
+        @Field("size") size: String,
+        @Field("brand") brand: String,
     ) : Call<String>
 
 

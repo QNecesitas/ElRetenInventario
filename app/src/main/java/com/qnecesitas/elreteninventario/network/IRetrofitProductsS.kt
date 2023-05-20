@@ -1,6 +1,5 @@
 package com.qnecesitas.elreteninventario.network
 
-import com.qnecesitas.elreteninventario.Activity_Deficit
 import com.qnecesitas.elreteninventario.data.ModelEditProduct
 import com.qnecesitas.elreteninventario.data.ModelProductPath
 import retrofit2.Call
@@ -25,14 +24,15 @@ interface IRetrofitProductsS {
         @Field("salePrice") salePrice: Double,
         @Field("descr") descr: String,
         @Field("file") file: String,
-        @Field("deficit") deficit: Int
+        @Field("deficit") deficit: Int,
+        @Field("size") size: String,
+        @Field("brand") brand: String
     ) : Call<String>
 
     @FormUrlEncoded
     @POST("UpdateProduct.php")
     fun updateProduct(
         @Field("token") token: String,
-        @Field("c_productSOld") c_productSOld : String,
         @Field("file") file: String,
         @Field("c_productS") c_productS : String,
         @Field("name") name : String,
@@ -41,7 +41,9 @@ interface IRetrofitProductsS {
         @Field("buyPrice") buyPrice: Double,
         @Field("salePrice") salePrice: Double,
         @Field("descr") descr: String,
-        @Field("deficit") deficit: Int
+        @Field("deficit") deficit: Int,
+        @Field("size") size: String,
+        @Field("brand") brand: String
     ) : Call<String>
 
     @GET("FetchProductsS.php")
@@ -84,8 +86,10 @@ interface IRetrofitProductsS {
         @Field("statePhoto") statePhoto: Int,
         @Field("c_sessionLS") c_sessionLS: String,
         @Field("deficit") deficit: Int,
-        @Field("exists") exists: Boolean,
-        @Field("sendAll") sendAll: Boolean
+        @Field("exists") exists: Int,
+        @Field("sendAll") sendAll: Int,
+        @Field("size") size: String,
+        @Field("brand") brand: String
     ): Call<String>
 
     @FormUrlEncoded

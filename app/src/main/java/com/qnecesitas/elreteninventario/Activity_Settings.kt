@@ -135,7 +135,7 @@ class Activity_Settings : AppCompatActivity() {
             binding.tietPasswSalespConfirm.error = null
         }
 
-        if(binding.tietPasswSalespConfirm.text.toString() ==
+        if(binding.tietPasswSalespConfirm.text.toString() !=
             binding.tietPasswSalespNew.text.toString()){
             result =false
             binding.tietPasswSalespConfirm.error = getString(R.string.los_campos_no_coinciden)
@@ -243,6 +243,7 @@ class Activity_Settings : AppCompatActivity() {
                             FancyToast.SUCCESS,
                             false
                         ).show()
+                        loadPasswordInternet { {} }
                     } else {
                         FancyToast.makeText(
                             applicationContext,

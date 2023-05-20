@@ -32,7 +32,7 @@ class RetrofitSessionsImplLS : IRetrofitSessionsLS {
         c_sessionS: String,
         fk_c_drawerLS: String
     ): Call<String> {
-        return deleteSessions(token, c_sessionS, fk_c_drawerLS)
+        return productApi.deleteSessions(token, c_sessionS, fk_c_drawerLS)
     }
 
     override fun addSession(

@@ -17,13 +17,12 @@ class RetrofitProductsImplS : IRetrofitProductsS {
 
     private val productApi: IRetrofitProductsS = retrofit.create(IRetrofitProductsS::class.java)
 
-    override fun addProduct(token: String, c_productS: String, name: String, c_fk_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int): Call<String>{
-        return productApi.addProduct(token,c_productS,name,c_fk_sessionS,amount,buyPrice,salePrice,descr,file,deficit)
+    override fun addProduct(token: String, c_productS: String, name: String, c_fk_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int,size: String ,brand : String): Call<String>{
+        return productApi.addProduct(token,c_productS,name,c_fk_sessionS,amount,buyPrice,salePrice,descr,file,deficit,size,brand)
     }
 
     override fun updateProduct(
         token: String,
-        c_productSOld: String,
         file: String,
         c_productS: String,
         name: String,
@@ -32,10 +31,12 @@ class RetrofitProductsImplS : IRetrofitProductsS {
         buyPrice: Double,
         salePrice: Double,
         descr: String,
-        deficit: Int
+        deficit: Int,
+        size: String,
+        brand: String
     ): Call<String> {
         return productApi.updateProduct(
-            token, c_productSOld, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr,deficit
+            token, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr,deficit,size,brand
         )
     }
 
@@ -81,10 +82,12 @@ class RetrofitProductsImplS : IRetrofitProductsS {
         statePhoto : Int,
         c_sessionLS: String,
         deficit: Int,
-        exists: Boolean,
-        sendAll: Boolean
+        exists: Int,
+        sendAll: Int,
+        size: String,
+        brand: String
     ): Call<String> {
-        return productApi.transferProducts(token, c_productS, name, fk_c_sessionS, amount, buyPrice, salePrice, descr, statePhoto, c_sessionLS,deficit, exists, sendAll)
+        return productApi.transferProducts(token, c_productS, name, fk_c_sessionS, amount, buyPrice, salePrice, descr, statePhoto, c_sessionLS,deficit, exists, sendAll,size,brand)
     }
 
     override fun alterAmountS(token: String, c_productS: String, amount: Int): Call<String> {

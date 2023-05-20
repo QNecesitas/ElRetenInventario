@@ -55,12 +55,23 @@
             android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/rd_tv_size"
+                android:layout_marginTop="4sp"
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:text="@string/Size_Info"
+                app:layout_constraintTop_toBottomOf="@id/rd_tv_name"
+                app:layout_constraintStart_toStartOf="@id/rd_tv_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="@dimen/textSize_s"/>
+
+            <TextView
                 android:layout_marginTop="4sp"
                 android:id="@+id/rd_tv_cantP"
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:text="@string/cantidad_producto"
-                app:layout_constraintTop_toBottomOf="@id/rd_tv_name"
+                app:layout_constraintTop_toBottomOf="@id/rd_tv_size"
                 app:layout_constraintStart_toStartOf="@id/rd_tv_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textSize="@dimen/textSize_s"/>

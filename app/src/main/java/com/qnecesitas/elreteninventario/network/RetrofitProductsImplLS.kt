@@ -17,8 +17,8 @@ class RetrofitProductsImplLS : IRetrofitProductsLS {
 
     private val productApi: IRetrofitProductsLS = retrofit.create(IRetrofitProductsLS::class.java)
 
-    override fun addProductLS(token: String, c_productS: String, name: String, c_fk_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String,deficit: Int): Call<String>{
-        return productApi.addProductLS(token,c_productS,name,c_fk_sessionS,amount,buyPrice,salePrice,descr,file,deficit)
+    override fun addProductLS(token: String, c_productS: String, name: String, c_fk_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String,deficit: Int,size: String,brand: String): Call<String>{
+        return productApi.addProductLS(token,c_productS,name,c_fk_sessionS,amount,buyPrice,salePrice,descr,file,deficit,size,brand)
     }
 
     override fun updateProductLS(
@@ -32,10 +32,12 @@ class RetrofitProductsImplLS : IRetrofitProductsLS {
         buyPrice: Double,
         salePrice: Double,
         descr: String,
-        deficit: Int
+        deficit: Int,
+        size: String,
+        brand : String
     ): Call<String> {
         return productApi.updateProductLS(
-            token, c_productSOld, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr,deficit
+            token, c_productSOld, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr,deficit,size,brand
         )
     }
 
@@ -70,10 +72,12 @@ class RetrofitProductsImplLS : IRetrofitProductsLS {
         statePhoto : Int,
         c_sessionLS: String,
         deficit: Int,
-        exists: Boolean,
-        sendAll: Boolean
+        exists: Int,
+        sendAll: Int,
+        size: String,
+        brand : String
     ): Call<String> {
-        return productApi.transferProductsLS(token, c_productS, name, fk_c_sessionS, amount, buyPrice, salePrice, descr, statePhoto, c_sessionLS,deficit, exists,sendAll)
+        return productApi.transferProductsLS(token, c_productS, name, fk_c_sessionS, amount, buyPrice, salePrice, descr, statePhoto, c_sessionLS,deficit, exists,sendAll,size,brand)
     }
 
     override fun alterAmountSLS(token: String, c_productS: String, amount: Int): Call<String> {

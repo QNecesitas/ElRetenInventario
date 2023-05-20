@@ -27,7 +27,7 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
         ){
             val c_order = modelSale.c_order
             val nombre = modelSale.name
-            val precio = modelSale.totalPrice.toString()
+            val precio = context.getString(R.string.precio_f,modelSale.totalPrice.toDouble())
             val producto = modelSale.products
             val descuento = modelSale.discount.toString()
             val dia = modelSale.day.toString()

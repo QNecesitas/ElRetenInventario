@@ -352,7 +352,7 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
             val call = retrofitSessionImpl.deleteSessions(
                 Constants.PHP_TOKEN,
                 sessionCode,
-                al_sessions.get(position).fk_c_drawerS
+                al_sessions[position].fk_c_drawerS
             )
             call.enqueue(object : Callback<String> {
                 override fun onResponse(

@@ -160,10 +160,7 @@ class Activity_Counter : AppCompatActivity() {
         binding.rvProductsShow.adapter = adapterCounter
     }
 
-    /***TODO 15 min
-     * TODO _Mostrar el fragment en el Frame inferior
-     * TODO _Revisa metodos showFragment... en Activity Editar producto
-     */
+
     private fun showFragment() {
         fragmentManager = supportFragmentManager
         fragment_carrito = Fragment_Cart()
@@ -246,6 +243,8 @@ class Activity_Counter : AppCompatActivity() {
         val amount = getString(R.string.Cantidad_Info, alCounter[position].amount)
         val salePrice = getString(R.string.PrecioV_Info, alCounter[position].salePrice)
         val descr = getString(R.string.Descripcion_Info, alCounter[position].descr)
+        val size = getString(R.string.Size_Info, alCounter[position].size)
+        val brand = getString(R.string.Brand_Info, alCounter[position].brand)
         val codeImage = alCounter[position].c_productS
 
         //Fill out
@@ -254,6 +253,8 @@ class Activity_Counter : AppCompatActivity() {
         li_info_binding.tvAmount.text = amount
         li_info_binding.tvPrice.text = salePrice
         li_info_binding.tvDesc.text = descr
+        li_info_binding.tvSize.text= size
+        li_info_binding.tvBrand.text= brand
         li_info_binding.ivImageProduct.let {
             Glide.with(applicationContext)
                 .load(Constants.PHP_IMAGES + "P_" + codeImage + ".jpg")
@@ -274,13 +275,6 @@ class Activity_Counter : AppCompatActivity() {
         alertDialog.show()
     }
 
-    /***TODO
-     * TODO _Hacer funcionalidad de sus botones  -------------10 min
-     * TODO _Revisar el li_cantidad de Edit_Product y ver todas las comprobaciones que hay que hacer --------------10 min
-     * TODO _Hacer las comprobaciones para cuando se exceda del numero posible(con la resta) -------------------10 min
-     * TODO _Al aceptar, que se envien al recycler---------------------------------------------------5 min
-     * TODO _Mostrar si la cantidad se excedio de la maxima un AlerDialog(llamando al metodo alertMaxAmount) --------5 min
-     */
     private fun li_cant(position: Int) {
 
         val inflater = LayoutInflater.from(binding.root.context)
@@ -290,8 +284,8 @@ class Activity_Counter : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Filling and listeners
-        var currentAmount: Int = alCounter.get(position).amount
-        val maxAmount = currentAmount
+        var currentAmount: Int = 1
+        val maxAmount =alCounter[position].amount
 
         li_add_counter_binding.etCantidad.setText(currentAmount.toString())
 

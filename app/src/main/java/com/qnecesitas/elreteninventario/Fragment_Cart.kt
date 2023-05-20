@@ -118,7 +118,7 @@ class Fragment_Cart : Fragment() {
         }
         adapterCart = AdapterR_CounterProductAdd(alCart, binding.root.context)
 
-        binding.tvPrecioT.text = precioT.toString()
+        binding.tvPrecioT.text = getString(R.string.PrecioTotal, precioT)
 
         adapterCart.setCancelListener(object : AdapterR_CounterProductAdd.RecyclerClickListener {
             override fun onClick(position: Int) {
@@ -169,7 +169,7 @@ class Fragment_Cart : Fragment() {
                     val discount = li_cartAccept_binding?.tietDescuento?.text.toString().toDouble()
                     val calendar = Calendar.getInstance()
                     val day = calendar.get(Calendar.DAY_OF_MONTH)
-                    val month = calendar.get(Calendar.MONTH)
+                    val month = calendar.get(Calendar.MONTH)+1
                     val year = calendar.get(Calendar.YEAR)
 
                     //model
@@ -177,7 +177,7 @@ class Fragment_Cart : Fragment() {
                         1,
                         name,
                         makeProducts(),
-                        binding.tvPrecioT.text.toString().toDouble(),
+                        precioT,
                         1.0,
                         discount,
                         day,
@@ -220,8 +220,8 @@ class Fragment_Cart : Fragment() {
         li_voucher_binding?.tvNombreX?.text = lastModelSale?.name
         li_voucher_binding?.tvFechaX?.text = getString(R.string.Fecha,lastModelSale?.day.toString(),
          lastModelSale?.month.toString(),lastModelSale?.year.toString())
-        li_voucher_binding?.tvTotalPX?.text = lastModelSale?.totalPrice.toString()
-        li_voucher_binding?.tvDiscountX?.text = lastModelSale?.discount.toString()
+        li_voucher_binding?.tvTotalPX?.text = getString(R.string.PrecioTotal,lastModelSale?.totalPrice?.toDouble())
+        li_voucher_binding?.tvDiscountX?.text = getString(R.string.descuento_f,lastModelSale?.discount?.toDouble())
         li_voucher_binding?.tvProductX?.text = lastModelSale?.products?.replace("--n--", "\n")
             ?.replace("--s--", "   ")
 
@@ -364,6 +364,8 @@ class Fragment_Cart : Fragment() {
             productsStr += "--n--"
             productsStr += "--s--Cantidad: " + product.amount
             productsStr += "--n--"
+            productsStr += "--s--Código: " + product.product.c_productS
+            productsStr += "--n--"
             productsStr += "--s--Precio total: "
             productsStr += (product.amount * product.product.salePrice).toString()
             productsStr += " CUP"
@@ -375,7 +377,7 @@ class Fragment_Cart : Fragment() {
     private fun makeTotalPrice(): Double{
         var price = 0.0
         for (it in alCart){
-            price += it.product.salePrice
+            price += it.product.salePrice * it.amount
         }
         return price
     }

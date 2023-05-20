@@ -104,6 +104,10 @@
     <string name="Producto_Info">Producto: %s</string>
     <string name="Codigo_Info">Código: %s</string>
     <string name="PrecioV_Info">Precio venta: %.1f CUP</string>
+    <string name="Medida_Info">Medida: %s</string>
+    <string name="Modelo_Info">Marca: %s</string>
+    <string name="Size_Info">Medida: %s </string>
+    <string name="Brand_Info">Marca: %s </string>
     <string name="PrecioC_Info">Coste del producto: %.1f CUP</string>
     <string name="Cantidad_Info">Cantidad disponible: %d unidades</string>
     <string name="Descripcion_Info">Descripción: %s</string>
@@ -169,8 +173,8 @@
     <string name="EProductos">Encontrar entre productos</string>
     <string name="sobre_nosotrosx">Sobre nosotros</string>
     <string name="deficit">Deficit</string>
-    <string name="borrar_pedido">Eliminar pedidos</string>
-    <string name="PrecioTotal">Precio total</string>
+    <string name="borrar_pedido">Vaciar pedidos</string>
+    <string name="PrecioTotal">%.1f CUP</string>
     <string name="nombre_cliente">Nombre cliente</string>
     <string name="descuento">Descuento</string>
     <string name="finalizar_pedido">Finalizar pedido</string>
@@ -197,4 +201,10 @@
     <string name="direccion_negocio">Calzada de Luyanó, municipio 10 de Octubre, #727, e/ Concha y Porvenir, La Habana</string>
     <string name="Menu_admin">Menú Administrador</string>
     <string name="Menu_salesperson">Menú Dependiente</string>
+    <string name="descuento_f">%.1f CUP</string>
+    <string name="precio_f">%.1f CUP</string>
+    <string name="No_hay_infoMostrar">No hay estadísticas para mostrar aún</string>
+    <string name="escogerF">--Escoger--</string>
+    <string name="size">Medida</string>
+    <string name="brand_or_model">Marca:</string>
 </resources>

@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -69,8 +70,8 @@ class Activity_EditProduct : AppCompatActivity() {
     private lateinit var adapterR_editProducts: AdapterR_EditProduct
     private var isContracted = false
     private var lastTranferAmount = 0
-    private var lastTransferExist = false
-    private var lastTransferAllFill = false
+    private var lastTransferExist = 0
+    private var lastTransferAllFill = 0
 
     //Internet
     private lateinit var retrofitProductsImplS: RetrofitProductsImplS
@@ -245,7 +246,14 @@ class Activity_EditProduct : AppCompatActivity() {
         if(isContracted){
             binding.aepRecycler.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
         }else{
-            binding.aepRecycler.layoutManager = GridLayoutManager(this, 2)
+            val displayMetrics = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+            val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
+            if(screenWidthDp >= 800){
+                binding.aepRecycler.layoutManager = GridLayoutManager(this, 7)
+            }else {
+                binding.aepRecycler.layoutManager = GridLayoutManager(this, 2)
+            }
         }
     }
 
@@ -340,6 +348,8 @@ class Activity_EditProduct : AppCompatActivity() {
         val buyPrice = getString(R.string.PrecioC_Info, al_editProduct[position].buyPrice)
         val salePrice = getString(R.string.PrecioV_Info, al_editProduct[position].salePrice)
         val descr = getString(R.string.Descripcion_Info, al_editProduct[position].descr)
+        val size = getString(R.string.Size_Info, al_editProduct[position].size)
+        val brand = getString(R.string.Brand_Info, al_editProduct[position].brand)
         val codeImage = al_editProduct[position].c_productS
 
         //Fill out
@@ -349,6 +359,8 @@ class Activity_EditProduct : AppCompatActivity() {
         li_info_binding?.infoPriceB?.text = buyPrice
         li_info_binding?.infoPriceS?.text = salePrice
         li_info_binding?.infoDescr?.text = descr
+        li_info_binding?.infoSize?.text = size
+        li_info_binding?.infoBrand?.text = brand
         li_info_binding?.image?.let {
             Glide.with(this@Activity_EditProduct)
                 .load(Constants.PHP_IMAGES + "P_" + codeImage + ".jpg")
@@ -400,6 +412,8 @@ class Activity_EditProduct : AppCompatActivity() {
         val descr = al_editProduct[position].descr
         val codeImage = al_editProduct[position].c_productS
         val deficit = al_editProduct[position].deficit
+        val size = al_editProduct[position].size
+        val brand = al_editProduct[position].brand
 
         //Fill out
         li_add_binding?.tietName?.setText(name)
@@ -409,6 +423,8 @@ class Activity_EditProduct : AppCompatActivity() {
         li_add_binding?.tietPriceBuy?.setText(buyPrice.toString())
         li_add_binding?.tietPriceSale?.setText(salePrice.toString())
         li_add_binding?.tietDesc?.setText(descr)
+        li_add_binding?.tietSize?.setText(size)
+        li_add_binding?.tietBrand?.setText(brand)
         li_add_binding?.image?.let {
             Glide.with(this@Activity_EditProduct)
                 .load(Constants.PHP_IMAGES + "P_" + codeImage + ".jpg")
@@ -445,7 +461,6 @@ class Activity_EditProduct : AppCompatActivity() {
                 alertDialog.dismiss()
                 updateProductInternet(
                     al_editProduct[position].c_productS,
-                    li_add_binding?.tietCode?.text.toString(),
                     li_add_binding?.tietName?.text.toString(),
                     li_add_binding?.tietCant?.text.toString().toInt(),
                     li_add_binding?.tietPriceBuy?.text.toString().toDouble(),
@@ -453,7 +468,9 @@ class Activity_EditProduct : AppCompatActivity() {
                     li_add_binding?.tietDesc?.text.toString(),
                     if (li_add_binding?.image == null) 0 else 1,
                     position,
-                    li_add_binding?.tietDeficit?.text.toString().toInt()
+                    li_add_binding?.tietDeficit?.text.toString().toInt(),
+                    li_add_binding?.tietSize?.text.toString(),
+                    li_add_binding?.tietBrand?.text.toString()
                 )
             }
         })
@@ -482,6 +499,8 @@ class Activity_EditProduct : AppCompatActivity() {
         var descr: String
         var statePhoto: Int
         var deficit: Int
+        var size: String
+        var brand : String
 
         li_add_binding?.tietCode?.setText(c_Product)
 
@@ -512,10 +531,11 @@ class Activity_EditProduct : AppCompatActivity() {
                 descr = li_add_binding?.tietDesc?.text.toString()
                 statePhoto = if (li_add_binding?.image == null) 0 else 1
                 deficit = li_add_binding?.tietDeficit?.text.toString().toInt()
-
+                size = li_add_binding?.tietSize?.text.toString()
+                brand = li_add_binding?.tietBrand?.text.toString()
                 alertDialog.dismiss()
 
-                checkDuplicatedInternet(c_Product, n_Product, amount, buyPrice, salePrice, descr, statePhoto, deficit)
+                checkDuplicatedInternet(c_Product, n_Product, amount, buyPrice, salePrice, descr, statePhoto, deficit, size, brand)
 
             }
         })
@@ -652,14 +672,17 @@ class Activity_EditProduct : AppCompatActivity() {
     }
 
     private fun checkIfExistIfAllSended(position: Int) {
+        lastTransferAllFill = 0
+        lastTransferExist = 0
+
         for (it in al_editProductAllLS){
             if(it.c_productS == al_editProduct[position].c_productS ){
-                lastTransferExist = true
+                lastTransferExist = 1
             }
         }
 
         if(al_editProduct[position].amount == lastTranferAmount){
-            lastTransferAllFill = true
+            lastTransferAllFill = 1
         }
 
 
@@ -684,7 +707,9 @@ class Activity_EditProduct : AppCompatActivity() {
         salePrice: Double,
         descr: String,
         statePhoto: Int,
-        deficit: Int
+        deficit: Int,
+        size: String,
+        brand : String
     ) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
             binding.aepRefresh.isRefreshing = true
@@ -698,7 +723,9 @@ class Activity_EditProduct : AppCompatActivity() {
                 salePrice,
                 descr,
                 imageFile,
-                deficit
+                deficit,
+                size,
+                brand
             )
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -713,7 +740,9 @@ class Activity_EditProduct : AppCompatActivity() {
                                 salePrice,
                                 descr,
                                 statePhoto,
-                                deficit
+                                deficit,
+                                size,
+                                brand
                             )
                             al_editProduct.add(model)
                             updateRecyclerAdapter()
@@ -762,7 +791,6 @@ class Activity_EditProduct : AppCompatActivity() {
     }
 
     private fun updateProductInternet(
-        c_ProductOld: String,
         c_Product: String,
         name: String,
         amount: Int,
@@ -771,13 +799,14 @@ class Activity_EditProduct : AppCompatActivity() {
         descr: String,
         statePhoto: Int,
         position: Int,
-        deficit: Int
+        deficit: Int,
+        size: String,
+        brand: String
     ) {
         if (NetworkTools.isOnline(binding.root.context, true)) {
             binding.aepRefresh.isRefreshing = true
             val call = retrofitProductsImplS.updateProduct(
                 Constants.PHP_TOKEN,
-                c_ProductOld,
                 imageFile,
                 c_Product,
                 name,
@@ -786,7 +815,9 @@ class Activity_EditProduct : AppCompatActivity() {
                 buyPrice,
                 salePrice,
                 descr,
-                deficit
+                deficit,
+                size,
+                brand
             )
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -801,8 +832,11 @@ class Activity_EditProduct : AppCompatActivity() {
                             salePrice,
                             descr,
                             statePhoto,
-                            deficit
+                            deficit,
+                            size,
+                            brand
                         )
+
                         al_editProduct[position] = model
                         updateRecyclerAdapter()
                         FancyToast.makeText(
@@ -849,7 +883,7 @@ class Activity_EditProduct : AppCompatActivity() {
         }
     }
 
-    private fun checkDuplicatedInternet(c_Product: String, n_Product: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, statePhoto: Int, deficit: Int){
+    private fun checkDuplicatedInternet(c_Product: String, n_Product: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, statePhoto: Int, deficit: Int, size: String, brand: String){
         if (NetworkTools.isOnline(binding.root.context, false)) {
             binding.aepRefresh.isRefreshing = true
 
@@ -870,7 +904,9 @@ class Activity_EditProduct : AppCompatActivity() {
                                 salePrice,
                                 descr,
                                 statePhoto,
-                                deficit
+                                deficit,
+                                size,
+                                brand
                             )
                         }else{
                             showAlertDialogDuplicated()
@@ -991,7 +1027,9 @@ class Activity_EditProduct : AppCompatActivity() {
                 codeSession,
                 al_editProduct[position].deficit,
                 lastTransferExist,
-                lastTransferAllFill
+                lastTransferAllFill,
+                al_editProduct[position].size,
+                al_editProduct[position].brand
             )
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -1004,8 +1042,7 @@ class Activity_EditProduct : AppCompatActivity() {
                             FancyToast.SUCCESS,
                             false
                         ).show()
-                        al_editProduct.removeAt(position)
-                        updateRecyclerAdapter()
+                        loadRecyclerInfo()
                     } else {
                         FancyToast.makeText(
                             this@Activity_EditProduct,
@@ -1262,14 +1299,7 @@ class Activity_EditProduct : AppCompatActivity() {
             li_add_binding?.tilDeficit?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
-        //Desc
-        if (li_add_binding?.tietDesc?.text?.isNotEmpty() == true) {
-            amountTrue++
-        } else {
-            li_add_binding?.tilDesc?.error = getString(R.string.este_campo_no_debe_vacio)
-        }
-
-        return amountTrue == 7
+        return amountTrue == 6
     }
 
     private fun escogerimagenGaleria() {

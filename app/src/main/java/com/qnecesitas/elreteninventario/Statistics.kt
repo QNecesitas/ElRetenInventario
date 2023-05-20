@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -31,7 +30,9 @@ import java.util.Calendar
 
 class Statistics : AppCompatActivity() {
 
-    lateinit var binding: ActivityStatisticsBinding
+    private lateinit var binding: ActivityStatisticsBinding
+
+    private lateinit var alSalesAll: ArrayList<ModelSale>
 
     //Internet
     private lateinit var retrofitSalesImpl: RetrofitSalesImpl
@@ -51,10 +52,17 @@ class Statistics : AppCompatActivity() {
 
         //retrofit
         retrofitSalesImpl = RetrofitSalesImpl()
+        alSalesAll = ArrayList()
 
+        //Date
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
 
         //profits Day
         binding.ivProfitDayCalendar.setOnClickListener {
+            liDateDay(this::callProfitDay)
+        }
+        binding.tvProfitDayResponse.setOnClickListener {
             liDateDay(this::callProfitDay)
         }
 
@@ -62,9 +70,15 @@ class Statistics : AppCompatActivity() {
         binding.ivProfitMonthCalendar.setOnClickListener {
             liDateMonth(this::callProfitMonth)
         }
+        binding.tvProfitMonthResponse.setOnClickListener {
+            liDateMonth(this::callProfitMonth)
+        }
 
         //profits Year
         binding.ivProfitYearCalendar.setOnClickListener {
+            liDateYear(this::callProfitYear)
+        }
+        binding.tvProfitYearResponse.setOnClickListener {
             liDateYear(this::callProfitYear)
         }
 
@@ -72,9 +86,15 @@ class Statistics : AppCompatActivity() {
         binding.ivSalesDayCalendar.setOnClickListener {
             liDateDay(this::callSalesDay)
         }
+        binding.tvSalesDayResponse.setOnClickListener {
+            liDateDay(this::callSalesDay)
+        }
 
         //sales Month
         binding.ivSalesMonthCalendar.setOnClickListener {
+            liDateMonth(this::callSalesMonth)
+        }
+        binding.tvSalesMonthResponse.setOnClickListener {
             liDateMonth(this::callSalesMonth)
         }
 
@@ -82,12 +102,92 @@ class Statistics : AppCompatActivity() {
         binding.ivSalesYearCalendar.setOnClickListener {
             liDateYear(this::callSalesYear)
         }
+        binding.tvSalesYearResponse.setOnClickListener {
+            liDateYear(this::callSalesYear)
+        }
 
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val sales = getSalesFromMonths(year)
-        updateChart(prepareDataChart(sales))
+
+        binding.refresh.setOnRefreshListener {
+            loadSalesAllMonths(year)
+        }
+        binding.aepRetryConnection.setOnClickListener{
+            loadSalesAllMonths(year)
+        }
+
+        loadSalesAllMonths(year)
     }
+
+
+
+    /*Start code
+    ---------------------------
+     */
+    private fun loadSalesAllMonths(year: Int) {
+        if (NetworkTools.isOnline(binding.root.context, false)) {
+            binding.refresh.isRefreshing = true
+            val call = retrofitSalesImpl.fetchOrdersY(Constants.PHP_TOKEN, year)
+            call.enqueue(object : Callback<ArrayList<ModelSale>> {
+                override fun onResponse(
+                    call: Call<ArrayList<ModelSale>>,
+                    response: Response<java.util.ArrayList<ModelSale>>
+                ) {
+                    binding.refresh.isRefreshing = false
+                    if (response.isSuccessful) {
+                        alSalesAll = response.body()!!
+                        alertNotInternet(false)
+                        updateChart()
+                    } else {
+                        alertNotInternet(true)
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<java.util.ArrayList<ModelSale>>,
+                    t: Throwable
+                ) {
+                    alertNotInternet(true)
+                    binding.refresh.isRefreshing = false
+                }
+            })
+        } else {
+            showAlertDialogNoInternetProfitYear(this@Statistics, year)
+        }
+    }
+
+    private fun updateChart(){
+        prepareDataChart(alSalesAll)
+    }
+
+    private fun prepareDataChart(list : ArrayList<ModelSale>)  {
+        val listOfEntries = mutableListOf<Entry>()
+
+        for(x in 1 .. 12){
+            val salesByMonth = ArrayList<ModelSale>()
+            for(model in list){
+                if (model.month == x){
+                    salesByMonth.add(model)
+                }
+            }
+            listOfEntries.add(Entry(x.toFloat(), composeProfit(salesByMonth).toFloat()))
+        }
+
+
+        drawChart( listOfEntries )
+    }
+
+
+    private fun alertNotInternet(open: Boolean) {
+        if (open) {
+            binding.aepNotConnection.visibility = View.VISIBLE
+            binding.chart.visibility = View.GONE
+        } else {
+            binding.aepNotConnection.visibility = View.GONE
+            binding.chart.visibility = View.VISIBLE
+        }
+    }
+
+
+
 
     //Profits Day
     private fun callProfitDay(year: Int, month: Int, day: Int) {
@@ -120,96 +220,6 @@ class Statistics : AppCompatActivity() {
             showAlertDialogNoInternetProfitDay(this@Statistics, year, month, day)
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -618,52 +628,8 @@ class Statistics : AppCompatActivity() {
     }
 
    //update chart
-    private fun getSalesFromMonths(year: Int): ArrayList<ModelSale> {
-        var list = ArrayList<ModelSale>()
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSalesImpl.fetchOrdersY(Constants.PHP_TOKEN, year)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        list = response.body()!!
-                    } else {
-                        showAlertDialogNoInternetProfitYear(this@Statistics, year)
-                    }
-                }
+    private fun drawChart(entries: List<Entry>) {
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    showAlertDialogNoInternetProfitYear(this@Statistics, year)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            showAlertDialogNoInternetProfitYear(this@Statistics, year)
-        }
-        return list
-    }
-    private fun prepareDataChart(list : ArrayList<ModelSale>) : List<Entry> {
-        val listOfEntries = mutableListOf<Entry>()
-        val salesByMonth = ArrayList<ModelSale>()
-        for(x in 1 .. 12){
-            for(model in list){
-                if (model.month == x){
-                    salesByMonth.add(model)
-                }
-            }
-            listOfEntries.add(Entry(x.toFloat(), composeProfit(salesByMonth).toFloat()))
-        }
-        return listOfEntries
-    }
-    private fun updateChart(entries: List<Entry>) {
-        Toast.makeText(this,""+entries.size,Toast.LENGTH_SHORT).show()
         //create LineDataSet
         val dataSet = LineDataSet(entries, "Meses")
         dataSet.color = R.color.orange

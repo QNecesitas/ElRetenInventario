@@ -36,9 +36,11 @@ class AdapterR_DeficitProduct(
                 .into(binding.rdIvIcon)
 
             val nombre = model.name
+            val size = context.getString(R.string.Size_Info, model.size)
             val cantidad = context.getString(R.string.s_unidades, model.amount)
 
             binding.rdTvName.text = nombre
+            binding.rdTvSize.text = size
             binding.rdTvCantP.text = cantidad
 
         }
