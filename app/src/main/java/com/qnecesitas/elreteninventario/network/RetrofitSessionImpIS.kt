@@ -25,7 +25,8 @@ class RetrofitSessionImpIS : IRetrofitSessionsS{
     }
 
     override fun addSession(token: String, c_sessionS: String, fk_c_drawerS: String): Call<String> {
-        return productApi.addSession(token, c_sessionS, fk_c_drawerS)
+        val newCode = "${fk_c_drawerS}_${c_sessionS}"
+        return productApi.addSession(token, newCode, fk_c_drawerS)
     }
 
     override fun fetchSessions(token: String, fk_c_drawerS: String): Call<ArrayList<ModelSession>> {

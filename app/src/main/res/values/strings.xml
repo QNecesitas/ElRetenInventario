@@ -207,4 +207,7 @@
     <string name="escogerF">--Escoger--</string>
     <string name="size">Medida</string>
     <string name="brand_or_model">Marca:</string>
+    <string name="Ya_existe_el_estante">Ya existe un estante con ese nombre</string>
+    <string name="Ya_existe_seccion">Ya existe una sección con ese nombre en esta gaveta</string>
+    <string name="Ya_existe_gaveta">Ya existe una gaveta con ese nombre en este estante</string>
 </resources>

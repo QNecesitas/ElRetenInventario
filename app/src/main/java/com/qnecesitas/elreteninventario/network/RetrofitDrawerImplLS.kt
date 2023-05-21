@@ -30,7 +30,8 @@ class RetrofitDrawerImplLS: IRetrofitDrawersLS {
     }
 
     override fun addDrawer(token: String, c_drawerS: String, fk_c_shelfS: String): Call<String> {
-        return productApi.addDrawer(token, c_drawerS, fk_c_shelfS)
+        val newCode = "${fk_c_shelfS}_${c_drawerS}"
+        return productApi.addDrawer(token, newCode, fk_c_shelfS)
     }
 
     override fun fetchDrawers(token: String, fk_c_shelfS: String): Call<ArrayList<ModelDrawer>> {

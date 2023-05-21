@@ -165,11 +165,12 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
 
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
-            if (tietContent.isNotEmpty()){
-                addNewDrawerInternet(tietContent)
-                alertDialog.dismiss()
-            }
-            else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+            if (tietContent.isNotEmpty()) {
+                if (!isDuplicated(tietContent)){
+                    addNewDrawerInternet(tietContent)
+                    alertDialog.dismiss()
+                }else li_binding.til.error = getString(R.string.Ya_existe_gaveta)
+            }else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -229,6 +230,15 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
                 }
             })
         }
+    }
+
+    private fun isDuplicated(name: String): Boolean{
+        for(shelf in al_drawers){
+            if(shelf.c_drawerS == name){
+                return true
+            }
+        }
+        return false
     }
 
     //Edit drawer

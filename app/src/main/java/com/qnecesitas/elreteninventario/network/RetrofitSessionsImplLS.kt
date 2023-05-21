@@ -40,7 +40,8 @@ class RetrofitSessionsImplLS : IRetrofitSessionsLS {
         c_sessionLS: String,
         fk_c_drawerLS: String
     ): Call<String> {
-        return  productApi.addSession(token, c_sessionLS, fk_c_drawerLS)
+        val newCode = "${fk_c_drawerLS}_${c_sessionLS}"
+        return  productApi.addSession(token, newCode, fk_c_drawerLS)
     }
 
     override fun fetchSessions(

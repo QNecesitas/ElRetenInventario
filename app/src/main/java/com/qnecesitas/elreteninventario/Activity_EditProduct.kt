@@ -1157,12 +1157,9 @@ class Activity_EditProduct : AppCompatActivity() {
                         FancyToast.SUCCESS,
                         false
                     ).show()
-                    val al_modelPath = response.body()
-                    val path =
-                        al_modelPath?.get(0)?.fk_c_shelfS + "/"+
-                                al_modelPath?.get(0)?.fk_c_drawerS +"/"+
-                                al_editProduct[position].fk_c_sessionS
-                    showAlertDialogPath(path)
+                    val alModelPath = response.body()
+                    val path = alModelPath?.let { makePath(it, position) }
+                    path?.let { showAlertDialogPath(it) }
                     updateRecyclerAdapter()
                 } else {
                     FancyToast.makeText(
@@ -1359,6 +1356,24 @@ class Activity_EditProduct : AppCompatActivity() {
             val bitmap = (li_add_binding?.image?.drawable as BitmapDrawable).bitmap
             imageFile = ImageTools.convertImageString(bitmap).toString()
         }
+    }
+
+    private fun makePath(al_modelPath: ArrayList<ModelProductPath>,position: Int): String{
+        val shelfCode = al_modelPath[0].fk_c_shelfS
+
+        val drawerCode = al_modelPath[0].fk_c_drawerS
+        val guionDrawerPosition = drawerCode.indexOf("_")
+        val newDrawerCode = drawerCode.substring(guionDrawerPosition + 1)
+
+        val sessionCode = al_editProduct[position].fk_c_sessionS
+        val guionSessionPosition = sessionCode.indexOf("_")
+        val newSessionCode = sessionCode.substring(guionSessionPosition + 1)
+
+
+
+
+        return "$shelfCode/$newDrawerCode/$newSessionCode"
+
     }
 
     /**Transfer System**/

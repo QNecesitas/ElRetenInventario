@@ -167,8 +167,10 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
             if (tietContent.isNotEmpty()) {
-                addNewSessionInternet(tietContent)
-                alertDialog.dismiss()
+                if (!isDuplicated(tietContent)) {
+                    addNewSessionInternet(tietContent)
+                    alertDialog.dismiss()
+                }else li_binding.til.error = getString(R.string.Ya_existe_seccion)
             } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
@@ -227,6 +229,15 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
                 }
             })
         }
+    }
+
+    private fun isDuplicated(name: String): Boolean{
+        for(shelf in al_sessions){
+            if(shelf.c_sessionS == name){
+                return true
+            }
+        }
+        return false
     }
 
     //Edit session

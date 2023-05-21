@@ -170,8 +170,10 @@ class Fragment_ShelvesLS : Fragment() {
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
             if (tietContent.isNotEmpty()){
-                addNewShelfInternet(tietContent)
-                alertDialog.dismiss()
+                if(!isDuplicated(tietContent)) {
+                    addNewShelfInternet(tietContent)
+                    alertDialog.dismiss()
+                }else li_binding.til.error = getString(R.string.Ya_existe_el_estante)
             }
             else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
@@ -241,6 +243,14 @@ class Fragment_ShelvesLS : Fragment() {
         }
     }
 
+    private fun isDuplicated(name: String): Boolean{
+        for(shelf in al_shelves){
+            if(shelf.c_shelfS == name){
+                return true
+            }
+        }
+        return false
+    }
 
     //Edit shelf
     private fun click_edit(position: Int) {

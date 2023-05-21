@@ -145,6 +145,10 @@ class AdapterR_CounterProductShow(
                         alFilter.add(product)
                     }else if(product.c_productS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         alFilter.add(product)
+                    }else if(product.size.lowercase(Locale.ROOT).trim().contains(filterPattern)){
+                        alFilter.add(product)
+                    }else if(product.fk_c_sessionS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
+                        alFilter.add(product)
                     }
                 }
             }
