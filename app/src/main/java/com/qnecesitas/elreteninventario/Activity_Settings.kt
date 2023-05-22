@@ -104,7 +104,7 @@ class Activity_Settings : AppCompatActivity() {
             result =false
             binding.tietPasswAdminConfirm.error = getString(R.string.los_campos_no_coinciden)
         }else{
-            if(binding.tietPasswAdminConfirm.text?.isNotEmpty()==true){
+            if(binding.tietPasswAdminConfirm.text?.trim()?.isNotEmpty()==true){
                 binding.tietPasswAdminConfirm.error = null
             }
         }

@@ -86,6 +86,7 @@
                 app:spanCount="2" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:visibility="gone"
                 android:id="@+id/aep_fab_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

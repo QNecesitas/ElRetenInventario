@@ -34,7 +34,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/seed"
+                    android:background="?attr/colorPrimary"
                     android:text="@string/finalizar_pedido"
                     android:textAlignment="center"
                     android:textColor="@color/white"
@@ -87,6 +87,32 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
+            <!--Type Cash-->
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/til_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/CustomBorderTIl"
+                app:layout_constraintTop_toBottomOf="@id/til_descuento"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_margin="16dp"
+                android:layout_marginTop="8dp"
+                app:endIconTint="@color/white">
+
+                <AutoCompleteTextView
+                    android:id="@+id/tiet_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tipo_de_pago"
+                    android:inputType="none"
+                    android:minWidth="150sp"
+                    android:textColorHint="@color/white" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
             <!--BTN accept-->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_aceptar"
@@ -101,7 +127,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_cancelar"
-                app:layout_constraintTop_toBottomOf="@id/til_descuento" />
+                app:layout_constraintTop_toBottomOf="@id/til_spinner" />
 
 
             <!-- BTN cancel-->
@@ -118,7 +144,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_aceptar"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/til_descuento" />
+                app:layout_constraintTop_toBottomOf="@id/til_spinner" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

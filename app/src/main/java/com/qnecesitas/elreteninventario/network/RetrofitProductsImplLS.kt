@@ -1,5 +1,6 @@
 package com.qnecesitas.elreteninventario.network
 
+import android.util.Log
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelEditProduct
 import com.qnecesitas.elreteninventario.data.ModelProductPath

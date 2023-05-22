@@ -7,6 +7,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductAdd
@@ -157,6 +159,9 @@ class Fragment_Cart : Fragment() {
             builder.setView(li_cartAccept_binding?.root)
             val alertDialog = builder.create()
 
+            val alType: ArrayList<String> =  arrayListOf("Transferencia", "Efectivo")
+            val stringArrayAdapter = ArrayAdapter<String>(requireContext(), R.layout.list_item_spinner, alType)
+            li_cartAccept_binding?.tietSpinner?.setAdapter<ArrayAdapter<String>>(stringArrayAdapter)
 
             //Listeners
             li_cartAccept_binding?.btnCancelar?.setOnClickListener(View.OnClickListener {
@@ -164,13 +169,14 @@ class Fragment_Cart : Fragment() {
             })
 
             li_cartAccept_binding?.btnAceptar?.setOnClickListener(View.OnClickListener {
-                if(checkinfo()){
+                if(checkInfo()){
                     val name = li_cartAccept_binding?.tietNombClient?.text.toString()
                     val discount = li_cartAccept_binding?.tietDescuento?.text.toString().toDouble()
                     val calendar = Calendar.getInstance()
                     val day = calendar.get(Calendar.DAY_OF_MONTH)
                     val month = calendar.get(Calendar.MONTH)+1
                     val year = calendar.get(Calendar.YEAR)
+                    val type = li_cartAccept_binding?.tietSpinner?.text.toString()
 
                     //model
                     lastModelSale = ModelSale(
@@ -182,12 +188,12 @@ class Fragment_Cart : Fragment() {
                         discount,
                         day,
                         month,
-                        year
-                        )
+                        year,
+                        type)
 
 
                     alertDialog.dismiss()
-                    startCoroutines(name, discount)
+                    startCoroutines(name, discount, type)
                 }
             })
 
@@ -222,6 +228,7 @@ class Fragment_Cart : Fragment() {
          lastModelSale?.month.toString(),lastModelSale?.year.toString())
         li_voucher_binding?.tvTotalPX?.text = getString(R.string.PrecioTotal,lastModelSale?.totalPrice?.toDouble())
         li_voucher_binding?.tvDiscountX?.text = getString(R.string.descuento_f,lastModelSale?.discount?.toDouble())
+        li_voucher_binding?.tvPagox?.text = lastModelSale?.type
         li_voucher_binding?.tvProductX?.text = lastModelSale?.products?.replace("--n--", "\n")
             ?.replace("--s--", "   ")
 
@@ -237,7 +244,7 @@ class Fragment_Cart : Fragment() {
         alertDialog.show()
     }
 
-    private fun startCoroutines(name: String, discount: Double){
+    private fun startCoroutines(name: String, discount: Double, type: String){
         binding.progress.visibility = View.VISIBLE
         binding.progress.max = alCart.size+1
         var progress = 0;
@@ -252,7 +259,7 @@ class Fragment_Cart : Fragment() {
                         binding.progress.progress = progress
                     }
                     if(progress == alCart.size){
-                        addOrderInternet(name,discount)
+                        addOrderInternet(name,discount, type)
                     }
                 }else{
                     progress = 0
@@ -284,10 +291,10 @@ class Fragment_Cart : Fragment() {
         return call.awaitResponse()
     }
 
-    private fun addOrderInternet(nomb: String, descuento: Double){
+    private fun addOrderInternet(nomb: String, descuento: Double, type: String){
         if(NetworkTools.isOnline(binding.root.context, false)){
             binding.progress.visibility = View.VISIBLE
-            val call = retrofitCart.addOrder(Constants.PHP_TOKEN,nomb,makeProducts(),makeTotalPrice(), makeTotalInv(), descuento)
+            val call = retrofitCart.addOrder(Constants.PHP_TOKEN,nomb,makeProducts(),makeTotalPrice(), makeTotalInv(), descuento, type)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     binding.progress.visibility = View.GONE
@@ -409,22 +416,30 @@ class Fragment_Cart : Fragment() {
         this.listenerDelete = listenerDelete
     }
 
-    fun checkinfo(): Boolean{
+    private fun checkInfo(): Boolean{
         var  amount = 0
 
-        if(li_cartAccept_binding?.tietNombClient?.text?.isNotEmpty() == true){
+        if(li_cartAccept_binding?.tietNombClient?.text?.trim()?.isNotEmpty() == true){
             amount++
         }else{
             li_cartAccept_binding?.tilNombClient?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
-        if (li_cartAccept_binding?.tietDescuento?.text?.isNotEmpty() ==true){
+        if (li_cartAccept_binding?.tietDescuento?.text?.trim()?.isNotEmpty() ==true){
             amount++
         }else{
             li_cartAccept_binding?.tilDescuento?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
-        return amount == 2
+        if (li_cartAccept_binding?.tietSpinner?.text?.trim()?.isNotEmpty() == true){
+            amount++
+        }else{
+            li_cartAccept_binding?.tietSpinner?.error = getString(R.string.este_campo_no_debe_vacio)
+        }
+
+        return amount == 3
     }
+
+
 
 }

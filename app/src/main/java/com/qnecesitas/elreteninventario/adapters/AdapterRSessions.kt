@@ -30,7 +30,7 @@ class AdapterRSessions(
             touchListener: RecyclerClickListener?,
             position: Int
         ) {
-            val guionPosition = model.c_sessionS.indexOf("_")
+            val guionPosition = model.c_sessionS.lastIndexOf("_")
             val originCode = model.c_sessionS.substring(guionPosition + 1)
             val code = context.getString(R.string.codigo_s, originCode)
             val amount = context.getString(R.string.cant_producto, model.amount.toString())

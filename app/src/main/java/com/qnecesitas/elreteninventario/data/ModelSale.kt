@@ -9,5 +9,6 @@ data class ModelSale(
     var discount: Double,
     var day: Int,
     var month: Int,
-    var year: Int
+    var year: Int,
+    var type: String
 )

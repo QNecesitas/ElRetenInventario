@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:minWidth="250dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/standard_card_corner_radius"
+        android:elevation="@dimen/standard_card_elevation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:minWidth="250dp"
+            android:id="@+id/cl_cantidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ET_PrecioCUP">
+
+            <!--Little toolbar-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/toolbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <!--Title-->
+                <TextView
+                    android:id="@+id/tv_cant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Cantidad"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/textSize_m"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--Linear Container-->
+            <LinearLayout
+                android:id="@+id/ly_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12sp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+                <!--menos-->
+                <ImageView
+                    android:id="@+id/btn_less"
+                    android:layout_width="30sp"
+                    android:layout_height="30sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20sp"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginEnd="20sp"
+                    android:contentDescription="@string/Menos"
+                    android:src="@drawable/baseline_remove_24" />
+
+                <!--Cantidad-->
+                <EditText
+                    android:textColor="@color/white"
+                    android:id="@+id/et_cantidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5sp"
+                    android:autofillHints="no"
+                    android:inputType="number"
+                    android:maxLength="5"
+                    android:minWidth="50sp"
+                    android:text="@string/_1"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/textSize_m"
+                    tools:ignore="LabelFor" />
+
+                <!--Agregar-->
+                <ImageView
+                    android:id="@+id/btn_more"
+                    android:layout_width="30sp"
+                    android:layout_height="30sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20sp"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginEnd="20sp"
+                    android:contentDescription="@string/Mas"
+                    android:src="@drawable/add" />
+
+            </LinearLayout>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="20sp"
+                android:padding="5sp"
+                android:text="@string/cancelar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ly_container" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:textColor="?attr/colorPrimary"
+                android:id="@+id/tv_accept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:layout_marginEnd="10sp"
+                android:padding="5sp"
+                android:text="@string/Aceptar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ly_container" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,11 +34,67 @@
                 android:layout_height="0sp"
                 android:background="@color/md_theme_light_secondaryContainer"
                 android:contentDescription="@string/imagen_del_producto"
-                android:src="@drawable/widgets"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+
+            <!--Big marca product-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:fontFamily="@font/anton"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:id="@+id/tv_marca_big"
+                android:visibility="visible"
+                android:text="@string/marca_del_producto"
+                android:gravity="center"
+                android:textSize="@dimen/textSize_xh"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/REP_IV_ImageProduct"
+                app:layout_constraintBottom_toBottomOf="@id/REP_IV_ImageProduct"/>
+            <ImageView
+                android:id="@+id/iv_decoration"
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                app:layout_constraintStart_toStartOf="@id/tv_marca_big"
+                app:layout_constraintEnd_toEndOf="@id/tv_marca_big"
+                app:layout_constraintTop_toBottomOf="@id/tv_marca_big"
+                android:src="@drawable/baseline_linear_scale_24"
+                app:tint="@color/white"
+                android:importantForAccessibility="no" />
+
+
+
+            <!--Little marca product-->
+                <androidx.appcompat.widget.AppCompatTextView
+                    app:layout_goneMarginTop="0dp"
+                    android:layout_marginTop="-16dp"
+                    android:id="@+id/tv_marca_little"
+                    android:visibility="visible"
+                    android:elevation="4dp"
+                    android:translationZ="4dp"
+                    android:background="@drawable/redonded_right"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/REP_IV_ImageProduct"
+                    android:textAlignment="center"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/marca_del_producto"/>
+
+
 
             <!--Name product-->
             <TextView
@@ -46,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8sp"
-                android:layout_marginTop="20sp"
+                android:layout_marginTop="12sp"
                 android:layout_marginEnd="8sp"
                 android:maxLines="2"
                 android:textStyle="bold"
@@ -54,7 +110,7 @@
                 android:text="@string/name_product"
                 android:textSize="@dimen/textSize_m"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/REP_IV_ImageProduct" />
+                app:layout_constraintTop_toBottomOf="@id/tv_marca_little" />
 
             <!--Cant-->
             <TextView

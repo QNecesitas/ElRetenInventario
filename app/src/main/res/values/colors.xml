@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="seed">#ff2347</color>
+    <color name="seed">#FF4765</color>
     <color name="md_theme_light_primary">#BF002D</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
     <color name="md_theme_light_primaryContainer">#FFDAD9</color>
@@ -68,5 +68,6 @@
     <color name="dark_gray">#6D6D6D</color>
     <color name="gray_light">#F6F6F6</color>
     <color name="orange">#FF5722</color>
+    <color name="black">#000000</color>
 
 </resources>

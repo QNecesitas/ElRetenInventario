@@ -1,12 +1,10 @@
 package com.qnecesitas.elreteninventario.adapters
 
 import android.content.Context
-import android.database.sqlite.SQLiteOpenHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
-import androidx.core.view.marginTop
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -47,30 +45,68 @@ class AdapterR_EditProduct(
             context: Context,
             position: Int
         ) {
-            Glide.with(context)
-                .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
-                .error(R.drawable.widgets)
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(binding.REPIVImageProduct)
 
-            val nombre = model.name
-            val cantidad = context.getString(R.string.s_unidades, model.amount)
+            val name = model.name
+            val cant = context.getString(R.string.s_unidades, model.amount)
             val size = model.size
+            val brand = model.brand
 
-            binding.REPTVName.text = nombre
-            binding.REPTVCant.text = cantidad
+
+            binding.REPTVName.text = name
+            binding.REPTVCant.text = cant
             binding.REPTVSize.text = size
             binding.root.setOnClickListener{
                 this@AdapterR_EditProduct.listener?.onClick(getRealPosition(position))
             }
+            binding.tvMarcaBig.text = brand
+            binding.tvMarcaLittle.text = brand
 
             if(isContracted){
                 binding.REPIVImageProduct.visibility = View.GONE
+                binding.tvMarcaBig.visibility = View.GONE
+                binding.ivDecoration.visibility = View.GONE
+                binding.tvMarcaLittle.visibility = View.VISIBLE
             }else{
                 binding.REPIVImageProduct.visibility = View.VISIBLE
+                if(model.statePhoto == 1){
+                    binding.tvMarcaBig.visibility = View.GONE
+                    binding.ivDecoration.visibility = View.GONE
+                    binding.tvMarcaLittle.visibility = View.VISIBLE
+                }else if(model.statePhoto == 0){
+                    binding.tvMarcaBig.visibility = View.VISIBLE
+                    binding.ivDecoration.visibility = View.VISIBLE
+                    binding.tvMarcaLittle.visibility = View.GONE
+                }
             }
+
+
+            if(model.brand.trim().isEmpty()){
+                binding.tvMarcaBig.visibility = View.GONE
+                binding.ivDecoration.visibility = View.GONE
+                binding.tvMarcaLittle.visibility = View.GONE
+                if(model.statePhoto == 0){
+                    binding.REPIVImageProduct.setImageResource(R.drawable.widgets)
+                }else{
+                    binding.REPIVImageProduct.setImageBitmap(null)
+                    Glide.with(context)
+                        .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.REPIVImageProduct)
+                }
+            }else{
+                binding.REPIVImageProduct.setImageBitmap(null)
+                if(model.statePhoto==1){
+                    Glide.with(context)
+                        .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.REPIVImageProduct)
+                }
+            }
+
 
         }
 

@@ -150,10 +150,34 @@
                 app:layout_constraintTop_toTopOf="@+id/tv_discount" />
 
 
+            <!--tv pago-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_marginTop="4dp"
+                android:id="@+id/tv_pago"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pago_s"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tv_totalP"
+                app:layout_constraintTop_toBottomOf="@+id/tv_discount" />
+
+            <!--tv pagox-->
+            <androidx.appcompat.widget.AppCompatTextView
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintHorizontal_bias="0"
+                android:id="@+id/tv_pagox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/pago_f"
+                app:layout_constraintStart_toEndOf="@+id/tv_pago"
+                app:layout_constraintTop_toTopOf="@+id/tv_pago" />
+
             <!--tv separator-->
             <androidx.appcompat.widget.AppCompatTextView
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_discount"
+                app:layout_constraintTop_toBottomOf="@+id/tv_pago"
                 android:id="@+id/separatorD_O"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

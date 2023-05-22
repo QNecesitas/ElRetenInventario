@@ -51,4 +51,10 @@
         <item name="colorControlActivated">@color/white</item>
     </style>
 
+    <style name="CustomBorderTIl" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+        <item name="boxStrokeWidth">2sp</item>
+    </style>
+
+
+
 </resources>

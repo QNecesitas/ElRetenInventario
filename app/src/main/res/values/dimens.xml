@@ -3,6 +3,7 @@
     <dimen name="icons_folders">30dp</dimen>
 
     <!--Text sizes-->
+    <dimen name="textSize_xh">24sp</dimen>
     <dimen name="textSize_h">20sp</dimen>
     <dimen name="textSize_mh">18sp</dimen>
     <dimen name="textSize_m">16sp</dimen>

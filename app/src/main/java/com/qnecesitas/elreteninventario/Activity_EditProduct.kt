@@ -589,7 +589,7 @@ class Activity_EditProduct : AppCompatActivity() {
 
         li_alter_amount_binding.btnAccept.setOnClickListener{
             alertDialog.dismiss()
-            if(li_alter_amount_binding.et.text.toString().isNotEmpty()) {
+            if(li_alter_amount_binding.et.text.toString().trim().isNotEmpty()) {
                 uploadAmountChangesInternet(li_alter_amount_binding.et.text.toString().toInt(), position)
             }else{
                 li_alter_amount_binding.et.error = getString(R.string.este_campo_no_debe_vacio)
@@ -651,7 +651,7 @@ class Activity_EditProduct : AppCompatActivity() {
 
         li_alter_amount_binding.btnAccept.setOnClickListener{
             alertDialog.dismiss()
-            if(li_alter_amount_binding.et.text.toString().isNotEmpty()) {
+            if(li_alter_amount_binding.et.text.toString().trim().isNotEmpty()) {
                 lastTranferAmount = li_alter_amount_binding.et.text.toString().toInt()
                 checkIfExistIfAllSended(position);
                 showClTransfer(position)
@@ -1255,42 +1255,42 @@ class Activity_EditProduct : AppCompatActivity() {
         var amountTrue = 0
 
         //Name
-        if (li_add_binding?.tietName?.text!!.isNotEmpty()) {
+        if (li_add_binding?.tietName?.text!!.trim().isNotEmpty()) {
             amountTrue++
         } else {
             li_add_binding?.tilName?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
         //Code
-        if (li_add_binding?.tietCode?.text!!.isNotEmpty()) {
+        if (li_add_binding?.tietCode?.text!!.trim().isNotEmpty()) {
             amountTrue++
         } else {
             li_add_binding?.tilCode?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
         //PriceBuy
-        if (li_add_binding?.tietPriceBuy?.text!!.isNotEmpty()) {
+        if (li_add_binding?.tietPriceBuy?.text!!.trim().isNotEmpty()) {
             amountTrue++
         } else {
             li_add_binding?.tilPriceBuy?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
         //PriceSale
-        if (li_add_binding?.tietPriceSale?.text!!.isNotEmpty()) {
+        if (li_add_binding?.tietPriceSale?.text!!.trim().isNotEmpty()) {
             amountTrue++
         } else {
             li_add_binding?.tilPriceSale?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
         //Amount
-        if (li_add_binding?.tietCant?.text?.isNotEmpty() == true) {
+        if (li_add_binding?.tietCant?.text?.trim()!!.isNotEmpty() == true) {
             amountTrue++
         } else {
             li_add_binding?.tilCant?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
         //Deficit
-        if(li_add_binding?.tietDeficit?.text?.isNotEmpty()==true) {
+        if(li_add_binding?.tietDeficit?.text?.trim()!!.isNotEmpty()==true) {
             amountTrue++
         } else {
             li_add_binding?.tilDeficit?.error = getString(R.string.este_campo_no_debe_vacio)
@@ -1355,6 +1355,7 @@ class Activity_EditProduct : AppCompatActivity() {
             li_add_binding?.image?.setImageURI(uriLLegadaRecortada)
             val bitmap = (li_add_binding?.image?.drawable as BitmapDrawable).bitmap
             imageFile = ImageTools.convertImageString(bitmap).toString()
+            li_add_binding!!.image.setImageBitmap(bitmap)
         }
     }
 
@@ -1362,11 +1363,11 @@ class Activity_EditProduct : AppCompatActivity() {
         val shelfCode = al_modelPath[0].fk_c_shelfS
 
         val drawerCode = al_modelPath[0].fk_c_drawerS
-        val guionDrawerPosition = drawerCode.indexOf("_")
+        val guionDrawerPosition = drawerCode.lastIndexOf("_")
         val newDrawerCode = drawerCode.substring(guionDrawerPosition + 1)
 
         val sessionCode = al_editProduct[position].fk_c_sessionS
-        val guionSessionPosition = sessionCode.indexOf("_")
+        val guionSessionPosition = sessionCode.lastIndexOf("_")
         val newSessionCode = sessionCode.substring(guionSessionPosition + 1)
 
 

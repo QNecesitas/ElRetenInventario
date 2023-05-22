@@ -210,4 +210,9 @@
     <string name="Ya_existe_el_estante">Ya existe un estante con ese nombre</string>
     <string name="Ya_existe_seccion">Ya existe una sección con ese nombre en esta gaveta</string>
     <string name="Ya_existe_gaveta">Ya existe una gaveta con ese nombre en este estante</string>
+    <string name="No_permitido_simbol">Símbolo \"_\" no permitido aquí</string>
+    <string name="marca_del_producto">Marca del producto</string>
+    <string name="tipo_de_pago">Tipo de pago</string>
+    <string name="pago_s">Pago:</string>
+    <string name="pago_f">Pagox</string>
 </resources>

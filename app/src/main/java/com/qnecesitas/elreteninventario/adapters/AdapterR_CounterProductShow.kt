@@ -3,6 +3,7 @@ package com.qnecesitas.elreteninventario.adapters
 import android.content.Context
 import android.graphics.Paint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.PopupMenu
@@ -67,6 +68,34 @@ class AdapterR_CounterProductShow(
             binding.TVName.text = name
             binding.tvCant.text = cantidad
             binding.tvPrecioV.text = precio
+
+
+
+            if(model.brand.trim().isEmpty()){
+                binding.tvMarcaBig.visibility = View.GONE
+                binding.ivDecoration.visibility = View.GONE
+                binding.tvMarcaLittle.visibility = View.GONE
+                if(model.statePhoto == 0){
+                    binding.IVImageProduct.setImageResource(R.drawable.widgets)
+                }else{
+                    Glide.with(context)
+                        .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.IVImageProduct)
+                }
+            }else{
+                if(model.statePhoto==1){
+                    Glide.with(context)
+                        .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.IVImageProduct)
+                }
+            }
+
 
 
             binding.tvOptionProduct.setOnClickListener {

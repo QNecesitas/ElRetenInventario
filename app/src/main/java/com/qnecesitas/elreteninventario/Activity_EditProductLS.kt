@@ -34,6 +34,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.adapters.AdapterR_EditProduct
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
+import com.qnecesitas.elreteninventario.auxiliary.IDCreater
 import com.qnecesitas.elreteninventario.auxiliary.ImageTools
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.auxiliary.Permissions
@@ -102,9 +103,11 @@ class Activity_EditProductLS : AppCompatActivity() {
         retrofitProductsImplLS = RetrofitProductsImplLS()
         retrofitProductsImplS = RetrofitProductsImplS()
         //Button Add
-        if (FragmentsInfo.LAST_CODE_SESSION_SENDED == "no") {
-            binding.aepFabAdd.visibility = View.GONE
-        } else binding.aepFabAdd.setOnClickListener { click_add() }
+
+        if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin){
+            binding.aepFabAdd.visibility = View.VISIBLE
+            binding.aepFabAdd.setOnClickListener { click_add() }
+        }
 
 
         //Results launchers
@@ -536,7 +539,7 @@ class Activity_EditProductLS : AppCompatActivity() {
 
         //Variables
         imageFile = "no"
-        var c_Product: String
+        var c_Product = IDCreater.generate()
         var n_Product: String
         var amount: Int
         var buyPrice: Double
@@ -546,6 +549,8 @@ class Activity_EditProductLS : AppCompatActivity() {
         var deficit: Int
         var size: String
         var brand : String
+
+        li_add_binding?.tietCode?.setText(c_Product)
 
         //Listener
         li_add_binding?.image?.setOnClickListener {
@@ -642,7 +647,7 @@ class Activity_EditProductLS : AppCompatActivity() {
 
         li_alter_amount_binding.btnAccept.setOnClickListener{
             alertDialog.dismiss()
-            if(li_alter_amount_binding.et.text.toString().isNotEmpty()) {
+            if(li_alter_amount_binding.et.text.toString().trim().isNotEmpty()) {
                 uploadAmountChangesInternet(currentAmount, position)
             }else{
                 li_alter_amount_binding.et.error = getString(R.string.este_campo_no_debe_vacio)
@@ -704,7 +709,7 @@ class Activity_EditProductLS : AppCompatActivity() {
 
         li_alter_amount_binding.btnAccept.setOnClickListener{
             alertDialog.dismiss()
-            if(li_alter_amount_binding.et.text.toString().isNotEmpty()) {
+            if(li_alter_amount_binding.et.text.toString().trim().isNotEmpty()) {
                 lastTranferAmount = li_alter_amount_binding.et.text.toString().toInt()
                 checkIfExistIfAllSended(position);
                 showClTransfer(position)
@@ -1214,21 +1219,21 @@ class Activity_EditProductLS : AppCompatActivity() {
         var amountTrue = 0
 
         //Name
-        if (li_add_binding?.tietName?.text!!.isNotEmpty()) {
+        if (li_add_binding?.tietName?.text!!.trim().isNotEmpty()) {
             amountTrue++
         } else {
             li_add_binding?.tilName?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
         //Code
-        if (li_add_binding?.tietCode?.text!!.isNotEmpty()) {
+        if (li_add_binding?.tietCode?.text!!.trim().isNotEmpty()) {
             amountTrue++
         } else {
             li_add_binding?.tilCode?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
         //PriceBuy
-        if (li_add_binding?.tietPriceBuy?.text!!.isNotEmpty()) {
+        if (li_add_binding?.tietPriceBuy?.text!!.trim().isNotEmpty()) {
             amountTrue++
         } else {
             li_add_binding?.tilPriceBuy?.error = getString(R.string.este_campo_no_debe_vacio)
@@ -1236,21 +1241,21 @@ class Activity_EditProductLS : AppCompatActivity() {
 
 
         //PriceSale
-        if (li_add_binding?.tietPriceSale?.text!!.isNotEmpty()) {
+        if (li_add_binding?.tietPriceSale?.text!!.trim().isNotEmpty()) {
             amountTrue++
         } else {
             li_add_binding?.tilPriceSale?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
         //Amount
-        if (li_add_binding?.tietCant?.text?.isNotEmpty() == true) {
+        if (li_add_binding?.tietCant?.text?.trim()!!.isNotEmpty() == true) {
             amountTrue++
         } else {
             li_add_binding?.tilCant?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
         //Deficit
-        if (li_add_binding?.tietDeficit?.text?.isNotEmpty() == true) {
+        if (li_add_binding?.tietDeficit?.text?.trim()!!.isNotEmpty() == true) {
             amountTrue++
         } else {
             li_add_binding?.tilDeficit?.error = getString(R.string.este_campo_no_debe_vacio)
@@ -1315,6 +1320,7 @@ class Activity_EditProductLS : AppCompatActivity() {
             li_add_binding?.image?.setImageURI(uriLLegadaRecortada)
             val bitmap = (li_add_binding?.image?.drawable as BitmapDrawable).bitmap
             imageFile = ImageTools.convertImageString(bitmap).toString()
+            li_add_binding!!.image.setImageBitmap(bitmap)
         }
     }
 
@@ -1322,11 +1328,11 @@ class Activity_EditProductLS : AppCompatActivity() {
         val shelfCode = al_modelPath[0].fk_c_shelfS
 
         val drawerCode = al_modelPath[0].fk_c_drawerS
-        val guionDrawerPosition = drawerCode.indexOf("_")
+        val guionDrawerPosition = drawerCode.lastIndexOf("_")
         val newDrawerCode = drawerCode.substring(guionDrawerPosition + 1)
 
         val sessionCode = al_editProduct[position].fk_c_sessionS
-        val guionSessionPosition = sessionCode.indexOf("_")
+        val guionSessionPosition = sessionCode.lastIndexOf("_")
         val newSessionCode = sessionCode.substring(guionSessionPosition + 1)
 
 

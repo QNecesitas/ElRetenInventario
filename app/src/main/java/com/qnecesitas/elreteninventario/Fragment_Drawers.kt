@@ -167,10 +167,12 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
-            if (tietContent.isNotEmpty()){
+            if (tietContent.trim().isNotEmpty()){
                 if(!isDuplicated(tietContent)) {
-                    addNewDrawerInternet(tietContent)
-                    alertDialog.dismiss()
+                    if(!tietContent.contains("_")) {
+                        addNewDrawerInternet(tietContent)
+                        alertDialog.dismiss()
+                    }else li_binding.til.error = getString(R.string.No_permitido_simbol)
                 }else li_binding.til.error = getString(R.string.Ya_existe_gaveta)
             }
             else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
@@ -245,7 +247,9 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
     private fun isDuplicated(name: String): Boolean{
         for(shelf in al_drawers){
-            if(shelf.c_drawerS == name){
+            val positionSymbol = shelf.c_drawerS.lastIndexOf("_")
+            val codePrepared = shelf.c_drawerS.substring(positionSymbol+1)
+            if(codePrepared == name){
                 return true
             }
         }
@@ -265,10 +269,12 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         val alertDialog = builder.create()
         var tiedContent: String;
 
-        li_binding.tiet.setText(codeDrawerOld)
+        val guionPosition = codeDrawerOld.lastIndexOf("_")
+        val newCode = codeDrawerOld.substring(guionPosition + 1)
+        li_binding.tiet.setText(newCode)
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
-            if (tiedContent.isNotEmpty()){
+            if (tiedContent.trim().isNotEmpty()){
                 editDrawerInternet(codeDrawerOld, tiedContent, position)
                 alertDialog.dismiss()
             }
@@ -352,15 +358,16 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     }
 
     private fun showAlertDialogNotEmpty(amount: Int) {
-        //init alert dialog
-        MaterialAlertDialogBuilder(requireContext())
+        val builder = android.app.AlertDialog.Builder(requireContext())
+        builder.setCancelable(true)
             .setTitle(getString(R.string.elemento_no_vaciado))
             .setMessage(getString(R.string.debe_eliminar_todo,amount))
             .setPositiveButton(R.string.Aceptar) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setCancelable(false)
-            .show()
+
+        //create the alert dialog and show it
+        builder.create().show()
     }
 
     private fun showAlertDialogDeleteDrawer(position: Int) {

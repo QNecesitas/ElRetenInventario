@@ -29,7 +29,7 @@ class AdapterRDrawers(private val al_drawers: ArrayList<ModelDrawer>, private va
             touchListener: RecyclerClickListener?,
             position: Int
         ) {
-            val guionPosition = model.c_drawerS.indexOf("_")
+            val guionPosition = model.c_drawerS.lastIndexOf("_")
             val originCode = model.c_drawerS.substring(guionPosition + 1)
             val code = context.getString(R.string.codigo_s, originCode)
             val amount = context.getString(R.string.cant_secciones, model.amount.toString())

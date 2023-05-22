@@ -2,15 +2,17 @@ package com.qnecesitas.elreteninventario
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.AdapterView.OnItemClickListener
+import android.widget.ArrayAdapter
 import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -20,6 +22,7 @@ import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelEditProduct
 import com.qnecesitas.elreteninventario.databinding.ActivityCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddCounterBinding
+import com.qnecesitas.elreteninventario.databinding.LiCartAceptBinding
 import com.qnecesitas.elreteninventario.databinding.LiShowProductBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplLS
 import com.shashank.sony.fancytoastlib.FancyToast
@@ -80,6 +83,8 @@ class Activity_Counter : AppCompatActivity() {
         alCounter = ArrayList()
         adapterCounter = AdapterR_CounterProductShow(alCounter, this)
         binding.rvProductsShow.adapter = adapterCounter
+
+
 
         //Internet
         retrofitImp = RetrofitProductsImplLS()
@@ -305,7 +310,7 @@ class Activity_Counter : AppCompatActivity() {
 
         li_add_counter_binding.etCantidad.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                if(li_add_counter_binding.etCantidad.text.toString().isNotEmpty()){
+                if(li_add_counter_binding.etCantidad.text.toString().trim().isNotEmpty()){
                     if (li_add_counter_binding.etCantidad.text.toString() == "0") {
                         currentAmount = 1
                         li_add_counter_binding.etCantidad.setText(currentAmount.toString())
@@ -348,6 +353,8 @@ class Activity_Counter : AppCompatActivity() {
         alertDialog.show()
 
     }
+
+
 
 
 }

@@ -350,7 +350,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="30sp"
+            android:layout_marginBottom="300sp"
             app:cardCornerRadius="@dimen/standard_card_corner_radius"
             app:cardElevation="20dp">
 
