@@ -28,6 +28,8 @@ class AdapterR_CounterProductShow(
 
     private var infoListener: RecyclerClickListener? = null
 
+    private var pathListener: RecyclerClickListener? = null
+
     private var customFilter: AdapterR_CounterProductShow.CustomFilter? = null
 
     init {
@@ -44,6 +46,7 @@ class AdapterR_CounterProductShow(
             context: Context,
             clickListener: RecyclerClickListener?,
             infoListener: RecyclerClickListener?,
+            pathListener: RecyclerClickListener?,
             position: Int
         ) {
             Glide.with(context)
@@ -104,6 +107,7 @@ class AdapterR_CounterProductShow(
                 popupMenu.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.cProd_info -> infoListener?.onClick(getRealPosition(position))
+                        R.id.cProd_ubic -> pathListener?.onClick(getRealPosition(position))
                     }
                     false
                 }
@@ -128,7 +132,7 @@ class AdapterR_CounterProductShow(
 
     override fun onBindViewHolder(holder: CounterProductShowViewHolder, position: Int) {
         holder.bind(
-            alFilter[position], context, clickListener, infoListener, position
+            alFilter[position], context, clickListener, infoListener, pathListener, position
         )
     }
 
@@ -142,6 +146,10 @@ class AdapterR_CounterProductShow(
 
     fun setClickInfoListener(infoListener: RecyclerClickListener) {
         this.infoListener = infoListener
+    }
+
+    fun setClickPathListener(pathListener: RecyclerClickListener) {
+        this.pathListener = pathListener
     }
 
 

@@ -380,8 +380,7 @@ class Activity_Sales : AppCompatActivity() {
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
-                        al_sales.removeAt(position)
-                        updateRecyclerAdapter()
+                        loadRecyclerInfoAll()
                         FancyToast.makeText(
                             this@Activity_Sales,
                             getString(R.string.Operacion_realizada_con_exito),

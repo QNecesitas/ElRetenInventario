@@ -20,6 +20,7 @@ import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductShow
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelProductPath
 import com.qnecesitas.elreteninventario.databinding.ActivityCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiCartAceptBinding
@@ -160,11 +161,15 @@ class Activity_Counter : AppCompatActivity() {
             }
 
         })
+        adapterCounter.setClickPathListener(object : AdapterR_CounterProductShow.RecyclerClickListener{
+            override fun onClick(position: Int) {
+                fetchProductsPathInternet(position)
+            }
+        })
 
 
         binding.rvProductsShow.adapter = adapterCounter
     }
-
 
     private fun showFragment() {
         fragmentManager = supportFragmentManager
@@ -203,6 +208,21 @@ class Activity_Counter : AppCompatActivity() {
             binding.rvProductsShow.visibility = View.VISIBLE
             binding.notConnection.visibility = View.GONE
         }
+    }
+
+    private fun showAlertDialogPath(path: String) {
+        //init alert dialog
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setCancelable(true)
+        builder.setTitle(R.string.Ubicacion)
+        builder.setMessage(path)
+        //set listeners for dialog buttons
+        builder.setPositiveButton(R.string.Aceptar) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        //create the alert dialog and show it
+        builder.create().show()
     }
 
     private fun alertNotInternet(open: Boolean) {
@@ -354,7 +374,74 @@ class Activity_Counter : AppCompatActivity() {
 
     }
 
+    /*Internet
+    --------------
+     */
+    private fun fetchProductsPathInternet(position: Int){
+        val call = retrofitImp.fetchProductSPathLS(
+            Constants.PHP_TOKEN,
+            alCounter[position].c_productS
+        )
+
+        call.enqueue(object : Callback<ArrayList<ModelProductPath>> {
+            override fun onResponse(call: Call<ArrayList<ModelProductPath>>, response: Response<ArrayList<ModelProductPath>>) {
+                binding.refresh.isRefreshing = false
+                if (response.isSuccessful) {
+                    FancyToast.makeText(
+                        this@Activity_Counter,
+                        getString(R.string.Operacion_realizada_con_exito),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.SUCCESS,
+                        false
+                    ).show()
+                    val al_modelPath = response.body()
+                    val alModelPath = response.body()
+                    val path = alModelPath?.let { makePath(it, position) }
+                    path?.let { showAlertDialogPath(it) }
+                    updateRecyclerAdapter()
+                } else {
+                    FancyToast.makeText(
+                        this@Activity_Counter,
+                        getString(R.string.Revise_su_conexion),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.ERROR,
+                        false
+                    ).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<ModelProductPath>>, t: Throwable) {
+                binding.refresh.isRefreshing = false
+                FancyToast.makeText(
+                    this@Activity_Counter,
+                    getString(R.string.Revise_su_conexion),
+                    FancyToast.LENGTH_LONG,
+                    FancyToast.ERROR,
+                    false
+                ).show()
+            }
+        })
+    }
+
+    /*Auxiliary
+    * _________Auxiliary
+    * */
+    private fun makePath(al_modelPath: ArrayList<ModelProductPath>,position: Int): String{
+        val shelfCode = al_modelPath[0].fk_c_shelfS
+
+        val drawerCode = al_modelPath[0].fk_c_drawerS
+        val guionDrawerPosition = drawerCode.lastIndexOf("_")
+        val newDrawerCode = drawerCode.substring(guionDrawerPosition + 1)
+
+        val sessionCode = alCounter[position].fk_c_sessionS
+        val guionSessionPosition = sessionCode.lastIndexOf("_")
+        val newSessionCode = sessionCode.substring(guionSessionPosition + 1)
 
 
+
+
+        return "$shelfCode/$newDrawerCode/$newSessionCode"
+
+    }
 
 }
