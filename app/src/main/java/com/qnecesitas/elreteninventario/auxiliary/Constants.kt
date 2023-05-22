@@ -9,7 +9,7 @@ class Constants {
         const val PHP_IMAGES = "https://qnecesitas.nat.cu/ElReten/Images/"
 
         //Tokens
-        const val PHP_TOKEN = "ElReten_820"
+        const val PHP_TOKEN = "ElReten_380"
 
 
     }
