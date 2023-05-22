@@ -215,4 +215,6 @@
     <string name="tipo_de_pago">Tipo de pago</string>
     <string name="pago_s">Pago:</string>
     <string name="pago_f">Pagox</string>
+    <string name="Desea_eliminar_la_venta">¿Desea realmente eliminar la venta?</string>
+
 </resources>

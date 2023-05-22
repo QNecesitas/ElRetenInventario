@@ -1,13 +1,10 @@
 package com.qnecesitas.elreteninventario.network
 
-import android.media.session.MediaSession.Token
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelSale
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
-import java.time.Month
 
 class RetrofitSalesImpl: IRetrofitSales {
 
@@ -32,6 +29,10 @@ class RetrofitSalesImpl: IRetrofitSales {
 
     override fun fetchOrdersD(token: String, year: Int, month: Int, day: Int): Call<ArrayList<ModelSale>>{
         return productApi.fetchOrdersD(token, year, month, day)
+    }
+
+    override fun deleteOrder(token: String, c_order: Int): Call<String> {
+        return productApi.deleteOrder(token, c_order)
     }
 
 }

@@ -16,6 +16,7 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
 
     private var customFilter: AdapterR_Sales.CustomFilter? = null
     private var alFilter: ArrayList<ModelSale> = ArrayList()
+    private var clickClose: ITouchClose? = null
 
     class SalesViewHolder(private val binding: RecyclerSalesBinding): RecyclerView.ViewHolder(binding.root){
         private var rotationB = false
@@ -23,11 +24,12 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
         fun bind(
             modelSale: ModelSale,
             context: Context,
-            position: Int
+            position: Int,
+            clickCLose: ITouchClose?
         ){
             val c_order = modelSale.c_order
             val nombre = modelSale.name
-            val precio = context.getString(R.string.precio_f,modelSale.totalPrice.toDouble())
+            val precio = context.getString(R.string.precio_f,modelSale.totalPrice)
             val producto = modelSale.products
             val descuento = modelSale.discount.toString()
             val dia = modelSale.day.toString()
@@ -39,7 +41,7 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
             binding.tvNombVenta.text = nombre
             binding.tvRebajaVenta.text = descuento
             binding.tvPriceTotalVenta.text = precio
-            binding.tvType?.text = type
+            binding.tvType.text = type
             binding.tvOrderVenta.text = producto.replace("--n--", "\n")
                 .replace("--s--", "   ")
             binding.tvFechaVenta.text = context.getString(R.string.Fecha,dia,mes,anio)
@@ -70,6 +72,8 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
                 }
             })
 
+            binding.cvClose.setOnClickListener{ clickCLose?.onClickClose(position) }
+
         }
 
     }
@@ -84,7 +88,7 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
     override fun getItemCount() = alFilter.size
 
     override fun onBindViewHolder(holder: SalesViewHolder, position: Int) {
-        holder.bind(alFilter[position],context,position)
+        holder.bind(alFilter[position],context,position,clickClose)
     }
 
     init {
@@ -142,6 +146,15 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
     //Custom
     fun getFilter(): Filter? {
         return customFilter
+    }
+
+    //Close
+    interface ITouchClose{
+        fun onClickClose(position: Int)
+    }
+
+    fun setCloseClick(clickClose: ITouchClose){
+        this.clickClose = clickClose
     }
 
 }

@@ -1,11 +1,12 @@
 package com.qnecesitas.elreteninventario.network
 
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
 import com.qnecesitas.elreteninventario.data.ModelSale
 import retrofit2.Call
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
-import java.time.Month
 import java.util.ArrayList
 
 interface IRetrofitSales {
@@ -35,5 +36,13 @@ interface IRetrofitSales {
         @Query("month") month: Int,
         @Query("day") day: Int
     ): Call<ArrayList<ModelSale>>
+
+    @FormUrlEncoded
+    @POST("DeleteOrder.php")
+    fun deleteOrder(
+        @Field("token") token: String,
+        @Field("c_order") c_order : Int
+    ) : Call<String>
+
 
 }

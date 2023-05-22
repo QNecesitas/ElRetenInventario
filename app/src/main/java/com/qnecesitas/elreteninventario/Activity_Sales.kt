@@ -1,18 +1,15 @@
 package com.qnecesitas.elreteninventario
 
-import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.PopupMenu
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.qnecesitas.elreteninventario.adapters.AdapterR_Sales
@@ -20,11 +17,11 @@ import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelSale
 import com.qnecesitas.elreteninventario.databinding.ActivitySalesBinding
-import com.qnecesitas.elreteninventario.databinding.LiAddProductBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYmBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYmdBinding
 import com.qnecesitas.elreteninventario.network.RetrofitSalesImpl
+import com.shashank.sony.fancytoastlib.FancyToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -150,6 +147,11 @@ class Activity_Sales : AppCompatActivity() {
         al_sales = ArrayList()
         adapterrSales = AdapterR_Sales(al_sales,this)
         binding.rvSales.adapter = adapterrSales
+        adapterrSales.setCloseClick(object : AdapterR_Sales.ITouchClose{
+            override fun onClickClose(position: Int) {
+                showAlertCloseSales(position)
+            }
+        })
 
 
 
@@ -305,14 +307,16 @@ class Activity_Sales : AppCompatActivity() {
         }
 
         adapterrSales = AdapterR_Sales(al_sales,this)
+        adapterrSales.setCloseClick(object : AdapterR_Sales.ITouchClose{
+            override fun onClickClose(position: Int) {
+                showAlertCloseSales(position)
+            }
+        })
 
 
         binding.rvSales.adapter = adapterrSales
 
     }
-
-
-
 
 
 
@@ -342,6 +346,84 @@ class Activity_Sales : AppCompatActivity() {
         }
     }
 
+    /*Close
+    ------------------
+     */
+    private fun showAlertCloseSales(position: Int){
+        //init alert dialog
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setCancelable(true)
+        builder.setTitle(R.string.Eliminar_elemento)
+        builder.setMessage(R.string.Desea_eliminar_la_venta)
+        //set listeners for dialog buttons
+        builder.setPositiveButton(
+            R.string.Si
+        ) { dialog, _ ->
+            dialog.dismiss()
+            deleteSaleInternet(al_sales[position].c_order, position)
+        }
+        builder.setNegativeButton(R.string.No,
+            DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
+
+        //create the alert dialog and show it
+        builder.create().show()
+    }
+
+    private fun deleteSaleInternet(orderCode: Int, position: Int) {
+        if (NetworkTools.isOnline(binding.root.context, true)) {
+            binding.refresh.isRefreshing = true
+            val call = retrofitImp.deleteOrder(Constants.PHP_TOKEN, orderCode)
+            call.enqueue(object : Callback<String> {
+                override fun onResponse(
+                    call: Call<String>,
+                    response: Response<String>
+                ) {
+                    binding.refresh.isRefreshing = false
+                    if (response.isSuccessful) {
+                        al_sales.removeAt(position)
+                        updateRecyclerAdapter()
+                        FancyToast.makeText(
+                            this@Activity_Sales,
+                            getString(R.string.Operacion_realizada_con_exito),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.SUCCESS,
+                            false
+                        ).show()
+                    } else {
+                        FancyToast.makeText(
+                            this@Activity_Sales,
+                            getString(R.string.Revise_su_conexion),
+                            FancyToast.LENGTH_LONG,
+                            FancyToast.ERROR,
+                            false
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<String>,
+                    t: Throwable
+                ) {
+                    binding.refresh.isRefreshing = false
+                    FancyToast.makeText(
+                        this@Activity_Sales,
+                        getString(R.string.Revise_su_conexion),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.ERROR,
+                        false
+                    ).show()
+                }
+            })
+        }else{
+            FancyToast.makeText(
+                this,
+                getString(R.string.Revise_su_conexion),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false
+            ).show()
+        }
+    }
 
     /*Date Pickers
     * ---------------------------------
