@@ -20,53 +20,68 @@
 
         <activity
             android:name=".Activity_Counter"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
 
         <activity
             android:name=".Statistics"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".Activity_Settings"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
 
         <activity
             android:name=".Activity_EditProductLS"
-            android:exported="false"/>
+            android:exported="false"
+            android:screenOrientation="locked"/>
 
         <activity
             android:name=".Activity_Deficit"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".Activity_LittleStore"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".Activity_MenuSelesperson"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".Activity_EditProduct"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".Activity_Store"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".Activity_Login"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".Activity_MenuAdmin"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".Activity_AboutDev"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".Activity_AboutUs"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity android:name=".Activity_Sales"
+            android:screenOrientation="locked"
             android:exported="true"/>
         <activity
+            android:screenOrientation="locked"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

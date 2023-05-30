@@ -74,6 +74,7 @@ interface IRetrofitProductsLS {
         @Field("salePrice") salePrice: Double,
         @Field("descr") descr: String,
         @Field("deficit") deficit: Int,
+        @Field("statePhoto") statePhoto: Int,
         @Field("size") size: String,
         @Field("brand") brand: String,
     ) : Call<String>

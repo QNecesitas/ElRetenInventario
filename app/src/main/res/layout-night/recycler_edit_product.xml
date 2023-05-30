@@ -39,6 +39,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <!--Identifier location-->
+            <ImageView
+                android:id="@+id/iv_location"
+                android:visibility="gone"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/redonded_left"
+                android:elevation="4dp"
+                android:translationZ="4dp"
+                android:src="@drawable/baseline_admin_panel_settings_24"
+                android:padding="8dp" />
 
             <!--Big marca product-->
             <androidx.appcompat.widget.AppCompatTextView

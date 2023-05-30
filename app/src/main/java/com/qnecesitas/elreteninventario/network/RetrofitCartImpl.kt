@@ -23,8 +23,9 @@ class RetrofitCartImpl : IRetrofitProductsCart {
         totalPrice: Double,
         totalInv: Double,
         discount: Double,
-        type: String
+        type: String,
+        totalTransf: Double
     ): Call<String> {
-        return productApi.addOrder(token, name, products, totalPrice, totalInv,discount,type)
+        return productApi.addOrder(token, name, products, totalPrice, totalInv,discount,type, totalTransf)
     }
 }

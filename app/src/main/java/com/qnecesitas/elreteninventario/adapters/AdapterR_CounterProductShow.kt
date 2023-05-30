@@ -49,13 +49,6 @@ class AdapterR_CounterProductShow(
             pathListener: RecyclerClickListener?,
             position: Int
         ) {
-            Glide.with(context)
-                .load((Constants.PHP_IMAGES + "P_" + position) + ".jpg")
-                .error(R.drawable.widgets)
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(binding.IVImageProduct)
 
             val name = model.name
             val cantidad = context.getString(R.string.s_unidades, model.amount)
@@ -71,6 +64,8 @@ class AdapterR_CounterProductShow(
             binding.TVName.text = name
             binding.tvCant.text = cantidad
             binding.tvPrecioV.text = precio
+            binding.tvMarcaLittle.text = model.brand
+            binding.tvMarcaBig.text = model.brand
 
 
 
@@ -81,6 +76,7 @@ class AdapterR_CounterProductShow(
                 if(model.statePhoto == 0){
                     binding.IVImageProduct.setImageResource(R.drawable.widgets)
                 }else{
+                    binding.IVImageProduct.setImageBitmap(null)
                     Glide.with(context)
                         .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
                         .centerCrop()
@@ -89,6 +85,7 @@ class AdapterR_CounterProductShow(
                         .into(binding.IVImageProduct)
                 }
             }else{
+                binding.IVImageProduct.setImageBitmap(null)
                 if(model.statePhoto==1){
                     Glide.with(context)
                         .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
@@ -172,7 +169,7 @@ class AdapterR_CounterProductShow(
         override fun performFiltering(charSequence: CharSequence): FilterResults {
             alFilter.clear()
             val filterResults = FilterResults()
-            if (charSequence.length == 0) {
+            if (charSequence.isEmpty()) {
                 alFilter.addAll(al_CPShow)
             } else {
                 val filterPattern =
@@ -185,6 +182,8 @@ class AdapterR_CounterProductShow(
                     }else if(product.size.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         alFilter.add(product)
                     }else if(product.fk_c_sessionS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
+                        alFilter.add(product)
+                    }else if(product.brand.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         alFilter.add(product)
                     }
                 }

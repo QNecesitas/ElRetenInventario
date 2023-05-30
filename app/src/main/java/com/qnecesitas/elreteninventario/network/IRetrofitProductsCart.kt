@@ -20,6 +20,7 @@ interface IRetrofitProductsCart {
         @Field("totalPrice") totalPrice: Double,
         @Field("totalInv") totalInv: Double,
         @Field("discount") discount: Double,
-        @Field("type") type: String
+        @Field("type") type: String,
+        @Field("totalTransf") totalTransf: Double
     ): Call<String>
 }

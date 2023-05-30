@@ -36,12 +36,14 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
             val mes = modelSale.month.toString()
             val anio = modelSale.year.toString()
             val type = modelSale.type
+            val tranfer = modelSale.totalTranf
 
             binding.tvNumeroVenta.text = c_order.toString()
             binding.tvNombVenta.text = nombre
             binding.tvRebajaVenta.text = descuento
             binding.tvPriceTotalVenta.text = precio
             binding.tvType.text = type
+            binding.tvPriceTotalTransferS?.text = tranfer.toString()
             binding.tvOrderVenta.text = producto.replace("--n--", "\n")
                 .replace("--s--", "   ")
             binding.tvFechaVenta.text = context.getString(R.string.Fecha,dia,mes,anio)
@@ -56,8 +58,10 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
                     binding.tvPriceTotalVenta.visibility = View.VISIBLE
                     binding.tvRebajaVentaS.visibility = View.VISIBLE
                     binding.tvRebajaVenta.visibility = View.VISIBLE
-                    binding.tvType?.visibility = View.VISIBLE
-                    binding.tvTypeS?.visibility = View.VISIBLE
+                    binding.tvType.visibility = View.VISIBLE
+                    binding.tvTypeS.visibility = View.VISIBLE
+                    binding.tvPriceTotalTransfer?.visibility = View.VISIBLE
+                    binding.tvPriceTotalTransferS?.visibility = View.VISIBLE
                 }else{
                     binding.ivArrow.rotation = 0F
                     rotationB = false
@@ -67,12 +71,15 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
                     binding.tvPriceTotalVenta.visibility = View.GONE
                     binding.tvRebajaVentaS.visibility = View.GONE
                     binding.tvRebajaVenta.visibility = View.GONE
-                    binding.tvType?.visibility = View.GONE
-                    binding.tvTypeS?.visibility = View.GONE
+                    binding.tvType.visibility = View.GONE
+                    binding.tvTypeS.visibility = View.GONE
+                    binding.tvPriceTotalTransfer?.visibility = View.GONE
+                    binding.tvPriceTotalTransferS?.visibility = View.GONE
                 }
             })
 
             binding.cvClose.setOnClickListener{ clickCLose?.onClickClose(position) }
+
 
         }
 

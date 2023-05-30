@@ -216,5 +216,18 @@
     <string name="pago_s">Pago:</string>
     <string name="pago_f">Pagox</string>
     <string name="Desea_eliminar_la_venta">¿Desea realmente eliminar la venta?</string>
+    <string name="ventas_st">Ventas :</string>
+    <string name="ganancias">Ganancias :</string>
+    <string name="productos_m_s_vendidos">Productos más vendidos :</string>
+    <string name="en_la_semana">En la semana:</string>
+    <string name="en_el_mes">En el mes:</string>
+    <string name="operacion_no_product_depend">Operación no permitida para productos del dependiente</string>
+    <string name="seleccione_para_buscar">--Seleccione para buscar--</string>
+    <string name="no_hay_valores">No hay valores para mostrar aún</string>
+    <string name="ventas_cant">Ventas: %d</string>
+    <string name="m_s_vendidos">Más vendidos:</string>
+    <string name="Buscar">Buscar</string>
+    <string name="Cant_pago">Cantidad pagada</string>
+    <string name="Transferencia">Transferencia</string>
 
 </resources>

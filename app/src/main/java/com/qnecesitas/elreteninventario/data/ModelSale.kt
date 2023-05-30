@@ -10,5 +10,6 @@ data class ModelSale(
     var day: Int,
     var month: Int,
     var year: Int,
-    var type: String
+    var type: String,
+    var totalTranf: Double
 )

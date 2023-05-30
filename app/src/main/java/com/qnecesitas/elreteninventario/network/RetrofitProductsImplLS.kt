@@ -34,11 +34,12 @@ class RetrofitProductsImplLS : IRetrofitProductsLS {
         salePrice: Double,
         descr: String,
         deficit: Int,
+        statePhoto: Int,
         size: String,
         brand : String
     ): Call<String> {
         return productApi.updateProductLS(
-            token, c_productSOld, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr,deficit,size,brand
+            token, c_productSOld, file, c_productS, name, c_fk_sessionS, amount, buyPrice, salePrice, descr,deficit,statePhoto,size,brand
         )
     }
 

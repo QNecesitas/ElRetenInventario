@@ -17,7 +17,8 @@ import java.util.Locale
 class AdapterR_EditProduct(
     private val al_editProdut: ArrayList<ModelEditProduct>,
     private val context: Context,
-    private val isContracted: Boolean
+    private val isContracted: Boolean,
+    private val isAllInto: Boolean
 ) :
     RecyclerView.Adapter<AdapterR_EditProduct.EditProductViewHolder>() {
 
@@ -79,6 +80,16 @@ class AdapterR_EditProduct(
                 }
             }
 
+            if(isAllInto){
+                binding.ivLocation.visibility = View.VISIBLE
+                if(model.fk_c_sessionS.contains(Constants.KEY_SALESPERSON_PRODUCT)){
+                    binding.ivLocation.setImageResource(R.drawable.baseline_account_circle_24)
+                }else{
+                    binding.ivLocation.setImageResource(R.drawable.baseline_admin_panel_settings_24)
+                }
+            }else{
+                binding.ivLocation.visibility = View.GONE
+            }
 
             if(model.brand.trim().isEmpty()){
                 binding.tvMarcaBig.visibility = View.GONE

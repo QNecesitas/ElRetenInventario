@@ -119,6 +119,10 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
     }
 
     private fun updateRecyclerAdapter() {
+        if(al_drawers.isNotEmpty()){
+            al_drawers.sortBy { it.c_drawerS }
+        }
+
         if (al_drawers.isEmpty()) {
             binding.fdNotInfo.visibility = View.VISIBLE
             binding.fdRecycler.visibility = View.GONE

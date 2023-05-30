@@ -69,5 +69,9 @@
     <color name="gray_light">#F6F6F6</color>
     <color name="orange">#FF5722</color>
     <color name="black">#000000</color>
+    <color name="location_orange">#F44336</color>
+    <color name="location_blue">#2196F3</color>
+    <color name="location_orange_dark">#AA2C23</color>
+    <color name="location_blue_dark">#283475</color>
 
 </resources>

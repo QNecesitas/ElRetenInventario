@@ -121,6 +121,10 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
     }
 
     private fun updateRecyclerAdapter() {
+        if(al_sessions.isNotEmpty()){
+            al_sessions.sortBy { it.c_sessionS }
+        }
+
         if (al_sessions.isEmpty()) {
             binding.fsNotInfoSession.visibility = View.VISIBLE
             binding.fsRecyclerSession.visibility = View.GONE

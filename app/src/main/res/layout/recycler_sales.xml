@@ -161,6 +161,34 @@
                 app:layout_constraintStart_toEndOf="@id/tv_priceTotal_venta_s"
                 app:layout_constraintTop_toBottomOf="@+id/tv_rebaja_venta" />
 
+
+
+            <!--tv price total Transfer-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_priceTotal_transfer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/Transferencia"
+                android:textSize="@dimen/textSize_m"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/tv_numero_venta"
+                app:layout_constraintTop_toBottomOf="@+id/tv_priceTotal_venta_s" />
+
+            <!--tv price total Transfer-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_priceTotal_transfer_s"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/precio_f"
+                android:textSize="@dimen/textSize_m"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/tv_priceTotal_transfer"
+                app:layout_constraintTop_toBottomOf="@+id/tv_priceTotal_venta_s" />
+
+
             <!--tv Type s-->
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_type_s"
@@ -172,7 +200,7 @@
                 android:textStyle="bold"
                 android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/tv_numero_venta"
-                app:layout_constraintTop_toBottomOf="@+id/tv_priceTotal_venta_s" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_priceTotal_transfer" />
 
             <!--tv Type -->
             <androidx.appcompat.widget.AppCompatTextView
@@ -184,7 +212,7 @@
                 android:textSize="@dimen/textSize_m"
                 android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/tv_type_s"
-                app:layout_constraintTop_toBottomOf="@+id/tv_priceTotal_venta_s" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_priceTotal_transfer_s" />
 
 
             <!--tv order static-->

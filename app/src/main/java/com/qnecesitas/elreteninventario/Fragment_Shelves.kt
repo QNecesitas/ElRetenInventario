@@ -126,6 +126,10 @@ class Fragment_Shelves : Fragment() {
     }
 
     private fun updateRecyclerAdapter() {
+        if(al_shelves.isNotEmpty()){
+            al_shelves.sortBy { it.c_shelfS }
+        }
+
         if (al_shelves.isEmpty()) {
             binding.fsNotInfo.visibility = View.VISIBLE
             binding.fsRecycler.visibility = View.GONE

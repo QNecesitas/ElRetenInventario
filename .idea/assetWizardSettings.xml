@@ -319,7 +319,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../../Markoz/Android-Trabajo/sdk/icons/material/materialicons/linear_scale/baseline_linear_scale_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../../Markoz/Android-Trabajo/sdk/icons/material/materialicons/account_circle/baseline_account_circle_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -329,7 +329,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="baseline_linear_scale_24" />
+                            <entry key="outputName" value="baseline_account_circle_24" />
                             <entry key="sourceFile" value="D:\QNecesitas\Operaciones\ElRetenInventario" />
                           </map>
                         </option>

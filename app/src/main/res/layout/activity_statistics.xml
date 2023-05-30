@@ -2,10 +2,10 @@
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Statistics"
-    android:id="@+id/refresh">
+    tools:context=".Statistics">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,34 +16,33 @@
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:theme="@style/ToolbarIcons"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:theme="@style/ToolbarIcons"
                 app:title="@string/Estad_sticas"
-                app:titleTextColor="@color/white"
-                />
+                app:titleTextColor="@color/white" />
         </com.google.android.material.appbar.AppBarLayout>
 
 
         <!--Scroll-->
         <ScrollView
-            app:layout_constraintTop_toBottomOf="@id/appbar"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appbar">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
 
-                <!--Grafica-->
+                <!--Graph-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/CL_grafica"
                     android:layout_width="match_parent"
@@ -64,16 +63,16 @@
 
                     <!-- CL Not Connection  -->
                     <LinearLayout
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
                         android:id="@+id/aep_not_connection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:orientation="vertical"
                         android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="UseCompoundDrawables">
 
                         <ImageView
@@ -118,11 +117,13 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:paddingBottom="20dp">
 
-                        <!--cl profit-->
+
+                        <!--cl importants products-->
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/profit"
+                            android:id="@+id/cl_impProducts"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -130,157 +131,43 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:id="@+id/text_profit"
+                                android:id="@+id/text_impProducts"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="20dp"
                                 android:layout_marginTop="10dp"
-                                android:text="Ganancias :"
+                                android:text="@string/productos_m_s_vendidos"
                                 android:textSize="@dimen/textSize_h"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
-                            <!--ll profit day-->
+                            <!--In week-->
                             <LinearLayout
-                                android:id="@+id/ll_profit_day"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/ll_impProductWeek"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="50dp"
+                                android:layout_marginStart="20dp"
                                 android:layout_marginTop="10dp"
+                                android:layout_marginEnd="50dp"
+                                android:orientation="vertical"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/text_profit">
+                                app:layout_constraintTop_toBottomOf="@id/text_impProducts">
 
-                                <TextView
+                                <Button
+                                    style="@style/Widget.Material3.Button.OutlinedButton"
+                                    android:id="@+id/tv_productSell"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="día : "
+                                    android:text="@string/Buscar"
                                     android:textSize="@dimen/textSize_mh" />
-
-                                <ImageView
-                                    android:id="@+id/iv_profit_day_calendar"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:src="@drawable/baseline_calendar_month_24" />
-
-                                <TextView
-                                    android:id="@+id/tv_profit_day_response"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="20dp"
-                                    android:text="@string/escogerF"
-                                    android:visibility="visible"
-                                    android:textSize="@dimen/textSize_mh" />
-
                             </LinearLayout>
 
-                            <!--ll profit month-->
-                            <LinearLayout
-                                android:id="@+id/ll_profit_month"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="50dp"
-                                android:layout_marginTop="10dp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/ll_profit_day">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="mes : "
-                                    android:textSize="@dimen/textSize_mh" />
-
-                                <ImageView
-                                    android:id="@+id/iv_profit_month_calendar"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/baseline_calendar_month_24" />
-
-                                <TextView
-                                    android:id="@+id/tv_profit_month_response"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="20dp"
-                                    android:text="@string/escogerF"
-                                    android:visibility="visible"
-                                    android:textSize="@dimen/textSize_mh" />
-
-
-                                <!--CUP-->
-                                <TextView
-                                    android:textStyle="bold"
-                                    app:layout_constraintBottom_toBottomOf="@id/ll_profit_month"
-                                    android:layout_marginStart="8dp"
-                                    app:layout_constraintTop_toTopOf="@id/ll_profit_month"
-                                    app:layout_constraintStart_toEndOf="@id/ll_profit_month"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/cup"/>
-
-                            </LinearLayout>
-
-                            <!--ll profit year-->
-                            <LinearLayout
-                                android:id="@+id/ll_profit_year"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="50dp"
-                                android:layout_marginTop="10dp"
-                                android:gravity="center_horizontal"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/ll_profit_month">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="año : "
-                                    android:textSize="@dimen/textSize_mh" />
-
-                                <ImageView
-                                    android:id="@+id/iv_profit_year_calendar"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:src="@drawable/baseline_calendar_month_24" />
-
-                                <TextView
-                                    android:id="@+id/tv_profit_year_response"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="20dp"
-                                    android:text="@string/escogerF"
-                                    android:visibility="visible"
-                                    android:textSize="@dimen/textSize_mh" />
-
-
-                                <!--CUP-->
-                                <TextView
-                                    android:textStyle="bold"
-                                    app:layout_constraintBottom_toBottomOf="@id/ll_profit_year"
-                                    android:layout_marginStart="8dp"
-                                    app:layout_constraintTop_toTopOf="@id/ll_profit_year"
-                                    app:layout_constraintStart_toEndOf="@id/ll_profit_year"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/cup"/>
-
-                            </LinearLayout>
-
-                            <!--CUP-->
-                            <TextView
-                                android:textStyle="bold"
-                                app:layout_constraintBottom_toBottomOf="@id/ll_profit_day"
-                                android:layout_marginStart="8dp"
-                                app:layout_constraintTop_toTopOf="@id/ll_profit_day"
-                                app:layout_constraintStart_toEndOf="@id/ll_profit_day"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/cup"/>
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
                         <View
-                            android:id="@+id/separator"
+                            android:id="@+id/separator1"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginStart="20dp"
@@ -289,7 +176,7 @@
                             android:background="@color/dark_gray"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/profit" />
+                            app:layout_constraintTop_toBottomOf="@id/cl_impProducts" />
 
                         <!--cl sales-->
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -298,7 +185,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/separator">
+                            app:layout_constraintTop_toBottomOf="@id/separator1">
 
                             <TextView
                                 android:id="@+id/text_sales"
@@ -306,7 +193,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="20dp"
                                 android:layout_marginTop="10dp"
-                                android:text="Ventas :"
+                                android:text="@string/ventas_st"
                                 android:textSize="@dimen/textSize_h"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -341,8 +228,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="20dp"
                                     android:text="@string/escogerF"
-                                    android:visibility="visible"
-                                    android:textSize="@dimen/textSize_mh" />
+                                    android:textSize="@dimen/textSize_mh"
+                                    android:visibility="visible" />
 
                             </LinearLayout>
 
@@ -375,8 +262,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="20dp"
                                     android:text="@string/escogerF"
-                                    android:visibility="visible"
-                                    android:textSize="@dimen/textSize_mh" />
+                                    android:textSize="@dimen/textSize_mh"
+                                    android:visibility="visible" />
 
                             </LinearLayout>
 
@@ -410,10 +297,181 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="20dp"
                                     android:text="@string/escogerF"
-                                    android:visibility="visible"
-                                    android:textSize="@dimen/textSize_mh" />
+                                    android:textSize="@dimen/textSize_mh"
+                                    android:visibility="visible" />
 
                             </LinearLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/separator2"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:background="@color/dark_gray"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sales" />
+
+                        <!--cl profit-->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/profit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/separator2">
+
+                            <TextView
+                                android:id="@+id/text_profit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginTop="10dp"
+                                android:text="@string/ganancias"
+                                android:textSize="@dimen/textSize_h"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <!--ll profit day-->
+                            <LinearLayout
+                                android:id="@+id/ll_profit_day"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="50dp"
+                                android:layout_marginTop="10dp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/text_profit">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="día : "
+                                    android:textSize="@dimen/textSize_mh" />
+
+                                <ImageView
+                                    android:id="@+id/iv_profit_day_calendar"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:src="@drawable/baseline_calendar_month_24" />
+
+                                <TextView
+                                    android:id="@+id/tv_profit_day_response"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="20dp"
+                                    android:text="@string/escogerF"
+                                    android:textSize="@dimen/textSize_mh"
+                                    android:visibility="visible" />
+
+                            </LinearLayout>
+
+                            <!--ll profit month-->
+                            <LinearLayout
+                                android:id="@+id/ll_profit_month"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="50dp"
+                                android:layout_marginTop="10dp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/ll_profit_day">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="mes : "
+                                    android:textSize="@dimen/textSize_mh" />
+
+                                <ImageView
+                                    android:id="@+id/iv_profit_month_calendar"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/baseline_calendar_month_24" />
+
+                                <TextView
+                                    android:id="@+id/tv_profit_month_response"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="20dp"
+                                    android:text="@string/escogerF"
+                                    android:textSize="@dimen/textSize_mh"
+                                    android:visibility="visible" />
+
+
+                                <!--CUP-->
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="@string/cup"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="@id/ll_profit_month"
+                                    app:layout_constraintStart_toEndOf="@id/ll_profit_month"
+                                    app:layout_constraintTop_toTopOf="@id/ll_profit_month" />
+
+                            </LinearLayout>
+
+                            <!--ll profit year-->
+                            <LinearLayout
+                                android:id="@+id/ll_profit_year"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="50dp"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center_horizontal"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/ll_profit_month">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="año : "
+                                    android:textSize="@dimen/textSize_mh" />
+
+                                <ImageView
+                                    android:id="@+id/iv_profit_year_calendar"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:src="@drawable/baseline_calendar_month_24" />
+
+                                <TextView
+                                    android:id="@+id/tv_profit_year_response"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="20dp"
+                                    android:text="@string/escogerF"
+                                    android:textSize="@dimen/textSize_mh"
+                                    android:visibility="visible" />
+
+
+                                <!--CUP-->
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="@string/cup"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="@id/ll_profit_year"
+                                    app:layout_constraintStart_toEndOf="@id/ll_profit_year"
+                                    app:layout_constraintTop_toTopOf="@id/ll_profit_year" />
+
+                            </LinearLayout>
+
+                            <!--CUP-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="@string/cup"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="@id/ll_profit_day"
+                                app:layout_constraintStart_toEndOf="@id/ll_profit_day"
+                                app:layout_constraintTop_toTopOf="@id/ll_profit_day" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -424,7 +482,6 @@
             </LinearLayout>
 
         </ScrollView>
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,6 +38,7 @@ class Activity_Sales : AppCompatActivity() {
 
     //Internet
     private lateinit var retrofitImp: RetrofitSalesImpl
+    private var lastFilterStr = ""
 
     //Date
     private var dateSelected = "Todo"
@@ -117,6 +118,7 @@ class Activity_Sales : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 adapterrSales.getFilter()?.filter(newText)
+                lastFilterStr = newText.toString()
                 return false
             }
 
@@ -300,6 +302,10 @@ class Activity_Sales : AppCompatActivity() {
     }
 
     private fun updateRecyclerAdapter() {
+        if(al_sales.isNotEmpty()){
+            al_sales.sortBy { it.name }
+        }
+
         if (al_sales.isEmpty()) {
             alertNotElements(true)
         } else {
@@ -315,6 +321,10 @@ class Activity_Sales : AppCompatActivity() {
 
 
         binding.rvSales.adapter = adapterrSales
+
+        if(lastFilterStr.trim().isNotEmpty()){
+            adapterrSales.getFilter()?.filter(lastFilterStr)
+        }
 
     }
 

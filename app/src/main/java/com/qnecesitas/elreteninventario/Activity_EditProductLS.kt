@@ -80,6 +80,8 @@ class Activity_EditProductLS : AppCompatActivity() {
     private var lastTranferAmount = 0
     private var lastTransferExist = 0
     private var lastTransferAllFill = 0
+    private var lastFilterStr = ""
+    private var lastPositionRecycler = 0
 
     //Results launchers
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
@@ -140,7 +142,7 @@ class Activity_EditProductLS : AppCompatActivity() {
             }
             updateRecyclerAdapter()
         }
-        adapterR_editProducts = AdapterR_EditProduct(al_editProduct, applicationContext,isContracted)
+        adapterR_editProducts = AdapterR_EditProduct(al_editProduct, applicationContext,isContracted, false)
 
         //Search
         binding.aepSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -150,6 +152,7 @@ class Activity_EditProductLS : AppCompatActivity() {
 
             override fun onQueryTextChange(s: String): Boolean {
                 adapterR_editProducts.getFilter()?.filter(s)
+                lastFilterStr = s
                 return true
             }
         })
@@ -239,12 +242,24 @@ class Activity_EditProductLS : AppCompatActivity() {
     }
 
     private fun updateRecyclerAdapter() {
+        if(al_editProduct.isNotEmpty()){
+            al_editProduct.sortBy { it.name }
+        }
+        if(al_editProductSAll.isNotEmpty()){
+            al_editProductSAll.sortBy { it.name }
+        }
+
+        val layoutManager =binding.aepRecycler.layoutManager as LinearLayoutManager
+        lastPositionRecycler = layoutManager.findFirstVisibleItemPosition()
+
         if (al_editProduct.isEmpty()) {
             alertNotElements(true)
         } else {
             alertNotElements(false)
         }
-        adapterR_editProducts = AdapterR_EditProduct(al_editProduct, binding.root.context, isContracted)
+
+
+        adapterR_editProducts = AdapterR_EditProduct(al_editProduct, binding.root.context, isContracted, false)
 
         adapterR_editProducts.setRecyclerOnClickListener(object :
             AdapterR_EditProduct.RecyclerClickListener {
@@ -266,6 +281,13 @@ class Activity_EditProductLS : AppCompatActivity() {
                 binding.aepRecycler.layoutManager = GridLayoutManager(this, 2)
             }
         }
+
+        if(lastFilterStr.trim().isNotEmpty()){
+            adapterR_editProducts.getFilter()?.filter(lastFilterStr)
+        }
+
+        val layoutManager1 =binding.aepRecycler.layoutManager as LinearLayoutManager
+        layoutManager1.scrollToPosition(lastPositionRecycler)
     }
 
 
@@ -514,7 +536,7 @@ class Activity_EditProductLS : AppCompatActivity() {
                     li_add_binding?.tietPriceBuy?.text.toString().toDouble(),
                     li_add_binding?.tietPriceSale?.text.toString().toDouble(),
                     li_add_binding?.tietDesc?.text.toString(),
-                    if (li_add_binding?.image == null) 0 else 1,
+                    al_editProduct[position].statePhoto,
                     position,
                     li_add_binding?.tietDeficit?.text.toString().toInt(),
                     li_add_binding?.tietSize?.text.toString(),
@@ -870,12 +892,13 @@ class Activity_EditProductLS : AppCompatActivity() {
                 imageFile,
                 c_Product,
                 name,
-                FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
+                al_editProduct[position].fk_c_sessionS,
                 amount,
                 buyPrice,
                 salePrice,
                 descr,
                 deficit,
+                statePhoto,
                 size,
                 brand
             )

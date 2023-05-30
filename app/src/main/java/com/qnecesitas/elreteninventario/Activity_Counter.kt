@@ -8,12 +8,11 @@ import android.text.TextWatcher
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
 import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductShow
@@ -23,7 +22,6 @@ import com.qnecesitas.elreteninventario.data.ModelEditProduct
 import com.qnecesitas.elreteninventario.data.ModelProductPath
 import com.qnecesitas.elreteninventario.databinding.ActivityCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddCounterBinding
-import com.qnecesitas.elreteninventario.databinding.LiCartAceptBinding
 import com.qnecesitas.elreteninventario.databinding.LiShowProductBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplLS
 import com.shashank.sony.fancytoastlib.FancyToast
@@ -48,6 +46,8 @@ class Activity_Counter : AppCompatActivity() {
 
     //Internet
     private lateinit var retrofitImp: RetrofitProductsImplLS
+    private var lastFilterStr = ""
+    private var lastPositionRecycler = 0
 
     //Fragment
     lateinit var fragment_carrito: Fragment_Cart
@@ -72,6 +72,7 @@ class Activity_Counter : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 adapterCounter.getFilter()?.filter(newText)
+                lastFilterStr = newText.toString()
                 return false
             }
 
@@ -140,6 +141,9 @@ class Activity_Counter : AppCompatActivity() {
     }
 
     private fun updateRecyclerAdapter() {
+        val layoutManager =binding.rvProductsShow.layoutManager as LinearLayoutManager
+        lastPositionRecycler = layoutManager.findFirstVisibleItemPosition()
+
         if (alCounter.isEmpty()) {
             alertNotElements(true)
         } else {
@@ -167,8 +171,13 @@ class Activity_Counter : AppCompatActivity() {
             }
         })
 
+        if(lastFilterStr.trim().isNotEmpty()){
+            adapterCounter.getFilter()?.filter(lastFilterStr)
+        }
 
         binding.rvProductsShow.adapter = adapterCounter
+        val layoutManager1 =binding.rvProductsShow.layoutManager as LinearLayoutManager
+        layoutManager1.scrollToPosition(lastPositionRecycler)
     }
 
     private fun showFragment() {

@@ -3,11 +3,12 @@ package com.qnecesitas.elreteninventario
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -32,6 +33,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.awaitResponse
 import java.util.Calendar
+
 
 
 class Fragment_Cart : Fragment() {
@@ -113,6 +115,10 @@ class Fragment_Cart : Fragment() {
     }
 
     private fun updateRecyclerAdapter() {
+        if(alCart.isNotEmpty()){
+            alCart.sortBy { it.product.name }
+        }
+
         if (alCart.isEmpty()) {
             alertNotElements(true)
         } else {
@@ -159,9 +165,20 @@ class Fragment_Cart : Fragment() {
             builder.setView(li_cartAccept_binding?.root)
             val alertDialog = builder.create()
 
-            val alType: ArrayList<String> =  arrayListOf("Transferencia", "Efectivo")
+            val alType: ArrayList<String> =  arrayListOf("Transferencia", "Efectivo", "Efectivo-Transferencia")
             val stringArrayAdapter = ArrayAdapter<String>(requireContext(), R.layout.list_item_spinner, alType)
             li_cartAccept_binding?.tietSpinner?.setAdapter<ArrayAdapter<String>>(stringArrayAdapter)
+
+
+            li_cartAccept_binding?.tietSpinner?.onItemClickListener =
+                OnItemClickListener { _, _, _, _ ->
+                    val selected= li_cartAccept_binding?.tietSpinner?.text.toString()
+                    if (selected == alType[0] || selected == alType[2]){
+                        li_cartAccept_binding?.tilPago?.visibility = View.VISIBLE
+                    }else{
+                        li_cartAccept_binding?.tilPago?.visibility = View.GONE
+                    }
+                }
 
             //Listeners
             li_cartAccept_binding?.btnCancelar?.setOnClickListener(View.OnClickListener {
@@ -177,6 +194,9 @@ class Fragment_Cart : Fragment() {
                     val month = calendar.get(Calendar.MONTH)+1
                     val year = calendar.get(Calendar.YEAR)
                     val type = li_cartAccept_binding?.tietSpinner?.text.toString()
+                    val totalTransf = li_cartAccept_binding?.tietPago?.text.toString().toDouble()
+
+
 
                     //model
                     lastModelSale = ModelSale(
@@ -189,11 +209,12 @@ class Fragment_Cart : Fragment() {
                         day,
                         month,
                         year,
-                        type)
+                        type,
+                        totalTransf)
 
 
                     alertDialog.dismiss()
-                    startCoroutines(name, discount, type)
+                    startCoroutines(name, discount, type, totalTransf)
                 }
             })
 
@@ -244,7 +265,7 @@ class Fragment_Cart : Fragment() {
         alertDialog.show()
     }
 
-    private fun startCoroutines(name: String, discount: Double, type: String){
+    private fun startCoroutines(name: String, discount: Double, type: String, totalTransf: Double){
         binding.progress.visibility = View.VISIBLE
         binding.progress.max = alCart.size+1
         var progress = 0;
@@ -259,7 +280,7 @@ class Fragment_Cart : Fragment() {
                         binding.progress.progress = progress
                     }
                     if(progress == alCart.size){
-                        addOrderInternet(name,discount, type)
+                        addOrderInternet(name,discount, type, totalTransf)
                     }
                 }else{
                     progress = 0
@@ -291,10 +312,10 @@ class Fragment_Cart : Fragment() {
         return call.awaitResponse()
     }
 
-    private fun addOrderInternet(nomb: String, descuento: Double, type: String){
+    private fun addOrderInternet(nomb: String, descuento: Double, type: String, totalTransf: Double){
         if(NetworkTools.isOnline(binding.root.context, false)){
             binding.progress.visibility = View.VISIBLE
-            val call = retrofitCart.addOrder(Constants.PHP_TOKEN,nomb,makeProducts(),makeTotalPrice(), makeTotalInv(), descuento, type)
+            val call = retrofitCart.addOrder(Constants.PHP_TOKEN,nomb,makeProducts(),makeTotalPrice(), makeTotalInv(), descuento, type, totalTransf)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     binding.progress.visibility = View.GONE
@@ -431,13 +452,19 @@ class Fragment_Cart : Fragment() {
             li_cartAccept_binding?.tilDescuento?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
+        if (li_cartAccept_binding?.tietPago?.text?.trim()?.isNotEmpty() ==true){
+            amount++
+        }else{
+            li_cartAccept_binding?.tietPago?.error = getString(R.string.este_campo_no_debe_vacio)
+        }
+
         if (li_cartAccept_binding?.tietSpinner?.text?.trim()?.isNotEmpty() == true){
             amount++
         }else{
             li_cartAccept_binding?.tietSpinner?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
-        return amount == 3
+        return amount == 4
     }
 
 
