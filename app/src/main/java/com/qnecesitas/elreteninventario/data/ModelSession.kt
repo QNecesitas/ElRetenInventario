@@ -1,7 +1,12 @@
 package com.qnecesitas.elreteninventario.data
 
-class ModelSession (
-    var c_sessionS : String,
-    var fk_c_drawerS : String,
-    var amount : Int = 0
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class ModelSession (
+    @PrimaryKey(autoGenerate = false) var c_sessionS: String,
+    @ColumnInfo(name = "ci") var fk_c_drawerS: String,
+    @ColumnInfo(name = "month") var amount: Int = 0
 )

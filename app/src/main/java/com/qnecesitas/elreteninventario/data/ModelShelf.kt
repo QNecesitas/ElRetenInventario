@@ -1,7 +1,10 @@
 package com.qnecesitas.elreteninventario.data
 
+import androidx.room.ColumnInfo
+import androidx.room.PrimaryKey
+
 data class ModelShelf(
-    var c_shelfS: String,
-    var amount: Int
+    @PrimaryKey(autoGenerate = false) var c_shelfS: String,
+    @ColumnInfo(name = "ci") var amount: Int,
 )
 

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -23,12 +24,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     buildFeatures{
         viewBinding = true
     }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    viewBinding {
+        enabled= true
+    }
+
     dataBinding {
         enabled = true
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -50,7 +62,11 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.github.yalantis:ucrop:2.2.6'
     implementation 'io.github.shashank02051997:FancyToast:2.0.2'
-    implementation 'androidx.databinding:databinding-runtime:8.0.1'
+    implementation 'androidx.databinding:databinding-runtime:8.0.2'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'androidx.room:room-runtime:2.5.1'
+    implementation 'androidx.activity:activity-ktx:1.7.2'
+    implementation 'androidx.room:room-ktx:2.5.1'
+    kapt 'androidx.room:room-compiler:2.5.1'
 }
