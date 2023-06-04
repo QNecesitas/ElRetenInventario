@@ -128,7 +128,7 @@ class Fragment_Cart : Fragment() {
 
         binding.tvPrecioT.text = getString(R.string.PrecioTotal, precioT)
 
-        adapterCart.setCancelListener(object : AdapterR_CounterProductAdd.RecyclerClickListener {
+        adapterCart.setCancelListener(object : AdapterR_CounterProductAdd.RecyclerCancelListener {
             override fun onClick(position: Int) {
                 deleteProduct(position)
             }
