@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductAdd
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelCart
@@ -44,7 +45,6 @@ class Fragment_Cart : Fragment() {
     //Recycler
     private lateinit var alCart: ArrayList<ModelCart>
     private lateinit var adapterCart: AdapterR_CounterProductAdd
-
     //ListenerReload
     private var listenerReload : IReload? = null
     private var listenerDelete : IDeleteProduct? = null
