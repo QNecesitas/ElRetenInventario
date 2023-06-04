@@ -1,8 +1,7 @@
 package com.qnecesitas.elreteninventario.network
 
-import android.util.Log
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -46,11 +45,11 @@ class RetrofitProductsImplLS : IRetrofitProductsLS {
     override fun fetchProductsLS(
         token: String,
         fk_c_sessionLS: String
-    ): Call<ArrayList<ModelEditProduct>> {
+    ): Call<ArrayList<ModelEditProductS>> {
         return productApi.fetchProductsLS(token, fk_c_sessionLS)
     }
 
-    override fun fetchProductsSAllLS(token: String): Call<ArrayList<ModelEditProduct>> {
+    override fun fetchProductsSAllLS(token: String): Call<ArrayList<ModelEditProductS>> {
         return productApi.fetchProductsSAllLS(token)
     }
 

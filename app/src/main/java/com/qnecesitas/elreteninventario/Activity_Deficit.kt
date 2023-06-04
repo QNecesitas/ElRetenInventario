@@ -1,21 +1,14 @@
 package com.qnecesitas.elreteninventario
 
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.RadioGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterR_DeficitProduct
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.databinding.ActivityDeficitBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS
 import retrofit2.Call
@@ -28,7 +21,7 @@ class Activity_Deficit : AppCompatActivity() {
     private lateinit var binding: ActivityDeficitBinding
 
     //Array
-    private lateinit var al_deficitProduct: ArrayList<ModelEditProduct>
+    private lateinit var al_deficitProduct: ArrayList<ModelEditProductS>
     private lateinit var adapterR_DeficitProduct: AdapterR_DeficitProduct
 
     //Internet
@@ -110,10 +103,10 @@ class Activity_Deficit : AppCompatActivity() {
                     Constants.PHP_TOKEN,
                     selectButton
                 )
-                call.enqueue(object : Callback<ArrayList<ModelEditProduct>> {
+                call.enqueue(object : Callback<ArrayList<ModelEditProductS>> {
                     override fun onResponse(
-                        call: Call<ArrayList<ModelEditProduct>>,
-                        response: Response<java.util.ArrayList<ModelEditProduct>>
+                            call: Call<ArrayList<ModelEditProductS>>,
+                            response: Response<java.util.ArrayList<ModelEditProductS>>
                     ) {
                         binding.adRefresh.isRefreshing = false
                         if (response.isSuccessful) {
@@ -130,8 +123,8 @@ class Activity_Deficit : AppCompatActivity() {
                     }
 
                     override fun onFailure(
-                        call: Call<java.util.ArrayList<ModelEditProduct>>,
-                        t: Throwable
+                            call: Call<java.util.ArrayList<ModelEditProductS>>,
+                            t: Throwable
                     ) {
                         binding.adRefresh.isRefreshing = false
                         binding.adNotInfo.visibility = View.GONE

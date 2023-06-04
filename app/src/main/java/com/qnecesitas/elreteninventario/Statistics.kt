@@ -10,7 +10,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -21,7 +20,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelCart
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelSale
 import com.qnecesitas.elreteninventario.databinding.ActivityStatisticsBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYBinding
@@ -34,7 +33,6 @@ import com.shashank.sony.fancytoastlib.FancyToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Error
 import java.util.Calendar
 
 class Statistics : AppCompatActivity() {
@@ -45,7 +43,7 @@ class Statistics : AppCompatActivity() {
 
     //Ranking
     private lateinit var alRanking: ArrayList<ModelCart>
-    private lateinit var alAllProducts: ArrayList<ModelEditProduct>
+    private lateinit var alAllProducts: ArrayList<ModelEditProductS>
     private lateinit var alMonthSalesRanking: ArrayList<ModelSale>
     private lateinit var retrofitProductsImplS: RetrofitProductsImplLS
 
@@ -722,10 +720,10 @@ class Statistics : AppCompatActivity() {
             binding.refresh.isRefreshing = true
 
             val call = retrofitProductsImplS.fetchProductsSAllLS(Constants.PHP_TOKEN)
-            call.enqueue(object : Callback<ArrayList<ModelEditProduct>> {
+            call.enqueue(object : Callback<ArrayList<ModelEditProductS>> {
                 override fun onResponse(
-                    call: Call<ArrayList<ModelEditProduct>>,
-                    response: Response<java.util.ArrayList<ModelEditProduct>>
+                        call: Call<ArrayList<ModelEditProductS>>,
+                        response: Response<java.util.ArrayList<ModelEditProductS>>
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
@@ -738,8 +736,8 @@ class Statistics : AppCompatActivity() {
                 }
 
                 override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelEditProduct>>,
-                    t: Throwable
+                        call: Call<java.util.ArrayList<ModelEditProductS>>,
+                        t: Throwable
                 ) {
                     alertNotInternet(true)
                     binding.refresh.isRefreshing = false
@@ -808,7 +806,7 @@ class Statistics : AppCompatActivity() {
         }
     }
 
-    private fun numberSales(modelEditProduct: ModelEditProduct) : Int{
+    private fun numberSales(modelEditProductS: ModelEditProductS) : Int{
         var cant = 0
         var cProdIndex: Int
         var subBeforeCode: String
@@ -817,9 +815,9 @@ class Statistics : AppCompatActivity() {
         var startRealAmountIndex: Int
         var endRealAmountIndex: Int
         for(modelSales in alMonthSalesRanking){
-           if (modelSales.products.contains(modelEditProduct.c_productS)){
+           if (modelSales.products.contains(modelEditProductS.c_productS)){
               try {
-                  cProdIndex = modelSales.products.indexOf(modelEditProduct.c_productS)
+                  cProdIndex = modelSales.products.indexOf(modelEditProductS.c_productS)
                   subBeforeCode = modelSales.products.substring(0,cProdIndex)
                   lastAmountIndex = subBeforeCode.lastIndexOf("Cantidad:")
                   subAmount = subBeforeCode.substring(lastAmountIndex)

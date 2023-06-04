@@ -2,7 +2,6 @@ package com.qnecesitas.elreteninventario;
 
 import android.graphics.Color;
 import android.os.Build;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,14 +19,13 @@ import androidx.core.app.NotificationCompat;
 import com.google.android.material.snackbar.Snackbar;
 import com.qnecesitas.elreteninventario.auxiliary.Constants;
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools;
-import com.qnecesitas.elreteninventario.data.ModelEditProduct;
+import com.qnecesitas.elreteninventario.data.ModelEditProductS;
 import com.qnecesitas.elreteninventario.data.ModelPassword;
 import com.qnecesitas.elreteninventario.databinding.ActivityLoginBinding;
 import com.qnecesitas.elreteninventario.network.RetrofitPasswords;
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,8 +40,8 @@ public class Activity_Login extends AppCompatActivity {
 
     //Deficit
     private RetrofitProductsImplS retrofitProductsImplS;
-    private ArrayList<ModelEditProduct> alProductsDeficitS;
-    private ArrayList<ModelEditProduct> alProductsDeficitLS;
+    private ArrayList<ModelEditProductS> alProductsDeficitS;
+    private ArrayList<ModelEditProductS> alProductsDeficitLS;
 
     //Notification
     private final String CHANNEL_ID = "ELReten";
@@ -178,10 +176,10 @@ public class Activity_Login extends AppCompatActivity {
     private void loadDeficitInternetS(){
         if (NetworkTools.isOnline(Activity_Login.this, false)) {
 
-            Call<ArrayList<ModelEditProduct>> call = retrofitProductsImplS.fetchProductsDeficit(Constants.PHP_TOKEN, "Almacén");
-            call.enqueue(new Callback<ArrayList<ModelEditProduct>>() {
+            Call<ArrayList<ModelEditProductS>> call = retrofitProductsImplS.fetchProductsDeficit(Constants.PHP_TOKEN, "Almacén");
+            call.enqueue(new Callback<ArrayList<ModelEditProductS>>() {
                 @Override
-                public void onResponse(Call<ArrayList<ModelEditProduct>> call, Response<ArrayList<ModelEditProduct>> response) {
+                public void onResponse(Call<ArrayList<ModelEditProductS>> call, Response<ArrayList<ModelEditProductS>> response) {
                     if(response.isSuccessful()){
                         alProductsDeficitS = response.body();
                         loadDeficitInternetLS();
@@ -192,7 +190,7 @@ public class Activity_Login extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<ArrayList<ModelEditProduct>> call, Throwable t) {
+                public void onFailure(Call<ArrayList<ModelEditProductS>> call, Throwable t) {
                     Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
                     binding.ALPBCargando.setVisibility(View.GONE);
                 }
@@ -206,10 +204,10 @@ public class Activity_Login extends AppCompatActivity {
     private void loadDeficitInternetLS(){
         if (NetworkTools.isOnline(Activity_Login.this, false)) {
 
-            Call<ArrayList<ModelEditProduct>> call = retrofitProductsImplS.fetchProductsDeficit(Constants.PHP_TOKEN, "Mostrador");
-            call.enqueue(new Callback<ArrayList<ModelEditProduct>>() {
+            Call<ArrayList<ModelEditProductS>> call = retrofitProductsImplS.fetchProductsDeficit(Constants.PHP_TOKEN, "Mostrador");
+            call.enqueue(new Callback<ArrayList<ModelEditProductS>>() {
                 @Override
-                public void onResponse(Call<ArrayList<ModelEditProduct>> call, Response<ArrayList<ModelEditProduct>> response) {
+                public void onResponse(Call<ArrayList<ModelEditProductS>> call, Response<ArrayList<ModelEditProductS>> response) {
                     binding.ALPBCargando.setVisibility(View.GONE);
                     if(response.isSuccessful()){
                         alProductsDeficitLS = response.body();
@@ -220,7 +218,7 @@ public class Activity_Login extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<ArrayList<ModelEditProduct>> call, Throwable t) {
+                public void onFailure(Call<ArrayList<ModelEditProductS>> call, Throwable t) {
                     Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
                     binding.ALPBCargando.setVisibility(View.GONE);
                 }

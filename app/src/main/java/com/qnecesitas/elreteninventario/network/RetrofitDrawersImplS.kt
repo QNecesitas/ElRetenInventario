@@ -1,8 +1,7 @@
 package com.qnecesitas.elreteninventario.network
 
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.data.ModelDrawer
-import com.qnecesitas.elreteninventario.data.ModelShelf
+import com.qnecesitas.elreteninventario.data.ModelDrawerS
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,7 +29,7 @@ class RetrofitDrawersImplS : IRetrofitDrawersS {
         return productApi.addDrawer(token, newCode,fk_c_shelfS)
     }
 
-    override fun fetchDrawers(token: String, fk_c_shelfS: String): Call<ArrayList<ModelDrawer>> {
+    override fun fetchDrawers(token: String, fk_c_shelfS: String): Call<ArrayList<ModelDrawerS>> {
         return productApi.fetchDrawers(token,fk_c_shelfS)
     }
 }

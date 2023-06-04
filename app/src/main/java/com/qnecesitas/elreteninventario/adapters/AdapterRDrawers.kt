@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qnecesitas.elreteninventario.R
-import com.qnecesitas.elreteninventario.data.ModelDrawer
+import com.qnecesitas.elreteninventario.data.ModelDrawerS
 import com.qnecesitas.elreteninventario.databinding.RecyclerDrawersBinding
 
 
-class AdapterRDrawers(private val al_drawers: ArrayList<ModelDrawer>, private val context: Context) :
+class AdapterRDrawers(private val al_drawers: ArrayList<ModelDrawerS>, private val context: Context) :
     RecyclerView.Adapter<AdapterRDrawers.DrawerViewHolder>() {
 
 
@@ -22,12 +22,12 @@ class AdapterRDrawers(private val al_drawers: ArrayList<ModelDrawer>, private va
 
 
         fun bind(
-            model: ModelDrawer ,
-            context: Context,
-            editListener: RecyclerClickListener?,
-            deleteListener: RecyclerClickListener?,
-            touchListener: RecyclerClickListener?,
-            position: Int
+                model: ModelDrawerS,
+                context: Context,
+                editListener: RecyclerClickListener?,
+                deleteListener: RecyclerClickListener?,
+                touchListener: RecyclerClickListener?,
+                position: Int
         ) {
             val guionPosition = model.c_drawerS.lastIndexOf("_")
             val originCode = model.c_drawerS.substring(guionPosition + 1)

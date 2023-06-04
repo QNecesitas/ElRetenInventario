@@ -3,19 +3,16 @@ package com.qnecesitas.elreteninventario.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Filter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.databinding.RecyclerDeficitBinding
-import java.util.Locale
 
 class AdapterR_DeficitProduct(
-    private val al_deficitProdut: ArrayList<ModelEditProduct>,
-    private val context: Context
+        private val al_deficitProdut: ArrayList<ModelEditProductS>,
+        private val context: Context
 )  : RecyclerView.Adapter<AdapterR_DeficitProduct.DeficitProductViewHolder>(){
 
 
@@ -26,8 +23,8 @@ class AdapterR_DeficitProduct(
 
 
         fun bind(
-            model: ModelEditProduct,
-            context: Context,
+                model: ModelEditProductS,
+                context: Context,
         ) {
             Glide.with(context)
                 .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")

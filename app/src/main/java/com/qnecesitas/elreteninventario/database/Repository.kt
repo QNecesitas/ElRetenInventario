@@ -1,10 +1,15 @@
 package com.qnecesitas.elreteninventario.database
 
-class Repository {
+import android.app.Application
+import com.qnecesitas.elreteninventario.ElRetenApplication
 
-    fun addDrawerLs(c_drawerLS: String, fk_c_shelfLS: String){
-        //TODO -- INSERT drawerLS
-        //TODO -- UPDATE ShelfLS
+class Repository(private val application: Application) {
+    val drawerLSDao = (application as ElRetenApplication).database.drawerLSDao()
+
+
+    fun addDrawerLs(c_drawerLS: String, fk_c_shelfLS: String, ){
+         //TODO -- INSERT drawerLS
+         //TODO -- UPDATE ShelfLS
     }
 
     fun addDrawerS(c_drawerS: String, fk_c_shelfS: String){

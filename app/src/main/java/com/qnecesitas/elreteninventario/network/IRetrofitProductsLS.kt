@@ -1,6 +1,6 @@
 package com.qnecesitas.elreteninventario.network
 
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
 import retrofit2.Call
 import retrofit2.http.Field
@@ -93,13 +93,13 @@ interface IRetrofitProductsLS {
     fun fetchProductsLS(
         @Query("token") token: String,
         @Query("fk_c_sessionLS") fk_c_sessionLS: String
-    ): Call<ArrayList<ModelEditProduct>>
+    ): Call<ArrayList<ModelEditProductS>>
 
 
     @GET("FetchProductsLSAll.php")
     fun fetchProductsSAllLS(
         @Query("token") token: String
-    ): Call<ArrayList<ModelEditProduct>>
+    ): Call<ArrayList<ModelEditProductS>>
 
 
     @GET("FetchProductLSPath.php")

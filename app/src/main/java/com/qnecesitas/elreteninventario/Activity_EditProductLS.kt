@@ -38,7 +38,7 @@ import com.qnecesitas.elreteninventario.auxiliary.IDCreater
 import com.qnecesitas.elreteninventario.auxiliary.ImageTools
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.auxiliary.Permissions
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
 import com.qnecesitas.elreteninventario.databinding.ActivityEditProductLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddProductBinding
@@ -66,8 +66,8 @@ class Activity_EditProductLS : AppCompatActivity() {
     private lateinit var li_alter_amount_binding : LiAlterAmountBinding
 
     //Edit Product
-    private lateinit var al_editProduct: ArrayList<ModelEditProduct>
-    private lateinit var al_editProductSAll: ArrayList<ModelEditProduct>
+    private lateinit var al_editProduct: ArrayList<ModelEditProductS>
+    private lateinit var al_editProductSAll: ArrayList<ModelEditProductS>
     private lateinit var adapterR_editProducts: AdapterR_EditProduct
     private var isContracted = false
 
@@ -177,10 +177,10 @@ class Activity_EditProductLS : AppCompatActivity() {
                     Constants.PHP_TOKEN,
                     FragmentsInfo.LAST_CODE_SESSION_LS_SENDED
                 )
-            call.enqueue(object : Callback<ArrayList<ModelEditProduct>> {
+            call.enqueue(object : Callback<ArrayList<ModelEditProductS>> {
                 override fun onResponse(
-                    call: Call<ArrayList<ModelEditProduct>>,
-                    response: Response<java.util.ArrayList<ModelEditProduct>>
+                        call: Call<ArrayList<ModelEditProductS>>,
+                        response: Response<java.util.ArrayList<ModelEditProductS>>
                 ) {
                     binding.aepRefresh.isRefreshing = false
                     if (response.isSuccessful) {
@@ -193,8 +193,8 @@ class Activity_EditProductLS : AppCompatActivity() {
                 }
 
                 override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelEditProduct>>,
-                    t: Throwable
+                        call: Call<java.util.ArrayList<ModelEditProductS>>,
+                        t: Throwable
                 ) {
                     alertNotInternet(true)
                     binding.aepRefresh.isRefreshing = false
@@ -213,10 +213,10 @@ class Activity_EditProductLS : AppCompatActivity() {
                 retrofitProductsImplS.fetchProductsSAll(
                     Constants.PHP_TOKEN)
 
-            call.enqueue(object : Callback<ArrayList<ModelEditProduct>> {
+            call.enqueue(object : Callback<ArrayList<ModelEditProductS>> {
                 override fun onResponse(
-                    call: Call<ArrayList<ModelEditProduct>>,
-                    response: Response<java.util.ArrayList<ModelEditProduct>>
+                        call: Call<ArrayList<ModelEditProductS>>,
+                        response: Response<java.util.ArrayList<ModelEditProductS>>
                 ) {
                     binding.aepRefresh.isRefreshing = false
                     if (response.isSuccessful) {
@@ -229,8 +229,8 @@ class Activity_EditProductLS : AppCompatActivity() {
                 }
 
                 override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelEditProduct>>,
-                    t: Throwable
+                        call: Call<java.util.ArrayList<ModelEditProductS>>,
+                        t: Throwable
                 ) {
                     alertNotInternet(true)
                     binding.aepRefresh.isRefreshing = false
@@ -811,7 +811,7 @@ class Activity_EditProductLS : AppCompatActivity() {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     binding.aepRefresh.isRefreshing = false
                     if (response.isSuccessful) {
-                        val model = ModelEditProduct(
+                        val model = ModelEditProductS(
                             c_Product,
                             n_Product,
                             FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
@@ -906,7 +906,7 @@ class Activity_EditProductLS : AppCompatActivity() {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     binding.aepRefresh.isRefreshing = false
                     if (response.isSuccessful) {
-                        val model = ModelEditProduct(
+                        val model = ModelEditProductS(
                             c_Product,
                             name,
                             FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,

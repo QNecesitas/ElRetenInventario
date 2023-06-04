@@ -1,7 +1,7 @@
 package com.qnecesitas.elreteninventario.network
 
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.data.ModelShelf
+import com.qnecesitas.elreteninventario.data.ModelShelfS
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -28,7 +28,7 @@ class RetrofitShelvesImplS : IRetrofitShelvesS {
         return productApi.addShelf(token, c_shelfS)
     }
 
-    override fun fetchShelves(token: String): Call<ArrayList<ModelShelf>> {
+    override fun fetchShelves(token: String): Call<ArrayList<ModelShelfS>> {
         return productApi.fetchShelves(token)
     }
 

@@ -8,16 +8,14 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.qnecesitas.elreteninventario.adapters.AdapterRDrawers
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
-import com.qnecesitas.elreteninventario.data.ModelDrawer
+import com.qnecesitas.elreteninventario.data.ModelDrawerS
 import com.qnecesitas.elreteninventario.databinding.FragmentDrawersBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddDrawerBinding
 import com.qnecesitas.elreteninventario.network.RetrofitDrawersImplS
@@ -31,7 +29,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     private var openDrawer: OpenDrawerS? = null
     //Recycler
     private lateinit var binding: FragmentDrawersBinding
-    private lateinit var al_drawers: ArrayList<ModelDrawer>
+    private lateinit var al_drawers: ArrayList<ModelDrawerS>
     private lateinit var adapterRDrawers: AdapterRDrawers
 
     //Internet
@@ -82,10 +80,10 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
             binding.refresh.isRefreshing = true
 
             val call = retrofitDrawersImpl.fetchDrawers(Constants.PHP_TOKEN,c_shelfS)
-            call.enqueue(object : Callback<ArrayList<ModelDrawer>> {
+            call.enqueue(object : Callback<ArrayList<ModelDrawerS>> {
                 override fun onResponse(
-                    call: Call<ArrayList<ModelDrawer>>,
-                    response: Response<java.util.ArrayList<ModelDrawer>>
+                        call: Call<ArrayList<ModelDrawerS>>,
+                        response: Response<java.util.ArrayList<ModelDrawerS>>
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
@@ -102,8 +100,8 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
                 }
 
                 override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelDrawer>>,
-                    t: Throwable
+                        call: Call<java.util.ArrayList<ModelDrawerS>>,
+                        t: Throwable
                 ) {
                     binding.refresh.isRefreshing = false
                     binding.fdNotConnection.visibility = View.VISIBLE
@@ -203,7 +201,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
-                        val model = ModelDrawer(drawerCode, c_shelfS)
+                        val model = ModelDrawerS(drawerCode, c_shelfS)
                         al_drawers.add(model)
                         updateRecyclerAdapter()
                         FancyToast.makeText(

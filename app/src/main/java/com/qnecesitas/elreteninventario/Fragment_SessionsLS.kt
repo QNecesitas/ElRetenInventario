@@ -12,11 +12,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.qnecesitas.elreteninventario.adapters.AdapterRSessions
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
-import com.qnecesitas.elreteninventario.data.ModelSession
+import com.qnecesitas.elreteninventario.data.ModelSessionS
 import com.qnecesitas.elreteninventario.databinding.FragmentSessionsLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddSessionBinding
 import com.qnecesitas.elreteninventario.network.RetrofitSessionsImplLS
@@ -31,7 +30,7 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
 
     //Recycler
     private lateinit var binding: FragmentSessionsLsBinding
-    private lateinit var al_sessions: ArrayList<ModelSession>
+    private lateinit var al_sessions: ArrayList<ModelSessionS>
     private lateinit var adapterRSessions: AdapterRSessions
 
     //Internet
@@ -81,10 +80,10 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
         if (NetworkTools.isOnline(binding.root.context, false)) {
             binding.refresh.isRefreshing = true
             val call = retrofitSessionImpl.fetchSessions(Constants.PHP_TOKEN, c_drawerLS)
-            call.enqueue(object : Callback<ArrayList<ModelSession>> {
+            call.enqueue(object : Callback<ArrayList<ModelSessionS>> {
                 override fun onResponse(
-                    call: Call<ArrayList<ModelSession>>,
-                    response: Response<java.util.ArrayList<ModelSession>>
+                        call: Call<ArrayList<ModelSessionS>>,
+                        response: Response<java.util.ArrayList<ModelSessionS>>
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
@@ -101,8 +100,8 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
                 }
 
                 override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSession>>,
-                    t: Throwable
+                        call: Call<java.util.ArrayList<ModelSessionS>>,
+                        t: Throwable
                 ) {
                     binding.refresh.isRefreshing = false
                     binding.fsNotConnectionSession.visibility = View.VISIBLE
@@ -199,7 +198,7 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
-                        val model = ModelSession(sessionCode, c_drawerLS)
+                        val model = ModelSessionS(sessionCode, c_drawerLS)
                         al_sessions.add(model)
                         updateRecyclerAdapter()
                         FancyToast.makeText(
