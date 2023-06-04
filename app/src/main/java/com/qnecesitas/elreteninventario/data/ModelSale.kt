@@ -5,14 +5,14 @@ import androidx.room.PrimaryKey
 
 data class ModelSale(
     @PrimaryKey(autoGenerate = true) var c_order: Int,
-    @ColumnInfo(name = "ci") var name: String,
-    @ColumnInfo(name = "month") var products: String,
-    @ColumnInfo(name = "ci") var totalPrice: Double,
-    @ColumnInfo(name = "month") var totalInv: Double,
-    @ColumnInfo(name = "ci") var discount: Double,
-    @ColumnInfo(name = "month") var day: Int,
-    @ColumnInfo(name = "ci") var month: Int,
-    @ColumnInfo(name = "ci") var year: Int,
-    @ColumnInfo(name = "month") var type: String,
-    @ColumnInfo(name = "month") var totalTranf: Double
+    @ColumnInfo(name = "name") var name: String,
+    @ColumnInfo(name = "products") var products: String,
+    @ColumnInfo(name = "totalPrice") var totalPrice: Double,
+    @ColumnInfo(name = "totalInv") var totalInv: Double,
+    @ColumnInfo(name = "discount") var discount: Double,
+    @ColumnInfo(name = "day") var day: Int,
+    @ColumnInfo(name = "month") var month: Int,
+    @ColumnInfo(name = "year") var year: Int,
+    @ColumnInfo(name = "type") var type: String,
+    @ColumnInfo(name = "totalTranf") var totalTranf: Double
 )

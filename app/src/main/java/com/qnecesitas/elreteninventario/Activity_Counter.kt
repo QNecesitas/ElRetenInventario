@@ -18,7 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductShow
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
 import com.qnecesitas.elreteninventario.databinding.ActivityCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddCounterBinding
@@ -33,7 +33,7 @@ class Activity_Counter : AppCompatActivity() {
 
     //Recyclers
     private lateinit var adapterCounter: AdapterR_CounterProductShow
-    private lateinit var alCounter: ArrayList<ModelEditProduct>
+    private lateinit var alCounter: ArrayList<ModelEditProductS>
 
     //Binding
     private lateinit var binding: ActivityCounterBinding
@@ -112,10 +112,10 @@ class Activity_Counter : AppCompatActivity() {
             binding.refresh.isRefreshing = true
 
             val call = retrofitImp.fetchProductsSAllLS(Constants.PHP_TOKEN)
-            call.enqueue(object : Callback<ArrayList<ModelEditProduct>> {
+            call.enqueue(object : Callback<ArrayList<ModelEditProductS>> {
                 override fun onResponse(
-                    call: Call<ArrayList<ModelEditProduct>>,
-                    response: Response<java.util.ArrayList<ModelEditProduct>>
+                        call: Call<ArrayList<ModelEditProductS>>,
+                        response: Response<java.util.ArrayList<ModelEditProductS>>
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
@@ -128,8 +128,8 @@ class Activity_Counter : AppCompatActivity() {
                 }
 
                 override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelEditProduct>>,
-                    t: Throwable
+                        call: Call<java.util.ArrayList<ModelEditProductS>>,
+                        t: Throwable
                 ) {
                     alertNotInternet(true)
                     binding.refresh.isRefreshing = false

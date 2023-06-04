@@ -1,6 +1,6 @@
 package com.qnecesitas.elreteninventario.network
 
-import com.qnecesitas.elreteninventario.data.ModelSession
+import com.qnecesitas.elreteninventario.data.ModelSessionS
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -47,6 +47,6 @@ interface IRetrofitSessionsLS {
     fun fetchSessions(
         @Query("token") token: String,
         @Query("fk_c_drawerLS") fk_c_drawerLS: String
-    ): Call<ArrayList<ModelSession>>
+    ): Call<ArrayList<ModelSessionS>>
 
 }

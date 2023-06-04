@@ -1,6 +1,6 @@
 package com.qnecesitas.elreteninventario.network
 
-import com.qnecesitas.elreteninventario.data.ModelShelf
+import com.qnecesitas.elreteninventario.data.ModelShelfS
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -44,7 +44,7 @@ interface IRetrofitShelvesS {
     @GET("FetchShelvesS.php")
     fun fetchShelves(
         @Query("token") token: String
-    ): Call<ArrayList<ModelShelf>>
+    ): Call<ArrayList<ModelShelfS>>
 
 
 }

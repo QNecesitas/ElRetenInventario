@@ -15,7 +15,7 @@ import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductAdd
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelCart
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelSale
 import com.qnecesitas.elreteninventario.databinding.FragmentCartBinding
 import com.qnecesitas.elreteninventario.databinding.LiCartAceptBinding
@@ -93,14 +93,14 @@ class Fragment_Cart : Fragment() {
     /*Recycler operations
    * ---------------------------------
    * */
-    fun addProduct(modelEditProduct: ModelEditProduct, amount: Int) {
+    fun addProduct(modelEditProductS: ModelEditProductS, amount: Int) {
         alCart.add(
             ModelCart(
-                modelEditProduct.clone(),
+                modelEditProductS.clone(),
                 amount
             )
         )
-        precioT += amount * modelEditProduct.salePrice
+        precioT += amount * modelEditProductS.salePrice
         updateRecyclerAdapter()
     }
 

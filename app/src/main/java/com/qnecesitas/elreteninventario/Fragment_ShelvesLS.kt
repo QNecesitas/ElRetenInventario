@@ -12,11 +12,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.qnecesitas.elreteninventario.adapters.AdapterRShelves
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
-import com.qnecesitas.elreteninventario.data.ModelShelf
+import com.qnecesitas.elreteninventario.data.ModelShelfS
 import com.qnecesitas.elreteninventario.databinding.FragmentShelvesLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddShelfBinding
 import com.qnecesitas.elreteninventario.network.RetrofitShelvesImplLS
@@ -32,7 +31,7 @@ class Fragment_ShelvesLS : Fragment() {
 
     //Recycler
     private lateinit var binding: FragmentShelvesLsBinding
-    private lateinit var al_shelves: ArrayList<ModelShelf>
+    private lateinit var al_shelves: ArrayList<ModelShelfS>
     private lateinit var adapterRShelves: AdapterRShelves
 
     //Internet
@@ -84,10 +83,10 @@ class Fragment_ShelvesLS : Fragment() {
             binding.refresh.isRefreshing = true
 
             val call = retrofitShelvesImpl.fetchShelves(Constants.PHP_TOKEN)
-            call.enqueue(object : Callback<ArrayList<ModelShelf>> {
+            call.enqueue(object : Callback<ArrayList<ModelShelfS>> {
                 override fun onResponse(
-                    call: Call<ArrayList<ModelShelf>>,
-                    response: Response<java.util.ArrayList<ModelShelf>>
+                        call: Call<ArrayList<ModelShelfS>>,
+                        response: Response<java.util.ArrayList<ModelShelfS>>
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
@@ -104,8 +103,8 @@ class Fragment_ShelvesLS : Fragment() {
                 }
 
                 override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelShelf>>,
-                    t: Throwable
+                        call: Call<java.util.ArrayList<ModelShelfS>>,
+                        t: Throwable
                 ) {
                     binding.fsNotConnection.visibility = View.VISIBLE
                     binding.fsRecycler.visibility = View.GONE
@@ -203,7 +202,7 @@ class Fragment_ShelvesLS : Fragment() {
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
-                        val model = ModelShelf(shelfCode, 0)
+                        val model = ModelShelfS(shelfCode, 0)
                         al_shelves.add(model)
                         updateRecyclerAdapter()
                         FancyToast.makeText(

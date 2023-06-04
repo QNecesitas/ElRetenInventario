@@ -1,8 +1,7 @@
 package com.qnecesitas.elreteninventario.network
 
-import android.util.Log
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.data.ModelSession
+import com.qnecesitas.elreteninventario.data.ModelSessionS
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -47,7 +46,7 @@ class RetrofitSessionsImplLS : IRetrofitSessionsLS {
     override fun fetchSessions(
         token: String,
         fk_c_drawerLS: String
-    ): Call<ArrayList<ModelSession>> {
+    ): Call<ArrayList<ModelSessionS>> {
         return productApi.fetchSessions(token, fk_c_drawerLS)
     }
 }
