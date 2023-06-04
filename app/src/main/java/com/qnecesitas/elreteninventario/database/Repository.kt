@@ -54,5 +54,44 @@ class Repository {
         //TODO Update ProductS
     }
 
+    fun deleteDrawerLS(c_drawerLS: String,fk_c_shelfLS: String){
+        //TODO Delete DrawerLS
+    }
+
+    fun deleteDrawerS(c_drawerS: String,fk_c_shelfS: String){
+        //TODO Delete DrawerS
+    }
+
+    fun deleteOrder(c_order: String){
+        //TODO Delete Orders
+    }
+
+    fun deleteProduct(c_productS: String){
+        //TODO Delete Product
+    }
+
+    fun deleteProductLS(c_productLS: String,fk_c_sessionS: String){
+        //TODO Delete ProductLS
+    }
+
+    fun deleteSessionLS(c_sessionLS: String,fk_c_drawerLS: String){
+        //TODO Delete SessionLS
+    }
+
+
+    fun deleteSessionS(c_sessionS: String,fk_c_drawerS: String){
+        //TODO Delete SessionS
+    }
+
+
+    fun deleteShelfLS(c_shelfLS: String){
+        //TODO Delete ShelfLS
+    }
+
+
+    fun deleteShelfS(c_shelfS: String){
+        //TODO Delete ShelfS
+    }
+
 
 }
