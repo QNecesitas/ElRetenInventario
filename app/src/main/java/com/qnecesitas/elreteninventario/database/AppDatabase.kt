@@ -29,6 +29,14 @@ import com.qnecesitas.elreteninventario.data.ModelShelfLS
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun drawerLSDao(): DrawerLSDao
+    abstract fun shelfLSDao(): ShelfLSDao
+    abstract fun drawerSDao(): DrawerSDao
+    abstract fun shelfSDao(): ShelfSDao
+    abstract fun ordersDao(): OrdersDao
+    abstract fun sessionS(): SessionSDao
+    abstract fun sessionLS(): SessionLSDao
+    abstract fun productS(): ProductSDao
+    abstract fun productLS(): ProductLSDao
 
     companion object{
         @Volatile

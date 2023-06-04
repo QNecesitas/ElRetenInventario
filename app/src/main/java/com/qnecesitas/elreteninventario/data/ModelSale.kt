@@ -1,8 +1,10 @@
 package com.qnecesitas.elreteninventario.data
 
 import androidx.room.ColumnInfo
+import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+@Entity("Order")
 data class ModelSale(
     @PrimaryKey(autoGenerate = true) var c_order: Int,
     @ColumnInfo(name = "name") var name: String,
@@ -14,5 +16,5 @@ data class ModelSale(
     @ColumnInfo(name = "month") var month: Int,
     @ColumnInfo(name = "year") var year: Int,
     @ColumnInfo(name = "type") var type: String,
-    @ColumnInfo(name = "totalTranf") var totalTranf: Double
+    @ColumnInfo(name = "totalTransf") var totalTransf: Double
 )
