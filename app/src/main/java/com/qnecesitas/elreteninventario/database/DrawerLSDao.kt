@@ -1,6 +1,7 @@
 package com.qnecesitas.elreteninventario.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -10,9 +11,14 @@ import com.qnecesitas.elreteninventario.data.ModelDrawerLS
 @Dao
 interface DrawerLSDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDrawer(drawer: ModelDrawerLS)
+    @Query("INSERT INTO DrawerLS VALUES (:c_drawerLS,:fk_c_shelfLS,0)")
+    fun insertDrawerLS(c_drawerLS: String, fk_c_shelfLS: String)
 
+    @Query("DELETE FROM DrawerLS WHERE c_drawerLS = :c_drawerLS")
+    fun deleteDrawerLS(c_drawerLS: String)
+
+    @Query("UPDATE DrawerLS SET amount = amount-1 WHERE c_drawerLS = :fk_c_drawerLS")
+    fun updateDrawerLS(fk_c_drawerLS: String)
 
 
 }
