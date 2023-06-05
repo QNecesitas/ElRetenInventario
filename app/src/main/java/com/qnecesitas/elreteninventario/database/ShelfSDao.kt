@@ -8,6 +8,9 @@ import androidx.room.Update
 @Dao
 interface ShelfSDao {
 
+    @Query("INSERT INTO ShelfS (c_shelfS)VALUES(:c_shelfS)")
+    fun insertShelfS(c_shelfS: String)
+
     @Query("UPDATE ShelfS SET amount=amount+1 WHERE c_shelfS = :fk_c_shelfS")
     fun updateShelfSmore(fk_c_shelfS: String)
 

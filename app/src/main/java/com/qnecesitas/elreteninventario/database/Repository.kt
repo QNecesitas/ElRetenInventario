@@ -34,35 +34,34 @@ class Repository(private val application: Application) {
     }
 
     fun addProductLS(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int, statePhoto: Int, size: String, brand: String){
-        //TODO --Insert image
-        //TODO --Insert into productLS
-        //TODO --UPDATE sessionLS
+        productLS.insertProductLS(c_productS,name,fk_c_sessionS,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand)
+        sessionLS.updateSessionLSmore(fk_c_sessionS)
     }
 
     fun addSessionLS(c_sessionLS: String, fk_c_drawerLS: String){
-        //TODO -- Insert SessionS
-        //TODO Update DrawerLS
+        sessionLS.insertSessionLS(c_sessionLS,fk_c_drawerLS)
+       drawerLSDao.updateDrawerLSmore(fk_c_drawerLS)
     }
 
     fun addSessionS(c_sessionS: String, fk_c_drawerS: String){
-        //TODO -- Insert SessionS
-        //TODO -- Update DrawerS
+        sessionS.insertSessionS(c_sessionS,fk_c_drawerS)
+        drawerSDao.updateDrawerSmore(fk_c_drawerS)
     }
 
     fun addShelfLS(c_shelfLS: String){
-        //TODO Insert in ShelfLS
+        shelfSLSDao.insertShelfLS(c_shelfLS)
     }
 
     fun addShelfS(c_shelfS: String){
-        //TODO Insert in ShelfS
+        shelfSSDao.insertShelfS(c_shelfS)
     }
 
     fun alterAmountLS(c_productLS: String, amount: Int){
-        //TODO Update ProductLS
+        productLS.updateProductLS(amount,c_productLS)
     }
 
     fun alterAmountS(c_productS: String, amount: Int){
-        //TODO Update ProductS
+        productS.updateProductS(amount,c_productS)
     }
 
     fun deleteDrawerLS(c_drawerLS: String,fk_c_shelfLS: String){
@@ -86,18 +85,18 @@ class Repository(private val application: Application) {
 
     fun deleteProductLS(c_productLS: String,fk_c_sessionS: String){
         productLS.deleteProductLS(c_productLS)
-        sessionLS.updateSessionLS(fk_c_sessionS)
+        sessionLS.updateSessionLSless(fk_c_sessionS)
     }
 
     fun deleteSessionLS(c_sessionLS: String,fk_c_drawerLS: String){
         sessionLS.deleteSessionLS(c_sessionLS)
-        drawerLSDao.updateDrawerLS(fk_c_drawerLS)
+        drawerLSDao.updateDrawerLSless(fk_c_drawerLS)
     }
 
 
     fun deleteSessionS(c_sessionS: String,fk_c_drawerS: String){
-        sessionS.deleteSessionSless(c_sessionS)
-        drawerSDao.updateDrawerS(fk_c_drawerS)
+        sessionS.deleteSessionS(c_sessionS)
+        drawerSDao.updateDrawerSless(fk_c_drawerS)
     }
 
 

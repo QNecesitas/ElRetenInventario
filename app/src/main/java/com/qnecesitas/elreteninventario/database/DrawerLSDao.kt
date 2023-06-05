@@ -11,6 +11,9 @@ import com.qnecesitas.elreteninventario.data.ModelDrawerLS
 @Dao
 interface DrawerLSDao {
 
+    @Query("UPDATE DrawerLS SET amount = amount+1 WHERE c_drawerLS = :fk_c_drawerLS")
+    fun updateDrawerLSmore(fk_c_drawerLS: String)
+
     @Query("INSERT INTO DrawerLS VALUES (:c_drawerLS,:fk_c_shelfLS,0)")
     fun insertDrawerLS(c_drawerLS: String, fk_c_shelfLS: String)
 
@@ -18,7 +21,7 @@ interface DrawerLSDao {
     fun deleteDrawerLS(c_drawerLS: String)
 
     @Query("UPDATE DrawerLS SET amount = amount-1 WHERE c_drawerLS = :fk_c_drawerLS")
-    fun updateDrawerLS(fk_c_drawerLS: String)
+    fun updateDrawerLSless(fk_c_drawerLS: String)
 
 
 }
