@@ -1,7 +1,7 @@
 package com.qnecesitas.elreteninventario.network
 
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -45,13 +45,13 @@ class RetrofitProductsImplS : IRetrofitProductsS {
     override fun fetchProducts(
         token: String,
         fk_c_sessionS: String
-    ): Call<ArrayList<ModelEditProduct>> {
+    ): Call<ArrayList<ModelEditProductS>> {
         return productApi.fetchProducts(token, fk_c_sessionS)
     }
 
     override fun fetchProductsSAll(
         token: String
-    ): Call<ArrayList<ModelEditProduct>> {
+    ): Call<ArrayList<ModelEditProductS>> {
         return productApi.fetchProductsSAll(token)
     }
 
@@ -67,7 +67,7 @@ class RetrofitProductsImplS : IRetrofitProductsS {
     override fun fetchProductsDeficit(
         token: String,
         button: String
-    ): Call<ArrayList<ModelEditProduct>> {
+    ): Call<ArrayList<ModelEditProductS>> {
         return productApi.fetchProductsDeficit(token,button)
     }
 

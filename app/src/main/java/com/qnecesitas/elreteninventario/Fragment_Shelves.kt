@@ -4,31 +4,25 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.qnecesitas.elreteninventario.adapters.AdapterRShelves
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
-import com.qnecesitas.elreteninventario.data.ModelShelf
+import com.qnecesitas.elreteninventario.data.ModelShelfS
 import com.qnecesitas.elreteninventario.databinding.FragmentShelvesBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddShelfBinding
 import com.qnecesitas.elreteninventario.network.RetrofitShelvesImplS
 import com.shashank.sony.fancytoastlib.FancyToast
-import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.delay
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import javax.net.ssl.HandshakeCompletedEvent
 
 class Fragment_Shelves : Fragment() {
 
@@ -36,7 +30,7 @@ class Fragment_Shelves : Fragment() {
 
     //Recycler
     private lateinit var binding: FragmentShelvesBinding
-    private lateinit var al_shelves: ArrayList<ModelShelf>
+    private lateinit var al_shelves: ArrayList<ModelShelfS>
     private lateinit var adapterRShelves: AdapterRShelves
 
     //Internet
@@ -87,10 +81,10 @@ class Fragment_Shelves : Fragment() {
         if (NetworkTools.isOnline(binding.root.context, false)) {
             binding.refresh.isRefreshing = true
             val call = retrofitShelvesImpl.fetchShelves(Constants.PHP_TOKEN)
-            call.enqueue(object : Callback<ArrayList<ModelShelf>> {
+            call.enqueue(object : Callback<ArrayList<ModelShelfS>> {
                 override fun onResponse(
-                    call: Call<ArrayList<ModelShelf>>,
-                    response: Response<java.util.ArrayList<ModelShelf>>
+                        call: Call<ArrayList<ModelShelfS>>,
+                        response: Response<java.util.ArrayList<ModelShelfS>>
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
@@ -107,8 +101,8 @@ class Fragment_Shelves : Fragment() {
                 }
 
                 override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelShelf>>,
-                    t: Throwable
+                        call: Call<java.util.ArrayList<ModelShelfS>>,
+                        t: Throwable
                 ) {
                     binding.fsNotConnection.visibility = View.VISIBLE
                     binding.fsRecycler.visibility = View.GONE
@@ -206,7 +200,7 @@ class Fragment_Shelves : Fragment() {
                 ) {
                     binding.refresh.isRefreshing = false
                     if (response.isSuccessful) {
-                        val model = ModelShelf(shelfCode, 0)
+                        val model = ModelShelfS(shelfCode, 0)
                         al_shelves.add(model)
                         updateRecyclerAdapter()
                         FancyToast.makeText(

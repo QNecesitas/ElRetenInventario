@@ -1,7 +1,7 @@
 package com.qnecesitas.elreteninventario.network
 
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.data.ModelSession
+import com.qnecesitas.elreteninventario.data.ModelSessionS
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -29,7 +29,7 @@ class RetrofitSessionImpIS : IRetrofitSessionsS{
         return productApi.addSession(token, newCode, fk_c_drawerS)
     }
 
-    override fun fetchSessions(token: String, fk_c_drawerS: String): Call<ArrayList<ModelSession>> {
+    override fun fetchSessions(token: String, fk_c_drawerS: String): Call<ArrayList<ModelSessionS>> {
         return productApi.fetchSessions(token, fk_c_drawerS)
     }
 

@@ -2,15 +2,14 @@ package com.qnecesitas.elreteninventario.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qnecesitas.elreteninventario.R
-import com.qnecesitas.elreteninventario.data.ModelShelf
+import com.qnecesitas.elreteninventario.data.ModelShelfS
 import com.qnecesitas.elreteninventario.databinding.RecyclerShelvesBinding
 
 
-class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val context: Context) :
+class AdapterRShelves(private val al_shelves: ArrayList<ModelShelfS>, private val context: Context) :
     RecyclerView.Adapter<AdapterRShelves.ShelvesViewHolder>() {
 
     private var editListener: RecyclerClickListener? = null
@@ -22,12 +21,12 @@ class AdapterRShelves(private val al_shelves: ArrayList<ModelShelf>, private val
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            model: ModelShelf,
-            context: Context,
-            editListener: RecyclerClickListener?,
-            deleteListener: RecyclerClickListener?,
-            touchListener: RecyclerClickListener?,
-            position: Int
+                model: ModelShelfS,
+                context: Context,
+                editListener: RecyclerClickListener?,
+                deleteListener: RecyclerClickListener?,
+                touchListener: RecyclerClickListener?,
+                position: Int
         ) {
             val code = context.getString(R.string.codigo_s, model.c_shelfS)
             val cant = context.getString(R.string.cant_gavetas, model.amount.toString())

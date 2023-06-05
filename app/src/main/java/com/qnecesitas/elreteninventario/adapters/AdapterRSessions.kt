@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qnecesitas.elreteninventario.R
-import com.qnecesitas.elreteninventario.data.ModelSession
+import com.qnecesitas.elreteninventario.data.ModelSessionS
 import com.qnecesitas.elreteninventario.databinding.RecyclerSessionsBinding
 
 class AdapterRSessions(
-    private val al_session: ArrayList<ModelSession>,
-    private val context: Context
+        private val al_session: ArrayList<ModelSessionS>,
+        private val context: Context
 ) :
     RecyclerView.Adapter<AdapterRSessions.SessionViewHolder>() {
 
@@ -23,12 +23,12 @@ class AdapterRSessions(
 
 
         fun bind(
-            model: ModelSession,
-            context: Context,
-            editListener: RecyclerClickListener?,
-            deleteListener: RecyclerClickListener?,
-            touchListener: RecyclerClickListener?,
-            position: Int
+                model: ModelSessionS,
+                context: Context,
+                editListener: RecyclerClickListener?,
+                deleteListener: RecyclerClickListener?,
+                touchListener: RecyclerClickListener?,
+                position: Int
         ) {
             val guionPosition = model.c_sessionS.lastIndexOf("_")
             val originCode = model.c_sessionS.substring(guionPosition + 1)

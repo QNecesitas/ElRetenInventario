@@ -13,16 +13,16 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.databinding.RecyclerCounterProductShowBinding
 import java.util.Locale
 
 class AdapterR_CounterProductShow(
-    val al_CPShow: ArrayList<ModelEditProduct>,
-    private val context: Context
+        val al_CPShow: ArrayList<ModelEditProductS>,
+        private val context: Context
 ) : RecyclerView.Adapter<AdapterR_CounterProductShow.CounterProductShowViewHolder>() {
 
-    private var alFilter: ArrayList<ModelEditProduct> = ArrayList()
+    private var alFilter: ArrayList<ModelEditProductS> = ArrayList()
 
     private var clickListener: RecyclerClickListener? = null
 
@@ -42,12 +42,12 @@ class AdapterR_CounterProductShow(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            model: ModelEditProduct,
-            context: Context,
-            clickListener: RecyclerClickListener?,
-            infoListener: RecyclerClickListener?,
-            pathListener: RecyclerClickListener?,
-            position: Int
+                model: ModelEditProductS,
+                context: Context,
+                clickListener: RecyclerClickListener?,
+                infoListener: RecyclerClickListener?,
+                pathListener: RecyclerClickListener?,
+                position: Int
         ) {
 
             val name = model.name

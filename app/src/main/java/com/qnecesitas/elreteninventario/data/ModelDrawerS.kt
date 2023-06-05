@@ -4,11 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-data class ModelDrawer(
+@Entity("DrawerS")
+data class ModelDrawerS(
     @PrimaryKey(autoGenerate = false) var c_drawerS: String,
-    @ColumnInfo(name = "ci") var fk_c_shelfS: String,
-    @ColumnInfo(name = "month") var amount: Int = 0,
+    @ColumnInfo(name = "fk_c_shelfS") var fk_c_shelfS: String,
+    @ColumnInfo(name = "amount") var amount: Int = 0,
 )
 
 

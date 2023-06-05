@@ -2,12 +2,9 @@ package com.qnecesitas.elreteninventario
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
-import com.qnecesitas.elreteninventario.data.ModelEditProduct
 import com.qnecesitas.elreteninventario.data.ModelPassword
 import com.qnecesitas.elreteninventario.databinding.ActivitySettingsBinding
 import com.qnecesitas.elreteninventario.network.RetrofitPasswords

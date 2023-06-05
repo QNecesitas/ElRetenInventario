@@ -1,6 +1,6 @@
 package com.qnecesitas.elreteninventario.network
 
-import com.qnecesitas.elreteninventario.data.ModelDrawer
+import com.qnecesitas.elreteninventario.data.ModelDrawerS
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -47,7 +47,7 @@ interface IRetrofitDrawersS {
     fun fetchDrawers(
         @Query("token") token: String,
         @Query("fk_c_shelfS") fk_c_shelfS: String
-    ): Call<ArrayList<ModelDrawer>>
+    ): Call<ArrayList<ModelDrawerS>>
 
 
 }

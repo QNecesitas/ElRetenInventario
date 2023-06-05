@@ -11,6 +11,8 @@ import com.qnecesitas.elreteninventario.data.ModelDrawerLS
 interface DrawerLSDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertClient(drawer: ModelDrawerLS)
+    suspend fun insertDrawer(drawer: ModelDrawerLS)
+
+
 
 }
