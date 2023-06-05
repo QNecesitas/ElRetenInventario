@@ -37,6 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun sessionLS(): SessionLSDao
     abstract fun productS(): ProductSDao
     abstract fun productLS(): ProductLSDao
+    abstract fun account(): AccountDao
 
     companion object{
         @Volatile

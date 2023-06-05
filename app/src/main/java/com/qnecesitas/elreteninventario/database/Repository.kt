@@ -110,127 +110,130 @@ class Repository(private val application: Application) {
     }
 
     fun fetchAccounts(){
-        //TODO SELECT Account
+        account.selectAccount()
     }
 
     fun fetchDrawersLS(fk_c_shelfLS: String){
-        //TODO SELECT DrawerLS
+        drawerLSDao.selectDrawerLS(fk_c_shelfLS)
     }
 
     fun fetchDrawersS(fk_c_shelfS: String){
-        //TODO SELECT DrawerS
+        drawerSDao.selectDrawerS(fk_c_shelfS)
     }
 
     fun fetchOrdersAll(){
-        //TODO SELECT Orders
+        ordersDao.selectOrderAll()
     }
 
     fun fetchOrdersD(year:Int,month: Int,day: Int){
-        //TODO SELECT Orders
+        ordersDao.selectOrderD(day,month,year)
     }
 
     fun fetchOrdersM(year: Int,month: Int){
-        //TODO SELECT Orders
+        ordersDao.selectOrdersM(month,year)
     }
 
     fun fetchOrdersY(year: Int){
-        //TODO SELECT Orders
+        ordersDao.selectOrderY(year)
     }
 
     fun fetchProductLSPath(c_productLS: String){
-        //TODO SELECT ProductLS
+        productLS.selectProductLSPath(c_productLS)
     }
 
     fun fetchProductSPath(c_productS: String){
-        //TODO SELECT ProductS
+        productS.selectProductLSPath(c_productS)
     }
 
     fun fetchProductsCounter(){
-        //TODO SELECT ProductC
+        productS.selectProdcutSCounter()
     }
 
     fun fetchProductsDeficit(button:String){
-        //TODO SELECT ProductS
-        //TODO SELECT ProductLS
+        if(button == "Almacén"){
+            productS.selectProductSDeficit()
+        }else{
+            productLS.selectProductLSDeficit()
+        }
     }
 
     fun fetchProductsLS(fk_c_sessionLS: String){
-        //TODO SELECT ProductLS
+        productLS.selectProductLS(fk_c_sessionLS)
     }
 
     fun fetchProductsLSAll(){
-        //TODO SELECT ProductLS
+        productLS.selectProductLSAll()
     }
 
     fun fetchProductsS(fk_c_sessionS:String){
-        //TODO SELECT ProductS
+        productS.selectProductS(fk_c_sessionS)
     }
 
     fun fetchProductsSAll(){
-        //TODO SELECT ProductS
-        //TODO SELECT ProductLS
+        productS.selectProductSAll()
+        productLS.selectProductLSAll()
     }
 
     fun fetchSessionsLS(fk_c_drawerLS: String){
-        //TODO SELECT SessionLS
+        sessionLS.selectSessionLS(fk_c_drawerLS)
     }
 
     fun fetchSessionsS(fk_c_drawerS: String){
-        //TODO SELECT SessionS
+        sessionS.selectSessionS(fk_c_drawerS)
     }
 
     fun fetchShelvesLS(){
-        //TODO SELECT ShelfLS
+        shelfSLSDao.selectShelfLS()
     }
 
     fun fetchShelvesS(){
-        //TODO SELECT ShelfS
+        shelfSSDao.selectShelfS()
     }
 
     fun transferProductLS_S(c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionS: String,deficit: Int,exists:Int,sendAll: Int,size: String,brand: String){
         if(exists == 1){
-            //TODO UPDATE ProductS
+            productS.updateProductSTransMore(amount,c_productLS)
         }else{
-            //TODO INSERT ProductS
-            //TODO UPDATE SessionS
+            productS.insertProductSTrans(c_productLS,name,c_sessionS,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand)
+            sessionS.updateSessionSTransMore(c_sessionS)
         }
         if(sendAll == 1){
-            //TODO UPDATE SessionLS
-            //TODO DELETE ProductLS
+            sessionLS.updateSessionLSTransLess(fk_c_sessionLS)
+            productLS.deleteProductLSTrans(c_productLS)
         }else{
-            //TODO UPDATE ProductLS
+            productLS.updateProductLSTrans(amount,c_productLS)
         }
     }
 
     fun transferProductS_LS(c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionLS: String,deficit: Int,exists: Int,sendAll: Int,size: String,brand: String){
         if(exists == 1){
-            //TODO UPDATE ProductLS
+            productLS.updateProductSTrans(amount,c_productS)
         }else{
-            //TODO INSERT ProductLS
-            //TODO UPDATE SessionLS
+            productLS.insertProductLSTrans(c_productS,name,c_sessionLS,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand)
+            sessionLS.updateSessionLSTransMore(c_sessionLS)
         }
         if(sendAll == 1){
-            //TODO UPDATE SessionS
-            //TODO DELETE ProductS
+            sessionS.updateSessionSTransLess(fk_c_sessionS)
+            productS.deleteProductSTrans(c_productS)
         }else{
-            //TODO UPDATE ProductS
+            productS.updateProductSTransLess(amount,c_productS)
         }
     }
 
     fun updateAccount(password:String,user:String){
-        //TODO UPDATE Account
+        account.updateAccount(password,user)
     }
 
     fun updateDrawerLS(c_drawerLSOld: String,c_drawerLSNew:String,fk_c_shelfLS: String,amount: Int){
-        //TODO INSERT DrawerLS
-        //TODO UPDATE SessionLS
-        //TODO DELETE DrawerLS
+        drawerLSDao.insertDrawerLSUp(c_drawerLSNew,fk_c_shelfLS,amount)
+        sessionLS.updateSessionLSUp(c_drawerLSNew,c_drawerLSOld)
+        drawerLSDao.deleteDrawerLSUp(c_drawerLSOld)
     }
 
     fun updateDrawerS(c_drawerSOld: String,c_drawerSNew: String,fk_c_shelfS: String,amount: Int){
-        //TODO INSERT DrawerS
-        //TODO UPDATE SessionS
-        //TODO DELETE DrawerS
+        drawerSDao.insertDrawerSUp(c_drawerSNew,fk_c_shelfS,amount)
+        sessionS.updateSessionSUp(c_drawerSNew,c_drawerSOld)
+        drawerSDao.deleteDrawerSUp(c_drawerSOld)
     }
 
     fun updateProduct(file: String,c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,statePhoto: Int,namePhoto:String,path:String,size: String,brand: String){

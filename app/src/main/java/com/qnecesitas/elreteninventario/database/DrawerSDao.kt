@@ -11,6 +11,15 @@ import com.qnecesitas.elreteninventario.data.ModelDrawerS
 @Dao
 interface DrawerSDao {
 
+    @Query("DELETE FROM DrawerS WHERE c_drawerS =:c_drawerSOld")
+    fun deleteDrawerSUp(c_drawerSOld: String)
+
+    @Query("INSERT INTO DrawerS VALUES (:c_drawerSNew,:fk_c_shelfS,:amount)")
+    fun insertDrawerSUp(c_drawerSNew: String,fk_c_shelfS: String,amount: Int)
+
+    @Query("SELECT * FROM DrawerS WHERE fk_c_shelfS = :fk_c_shelfS")
+    fun selectDrawerS(fk_c_shelfS: String)
+
     @Query("UPDATE DrawerS SET amount = amount+1 WHERE c_drawerS = :fk_c_drawerS")
     fun updateDrawerSmore(fk_c_drawerS: String)
 
