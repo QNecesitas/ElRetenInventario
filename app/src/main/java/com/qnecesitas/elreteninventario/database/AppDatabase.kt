@@ -33,11 +33,11 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun drawerSDao(): DrawerSDao
     abstract fun shelfSDao(): ShelfSDao
     abstract fun ordersDao(): OrdersDao
-    abstract fun sessionS(): SessionSDao
-    abstract fun sessionLS(): SessionLSDao
-    abstract fun productS(): ProductSDao
-    abstract fun productLS(): ProductLSDao
-    abstract fun account(): AccountDao
+    abstract fun sessionSDao(): SessionSDao
+    abstract fun sessionLSDao(): SessionLSDao
+    abstract fun productSDao(): ProductSDao
+    abstract fun productLSDao(): ProductLSDao
+    abstract fun accountDao(): AccountDao
 
     companion object{
         @Volatile
