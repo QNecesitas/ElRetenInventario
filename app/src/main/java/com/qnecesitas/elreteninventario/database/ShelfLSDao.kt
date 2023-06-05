@@ -21,6 +21,9 @@ interface ShelfLSDao {
     @Query("DELETE FROM ShelfLS WHERE c_shelfLS = :c_shelfLS")
     fun deleteShelfLS(c_shelfLS: String)
 
+    @Query("DELETE FROM ShelfLS WHERE LOWER(c_shelfLS)=LOWER(:c_shelfLSOld)")
+    fun deleteShelfLSLower(c_shelfLSOld:String)
+
 
 
 }

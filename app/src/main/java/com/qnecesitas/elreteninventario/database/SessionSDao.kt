@@ -19,4 +19,10 @@ interface SessionSDao {
     @Query("DELETE FROM SessionS WHERE c_sessionS = :c_sessionS")
     fun deleteSessionS(c_sessionS: String)
 
+    @Query("UPDATE ProductS SET fk_c_sessionS=:c_sessionSNew WHERE fk_c_sessionS=:c_sessionSOld")
+    fun updateProductSforain(c_sessionSNew:String,c_sessionSOld:String)
+
+    @Query("INSERT INTO SessionS VALUES (:c_sessionSNew,:fk_c_drawerS,:amount)")
+    fun insertSessionSAmount(c_sessionSNew:String,fk_c_drawerS:String,amount:Int)
+
 }

@@ -23,4 +23,7 @@ interface DrawerSDao {
     @Query("UPDATE DrawerS SET amount = amount-1 WHERE c_drawerS = :fk_c_drawerS")
     fun updateDrawerSless(fk_c_drawerS: String)
 
+    @Query("UPDATE DrawerS SET fk_c_shelfS=:c_shelfSNew WHERE fk_c_shelfS=:c_shelfSOld")
+    fun updateDrawerSforain(c_shelfSNew:String,c_shelfSOld:String)
+
 }

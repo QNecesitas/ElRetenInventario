@@ -23,5 +23,8 @@ interface DrawerLSDao {
     @Query("UPDATE DrawerLS SET amount = amount-1 WHERE c_drawerLS = :fk_c_drawerLS")
     fun updateDrawerLSless(fk_c_drawerLS: String)
 
+    @Query("UPDATE DrawerLS SET fk_c_shelfLS=:c_shelfLSNew WHERE fk_c_shelfLS=:c_shelfLSOld")
+    fun updateDrawerLSForain(c_shelfLSNew:String,c_shelfLSOld:String)
+
 
 }

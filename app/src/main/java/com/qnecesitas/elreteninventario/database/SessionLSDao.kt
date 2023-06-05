@@ -20,4 +20,7 @@ interface SessionLSDao {
     @Query("DELETE FROM SessionLS WHERE c_sessionLS = :c_sessionLS")
     fun deleteSessionLS(c_sessionLS: String)
 
+    @Query("INSERT INTO SessionLS VALUES (:c_sessionLSNew,:fk_c_drawerLS,:amount)")
+    fun insertSessionLSAmount(c_sessionLSNew:String,fk_c_drawerLS:String,amount:Int)
+
 }
