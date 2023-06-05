@@ -45,7 +45,6 @@ class Fragment_Cart : Fragment() {
     //Recycler
     private lateinit var alCart: ArrayList<ModelCart>
     private lateinit var adapterCart: AdapterR_CounterProductAdd
-
     //ListenerReload
     private var listenerReload : IReload? = null
     private var listenerDelete : IDeleteProduct? = null
