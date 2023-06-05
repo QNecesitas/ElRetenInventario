@@ -9,6 +9,9 @@ import com.qnecesitas.elreteninventario.data.ModelShelfLS
 @Dao
 interface ShelfLSDao {
 
+    @Query("SELECT * FROM ShelfLS")
+    fun selectShelfLS()
+
     @Query("INSERT INTO ShelfLS (c_shelfLS, amount)VALUES(:c_shelfLS,0)")
     fun insertShelfLS(c_shelfLS: String)
 
