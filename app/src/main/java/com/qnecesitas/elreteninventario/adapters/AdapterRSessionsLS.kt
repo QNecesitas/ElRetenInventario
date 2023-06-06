@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qnecesitas.elreteninventario.R
+import com.qnecesitas.elreteninventario.data.ModelSessionLS
 import com.qnecesitas.elreteninventario.data.ModelSessionS
 import com.qnecesitas.elreteninventario.databinding.RecyclerSessionsBinding
 
 class AdapterRSessionsLS(
-        private val al_session: ArrayList<ModelSessionS>,
-        private val context: Context
+    private val al_session: ArrayList<ModelSessionLS>,
+    private val context: Context
 ) :
     RecyclerView.Adapter<AdapterRSessionsLS.SessionViewHolder>() {
 
@@ -23,15 +24,15 @@ class AdapterRSessionsLS(
 
 
         fun bind(
-                model: ModelSessionS,
+                model: ModelSessionLS,
                 context: Context,
                 editListener: RecyclerClickListener?,
                 deleteListener: RecyclerClickListener?,
                 touchListener: RecyclerClickListener?,
                 position: Int
         ) {
-            val guionPosition = model.c_sessionS.lastIndexOf("_")
-            val originCode = model.c_sessionS.substring(guionPosition + 1)
+            val guionPosition = model.c_sessionLS.lastIndexOf("_")
+            val originCode = model.c_sessionLS.substring(guionPosition + 1)
             val code = context.getString(R.string.codigo_s, originCode)
             val amount = context.getString(R.string.cant_producto, model.amount.toString())
 

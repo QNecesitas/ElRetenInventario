@@ -27,7 +27,7 @@ interface ProductLSDao {
 
 
     @Query("SELECT * FROM ProductLS ORDER BY name ASC")
-    fun selectProductLSAll() : ArrayList<ModelEditProductS>
+    fun selectProductLSAll() : ArrayList<ModelEditProductLS>
 
 
     @Query("SELECT * FROM ProductLS WHERE fk_c_sessionLS = :fk_c_sessionLS ORDER BY name ASC")

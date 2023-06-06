@@ -32,13 +32,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.adapters.AdapterR_EditProduct
+import com.qnecesitas.elreteninventario.adapters.AdapterR_EditProductLS
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.auxiliary.IDCreater
 import com.qnecesitas.elreteninventario.auxiliary.ImageTools
 import com.qnecesitas.elreteninventario.auxiliary.Permissions
+import com.qnecesitas.elreteninventario.data.ModelEditProductLS
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
+import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivityEditProductLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddProductBinding
 import com.qnecesitas.elreteninventario.databinding.LiAlterAmountBinding
@@ -65,14 +68,13 @@ class Activity_EditProductLS : AppCompatActivity() {
     private lateinit var li_alter_amount_binding : LiAlterAmountBinding
 
     //Edit Product
-    private lateinit var al_editProduct: ArrayList<ModelEditProductS>
-    private lateinit var al_editProductSAll: ArrayList<ModelEditProductS>
-    private lateinit var adapterR_editProducts: AdapterR_EditProduct
+    private lateinit var al_editProduct: ArrayList<ModelEditProductLS>
+    private lateinit var al_editProductSAll: ArrayList<ModelEditProductLS>
+    private lateinit var adapterR_editProducts: AdapterR_EditProductLS
     private var isContracted = false
 
     //Internet
-    private lateinit var retrofitProductsImplLS: RetrofitProductsImplLS
-    private lateinit var retrofitProductsImplS: RetrofitProductsImplS
+    private lateinit var repository: Repository
     private val PERMISO_GALERIA = 3
     private var imageFile = "no"
     private var uriLLegadaRecortada: Uri? = null
@@ -101,8 +103,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         binding.aepToolbar.setNavigationOnClickListener { finish() }
 
         //Init
-        retrofitProductsImplLS = RetrofitProductsImplLS()
-        retrofitProductsImplS = RetrofitProductsImplS()
+        repository = Repository(application)
         //Button Add
 
         if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin){
@@ -141,7 +142,7 @@ class Activity_EditProductLS : AppCompatActivity() {
             }
             updateRecyclerAdapter()
         }
-        adapterR_editProducts = AdapterR_EditProduct(al_editProduct, applicationContext,isContracted, false)
+        adapterR_editProducts = AdapterR_EditProductLS(al_editProduct, applicationContext,isContracted, false)
 
         //Search
         binding.aepSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -156,89 +157,24 @@ class Activity_EditProductLS : AppCompatActivity() {
             }
         })
 
-        //Internet
-        binding.aepRetryConnection.setOnClickListener {
-            loadRecyclerInfo()
-        }
         loadRecyclerInfo()
     }
 
     /**Initial thread**/
     private fun loadRecyclerInfo() {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.aepRefresh.isRefreshing = true
-
-            val call =
-                if (FragmentsInfo.LAST_CODE_SESSION_LS_SENDED == "no") retrofitProductsImplLS.fetchProductsSAllLS(
-                    Constants.PHP_TOKEN
-                )
-                else retrofitProductsImplLS.fetchProductsLS(
-                    Constants.PHP_TOKEN,
+            al_editProduct =
+                if (FragmentsInfo.LAST_CODE_SESSION_LS_SENDED == "no") repository.fetchProductsLSAll()
+                else repository.fetchProductsLS(
                     FragmentsInfo.LAST_CODE_SESSION_LS_SENDED
                 )
-            call.enqueue(object : Callback<ArrayList<ModelEditProductS>> {
-                override fun onResponse(
-                        call: Call<ArrayList<ModelEditProductS>>,
-                        response: Response<java.util.ArrayList<ModelEditProductS>>
-                ) {
-                    binding.aepRefresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        alertNotInternet(false)
-                        al_editProduct = response.body()!!
                         loadRecyclerAllS()
-                    } else {
-                        alertNotInternet(true)
-                    }
-                }
-
-                override fun onFailure(
-                        call: Call<java.util.ArrayList<ModelEditProductS>>,
-                        t: Throwable
-                ) {
-                    alertNotInternet(true)
-                    binding.aepRefresh.isRefreshing = false
-                }
-            })
-        } else {
-            alertNotInternet(true)
-        }
     }
 
     private fun loadRecyclerAllS() {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.aepRefresh.isRefreshing = true
-
-            val call =
-                retrofitProductsImplS.fetchProductsSAll(
-                    Constants.PHP_TOKEN)
-
-            call.enqueue(object : Callback<ArrayList<ModelEditProductS>> {
-                override fun onResponse(
-                        call: Call<ArrayList<ModelEditProductS>>,
-                        response: Response<java.util.ArrayList<ModelEditProductS>>
-                ) {
-                    binding.aepRefresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        alertNotInternet(false)
-                        al_editProductSAll = response.body()!!
+              al_editProductSAll =
+                repository.fetchProductsLSAll()
                         updateRecyclerAdapter()
-                    } else {
-                        alertNotInternet(true)
                     }
-                }
-
-                override fun onFailure(
-                        call: Call<java.util.ArrayList<ModelEditProductS>>,
-                        t: Throwable
-                ) {
-                    alertNotInternet(true)
-                    binding.aepRefresh.isRefreshing = false
-                }
-            })
-        } else {
-            alertNotInternet(true)
-        }
-    }
 
     private fun updateRecyclerAdapter() {
         if(al_editProduct.isNotEmpty()){
@@ -258,10 +194,10 @@ class Activity_EditProductLS : AppCompatActivity() {
         }
 
 
-        adapterR_editProducts = AdapterR_EditProduct(al_editProduct, binding.root.context, isContracted, false)
+        adapterR_editProducts = AdapterR_EditProductLS(al_editProduct, binding.root.context, isContracted, false)
 
         adapterR_editProducts.setRecyclerOnClickListener(object :
-            AdapterR_EditProduct.RecyclerClickListener {
+            AdapterR_EditProductLS.RecyclerClickListener {
             override fun onClick(position: Int) {
                 li_infoProduct(position)
             }
@@ -296,21 +232,17 @@ class Activity_EditProductLS : AppCompatActivity() {
         if (open) {
             binding.aepNotInfo.visibility = View.VISIBLE
             binding.aepRecycler.visibility = View.GONE
-            binding.aepNotConnection.visibility = View.GONE
         } else {
             binding.aepNotInfo.visibility = View.GONE
             binding.aepRecycler.visibility = View.VISIBLE
-            binding.aepNotConnection.visibility = View.GONE
         }
     }
 
     private fun alertNotInternet(open: Boolean) {
         if (open) {
-            binding.aepNotConnection.visibility = View.VISIBLE
             binding.aepRecycler.visibility = View.GONE
             binding.aepNotInfo.visibility = View.GONE
         } else {
-            binding.aepNotConnection.visibility = View.GONE
             binding.aepRecycler.visibility = View.VISIBLE
             binding.aepNotInfo.visibility = View.GONE
         }
@@ -361,14 +293,14 @@ class Activity_EditProductLS : AppCompatActivity() {
 
         //Init
         val name = getString(R.string.Producto_Info, al_editProduct[position].name)
-        val code = getString(R.string.Codigo_Info, al_editProduct[position].c_productS)
+        val code = getString(R.string.Codigo_Info, al_editProduct[position].c_productLS)
         val amount = getString(R.string.Cantidad_Info, al_editProduct[position].amount)
         val buyPrice = getString(R.string.PrecioC_Info, al_editProduct[position].buyPrice)
         val salePrice = getString(R.string.PrecioV_Info, al_editProduct[position].salePrice)
         val descr = getString(R.string.Descripcion_Info, al_editProduct[position].descr)
         val size = getString(R.string.Size_Info, al_editProduct[position].size)
         val brand = getString(R.string.Brand_Info, al_editProduct[position].brand)
-        val codeImage = al_editProduct[position].c_productS
+        val codeImage = al_editProduct[position].c_productLS
 
         //Fill out
         li_info_binding?.infoName?.text = name
@@ -473,12 +405,12 @@ class Activity_EditProductLS : AppCompatActivity() {
         //Init
         imageFile = "no"
         val name = al_editProduct[position].name
-        val code = al_editProduct[position].c_productS
+        val code = al_editProduct[position].c_productLS
         val amount = al_editProduct[position].amount
         val buyPrice = al_editProduct[position].buyPrice
         val salePrice = al_editProduct[position].salePrice
         val descr = al_editProduct[position].descr
-        val codeImage = al_editProduct[position].c_productS
+        val codeImage = al_editProduct[position].c_productLS
         val deficit = al_editProduct[position].deficit
         val size = al_editProduct[position].size
         val brand = al_editProduct[position].brand
@@ -528,7 +460,7 @@ class Activity_EditProductLS : AppCompatActivity() {
             if (checkInfoDataAdd()) {
                 alertDialog.dismiss()
                 updateProductInternet(
-                    al_editProduct[position].c_productS,
+                    al_editProduct[position].c_productLS,
                     li_add_binding?.tietCode?.text.toString(),
                     li_add_binding?.tietName?.text.toString(),
                     li_add_binding?.tietCant?.text.toString().toInt(),
@@ -755,7 +687,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         lastTransferExist = 0
 
         for (it in al_editProductSAll){
-            if(it.c_productS == al_editProduct[position].c_productS ){
+            if(it.c_productLS == al_editProduct[position].c_productLS ){
                 lastTransferExist = 1
             }
         }
@@ -790,27 +722,21 @@ class Activity_EditProductLS : AppCompatActivity() {
         size: String,
         brand : String
     ) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.aepRefresh.isRefreshing = true
-            val call = retrofitProductsImplLS.addProductLS(
-                Constants.PHP_TOKEN,
-                c_Product,
-                n_Product,
-                FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
-                amount,
-                buyPrice,
-                salePrice,
-                descr,
-                imageFile,
-                deficit,
-                size,
-                brand
-            )
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    binding.aepRefresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        val model = ModelEditProductS(
+        repository.addProductLS(
+            c_Product,
+            n_Product,
+            FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
+            amount,
+            buyPrice,
+            salePrice,
+            descr,
+            imageFile,
+            deficit,
+            size,
+            brand
+        )
+
+                        val model = ModelEditProductLS(
                             c_Product,
                             n_Product,
                             FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
@@ -832,41 +758,6 @@ class Activity_EditProductLS : AppCompatActivity() {
                             FancyToast.SUCCESS,
                             false
                         ).show()
-                    } else {
-                        FancyToast.makeText(
-                            applicationContext,
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    FancyToast.makeText(
-                        applicationContext,
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                    binding.aepRefresh.isRefreshing = false
-                }
-
-            })
-        } else {
-            FancyToast.makeText(
-                applicationContext,
-                getString(R.string.Revise_su_conexion),
-                FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
-            ).show()
-        }
     }
 
     private fun updateProductInternet(
@@ -883,29 +774,21 @@ class Activity_EditProductLS : AppCompatActivity() {
         size: String,
         brand : String
     ) {
-        if (NetworkTools.isOnline(this, false)) {
-            binding.aepRefresh.isRefreshing = true
-            val call = retrofitProductsImplLS.updateProductLS(
-                Constants.PHP_TOKEN,
-                c_ProductOld,
-                imageFile,
-                c_Product,
-                name,
-                al_editProduct[position].fk_c_sessionS,
-                amount,
-                buyPrice,
-                salePrice,
-                descr,
-                deficit,
-                statePhoto,
-                size,
-                brand
-            )
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    binding.aepRefresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        val model = ModelEditProductS(
+        repository.updateProductLS(
+            c_ProductOld,
+            imageFile,
+            c_Product,
+            name,
+            al_editProduct[position].fk_c_sessionLS,
+            amount,
+            buyPrice,
+            salePrice,
+            descr,
+            deficit,
+            size,
+            brand
+        )
+                        val model = ModelEditProductLS(
                             c_Product,
                             name,
                             FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
@@ -927,59 +810,13 @@ class Activity_EditProductLS : AppCompatActivity() {
                             FancyToast.SUCCESS,
                             false
                         ).show()
-
-                    } else {
-                        FancyToast.makeText(
-                            this@Activity_EditProductLS,
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    FancyToast.makeText(
-                        this@Activity_EditProductLS,
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                    binding.aepRefresh.isRefreshing = false
-                }
-
-            })
-        } else {
-            FancyToast.makeText(
-                this@Activity_EditProductLS,
-                getString(R.string.Revise_su_conexion),
-                FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
-            ).show()
-        }
     }
 
     private fun deleteProductInternet(position: Int) {
-        if (NetworkTools.isOnline(this, false)) {
-            binding.aepRefresh.isRefreshing = true
-
-            val call = retrofitProductsImplLS.deleteProductLS(
-                Constants.PHP_TOKEN,
-                al_editProduct[position].c_productS,
-                al_editProduct[position].fk_c_sessionS
+        repository.deleteProductLS(
+                al_editProduct[position].c_productLS,
+                al_editProduct[position].fk_c_sessionLS
             )
-
-
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    binding.aepRefresh.isRefreshing = false
-                    if (response.isSuccessful) {
                         FancyToast.makeText(
                             this@Activity_EditProductLS,
                             getString(R.string.Operacion_realizada_con_exito),
@@ -989,49 +826,13 @@ class Activity_EditProductLS : AppCompatActivity() {
                         ).show()
                         al_editProduct.removeAt(position)
                         updateRecyclerAdapter()
-                    } else {
-                        FancyToast.makeText(
-                            this@Activity_EditProductLS,
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                    binding.aepRefresh.isRefreshing = false
-                    FancyToast.makeText(
-                        this@Activity_EditProductLS,
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                }
-            })
-
-
-        } else {
-            FancyToast.makeText(
-                this@Activity_EditProductLS,
-                getString(R.string.Revise_su_conexion),
-                FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
-            ).show()
-        }
     }
 
     private fun transferProductInternet(position: Int, codeSession: String) {
-        if (NetworkTools.isOnline(this, false)) {
-            binding.aepRefresh.isRefreshing = true
-            val call = retrofitProductsImplLS.transferProductsLS(
-                Constants.PHP_TOKEN,
-                al_editProduct[position].c_productS,
+        repository.transferProductLS_S(
+                al_editProduct[position].c_productLS,
                 al_editProduct[position].name,
-                al_editProduct[position].fk_c_sessionS,
+                al_editProduct[position].fk_c_sessionLS,
                 lastTranferAmount,
                 al_editProduct[position].buyPrice,
                 al_editProduct[position].salePrice,
@@ -1044,10 +845,6 @@ class Activity_EditProductLS : AppCompatActivity() {
                 al_editProduct[position].size,
                 al_editProduct[position].brand
             )
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    binding.aepRefresh.isRefreshing = false
-                    if (response.isSuccessful) {
                         FancyToast.makeText(
                             this@Activity_EditProductLS,
                             getString(R.string.Operacion_realizada_con_exito),
@@ -1055,61 +852,14 @@ class Activity_EditProductLS : AppCompatActivity() {
                             FancyToast.SUCCESS,
                             false
                         ).show()
-                        Log.e("XXXXXXX",response.body()!!)
                         loadRecyclerInfo()
-                    } else {
-                        FancyToast.makeText(
-                            this@Activity_EditProductLS,
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    FancyToast.makeText(
-                        this@Activity_EditProductLS,
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                    binding.aepRefresh.isRefreshing = false
-                }
-
-            })
-
-        } else {
-            FancyToast.makeText(
-                this@Activity_EditProductLS,
-                getString(R.string.Revise_su_conexion),
-                FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
-            ).show()
-        }
     }
 
     private fun uploadAmountChangesInternet(amount: Int, position: Int){
-        if (NetworkTools.isOnline(this, false)) {
-            binding.aepRefresh.isRefreshing = true
-
-            val call = retrofitProductsImplLS.alterAmountSLS(
-                Constants.PHP_TOKEN,
-                al_editProduct[position].c_productS,
+       repository.alterAmountLS(
+                al_editProduct[position].c_productLS,
                 amount
             )
-
-
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    binding.aepRefresh.isRefreshing = false
-                    if (response.isSuccessful) {
                         FancyToast.makeText(
                             this@Activity_EditProductLS,
                             getString(R.string.Operacion_realizada_con_exito),
@@ -1119,51 +869,10 @@ class Activity_EditProductLS : AppCompatActivity() {
                         ).show()
                         al_editProduct[position].amount = amount
                         updateRecyclerAdapter()
-                    } else {
-                        FancyToast.makeText(
-                            this@Activity_EditProductLS,
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                    binding.aepRefresh.isRefreshing = false
-                    FancyToast.makeText(
-                        this@Activity_EditProductLS,
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                }
-            })
-
-
-        } else {
-            FancyToast.makeText(
-                this@Activity_EditProductLS,
-                getString(R.string.Revise_su_conexion),
-                FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
-            ).show()
-        }
     }
 
     private fun fetchProductsPathInternet(position: Int){
-        val call = retrofitProductsImplLS.fetchProductSPathLS(
-            Constants.PHP_TOKEN,
-            al_editProduct[position].c_productS
-        )
 
-        call.enqueue(object : Callback<ArrayList<ModelProductPath>> {
-            override fun onResponse(call: Call<ArrayList<ModelProductPath>>, response: Response<ArrayList<ModelProductPath>>) {
-                binding.aepRefresh.isRefreshing = false
-                if (response.isSuccessful) {
                     FancyToast.makeText(
                         this@Activity_EditProductLS,
                         getString(R.string.Operacion_realizada_con_exito),
@@ -1171,35 +880,13 @@ class Activity_EditProductLS : AppCompatActivity() {
                         FancyToast.SUCCESS,
                         false
                     ).show()
-                    val al_modelPath = response.body()
-                    val alModelPath = response.body()
+
+                    val alModelPath = repository.fetchProductLSPath(
+                        al_editProduct[position].c_productLS
+                    )
                     val path = alModelPath?.let { makePath(it, position) }
                     path?.let { showAlertDialogPath(it) }
                     updateRecyclerAdapter()
-                } else {
-                    FancyToast.makeText(
-                        this@Activity_EditProductLS,
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                }
-            }
-
-            override fun onFailure(call: Call<ArrayList<ModelProductPath>>, t: Throwable) {
-                binding.aepRefresh.isRefreshing = false
-                FancyToast.makeText(
-                    this@Activity_EditProductLS,
-                    getString(R.string.Revise_su_conexion),
-                    FancyToast.LENGTH_LONG,
-                    FancyToast.ERROR,
-                    false
-                ).show()
-            }
-        })
-
-
     }
 
 
@@ -1353,7 +1040,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         val guionDrawerPosition = drawerCode.lastIndexOf("_")
         val newDrawerCode = drawerCode.substring(guionDrawerPosition + 1)
 
-        val sessionCode = al_editProduct[position].fk_c_sessionS
+        val sessionCode = al_editProduct[position].fk_c_sessionLS
         val guionSessionPosition = sessionCode.lastIndexOf("_")
         val newSessionCode = sessionCode.substring(guionSessionPosition + 1)
 

@@ -5,11 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qnecesitas.elreteninventario.R
+import com.qnecesitas.elreteninventario.data.ModelDrawerLS
 import com.qnecesitas.elreteninventario.data.ModelDrawerS
 import com.qnecesitas.elreteninventario.databinding.RecyclerDrawersBinding
 
 
-class AdapterRDrawersLS(private val al_drawers: ArrayList<ModelDrawerS>, private val context: Context) :
+class AdapterRDrawersLS(private val al_drawerLS: ArrayList<ModelDrawerLS>, private val context: Context) :
     RecyclerView.Adapter<AdapterRDrawersLS.DrawerViewHolder>() {
 
 
@@ -22,15 +23,15 @@ class AdapterRDrawersLS(private val al_drawers: ArrayList<ModelDrawerS>, private
 
 
         fun bind(
-                model: ModelDrawerS,
+                model: ModelDrawerLS,
                 context: Context,
                 editListener: RecyclerClickListener?,
                 deleteListener: RecyclerClickListener?,
                 touchListener: RecyclerClickListener?,
                 position: Int
         ) {
-            val guionPosition = model.c_drawerS.lastIndexOf("_")
-            val originCode = model.c_drawerS.substring(guionPosition + 1)
+            val guionPosition = model.c_drawerLS.lastIndexOf("_")
+            val originCode = model.c_drawerLS.substring(guionPosition + 1)
             val code = context.getString(R.string.codigo_s, originCode)
             val amount = context.getString(R.string.cant_secciones, model.amount.toString())
 
@@ -50,10 +51,10 @@ class AdapterRDrawersLS(private val al_drawers: ArrayList<ModelDrawerS>, private
         return DrawerViewHolder(binding)
     }
 
-    override fun getItemCount() = al_drawers.size
+    override fun getItemCount() = al_drawerLS.size
 
     override fun onBindViewHolder(holder: DrawerViewHolder, position: Int) {
-        holder.bind(al_drawers[position], context, editListener, deleteListener,touchListener, position)
+        holder.bind(al_drawerLS[position], context, editListener, deleteListener,touchListener, position)
     }
 
     interface RecyclerClickListener{

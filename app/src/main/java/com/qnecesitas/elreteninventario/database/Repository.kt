@@ -45,8 +45,8 @@ class Repository(private val application: Application) {
         sessionSDao.updateSessionSmore(fk_c_sessionS)
     }
 
-    fun addProductLS(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int, statePhoto: Int, size: String, brand: String){
-        productLSDao.insertProductLS(c_productS,name,fk_c_sessionS,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand)
+    fun addProductLS(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int, size: String, brand: String){
+        productLSDao.insertProductLS(c_productS,name,fk_c_sessionS,amount,buyPrice,salePrice,descr,deficit,1,size,brand)
         sessionLSDao.updateSessionLSmore(fk_c_sessionS)
     }
 
@@ -173,7 +173,7 @@ class Repository(private val application: Application) {
         return productLSDao.selectProductLS(fk_c_sessionLS)
     }
 
-    fun fetchProductsLSAll() : ArrayList<ModelEditProductS>{
+    fun fetchProductsLSAll() : ArrayList<ModelEditProductLS>{
         return productLSDao.selectProductLSAll()
     }
 
@@ -182,8 +182,24 @@ class Repository(private val application: Application) {
     }
 
     fun fetchProductsSAll() : ArrayList<ModelEditProductS> {
-        val result = productLSDao.selectProductLSAll()
-        result.addAll(productSDao.selectProductSAll())
+        val result = productSDao.selectProductSAll()
+        for (it in productLSDao.selectProductLSAll()){
+            val newModel = ModelEditProductS(
+                it.c_productLS,
+                it.name,
+                it.fk_c_sessionLS,
+                it.amount,
+                it.buyPrice,
+                it.salePrice,
+                it.descr,
+                it.statePhoto,
+                it.deficit,
+                it.size,
+                it.brand
+            )
+            result.add( newModel)
+        }
+
         return result
     }
 
@@ -253,8 +269,8 @@ class Repository(private val application: Application) {
         productSDao.updateProductS(name,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand,c_productS)
     }
 
-    fun updateProductLS(c_productLSOld: String,file: String,c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,statePhoto: Int,namePhoto: String,namePhotoNew: String,path: String,pathNew: String,size: String,brand: String){
-        productLSDao.updateProductLS(c_productLS,name,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand,c_productLSOld)
+    fun updateProductLS(c_productLSOld: String,file: String,c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,size: String,brand: String){
+        productLSDao.updateProductLS(c_productLS,name,amount,buyPrice,salePrice,descr,1,deficit,size,brand,c_productLSOld)
 
     }
 
