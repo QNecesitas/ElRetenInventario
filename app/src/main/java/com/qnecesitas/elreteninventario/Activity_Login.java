@@ -18,7 +18,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.qnecesitas.elreteninventario.auxiliary.Constants;
-import com.qnecesitas.elreteninventario.auxiliary.NetworkTools;
 import com.qnecesitas.elreteninventario.data.ModelEditProductS;
 import com.qnecesitas.elreteninventario.data.ModelPassword;
 import com.qnecesitas.elreteninventario.databinding.ActivityLoginBinding;

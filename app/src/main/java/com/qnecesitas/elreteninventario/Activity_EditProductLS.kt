@@ -36,7 +36,6 @@ import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.auxiliary.IDCreater
 import com.qnecesitas.elreteninventario.auxiliary.ImageTools
-import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.auxiliary.Permissions
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath

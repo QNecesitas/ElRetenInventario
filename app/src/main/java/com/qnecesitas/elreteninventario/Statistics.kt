@@ -18,7 +18,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelCart
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelSale

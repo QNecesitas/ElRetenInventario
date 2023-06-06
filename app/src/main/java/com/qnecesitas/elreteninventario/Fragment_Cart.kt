@@ -13,7 +13,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductAdd
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelCart
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelSale

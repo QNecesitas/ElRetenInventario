@@ -7,7 +7,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.qnecesitas.elreteninventario.adapters.AdapterR_DeficitProduct
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.databinding.ActivityDeficitBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS

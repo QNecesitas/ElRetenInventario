@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRSessions
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelSessionS
+import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.FragmentSessionsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddSessionBinding
 import com.qnecesitas.elreteninventario.network.RetrofitSessionImpIS
@@ -35,7 +35,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
     private lateinit var adapterRSessions: AdapterRSessions
 
     //Internet
-    private lateinit var retrofitSessionImpl: RetrofitSessionImpIS
+    private lateinit var repository: Repository
 
     //Add Session
     private lateinit var li_binding: LiAddSessionBinding
@@ -65,12 +65,9 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         binding.fsRecyclerSession.adapter = adapterRSessions
 
         //Retrofit
-        retrofitSessionImpl = RetrofitSessionImpIS()
+        repository = Repository(requireActivity().application)
 
-        //Internet
-        binding.fsRetryConnectionSession.setOnClickListener {
-            loadRecyclerInfo()
-        }
+
         loadRecyclerInfo()
         return binding.root
     }
@@ -78,45 +75,10 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSessionImpl.fetchSessions(Constants.PHP_TOKEN, c_drawerS)
-            call.enqueue(object : Callback<ArrayList<ModelSessionS>> {
-                override fun onResponse(
-                        call: Call<ArrayList<ModelSessionS>>,
-                        response: Response<java.util.ArrayList<ModelSessionS>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        binding.fsNotConnectionSession.visibility = View.GONE
-                        binding.fsRecyclerSession.visibility = View.VISIBLE
-                        binding.fsNotInfoSession.visibility = View.GONE
-                        al_sessions = response.body()!!
-                        updateRecyclerAdapter()
-                    } else {
-                        binding.fsNotConnectionSession.visibility = View.VISIBLE
-                        binding.fsRecyclerSession.visibility = View.GONE
-                        binding.fsNotInfoSession.visibility = View.GONE
-                    }
-                }
-
-                override fun onFailure(
-                        call: Call<java.util.ArrayList<ModelSessionS>>,
-                        t: Throwable
-                ) {
-                    binding.refresh.isRefreshing = false
-                    binding.fsNotConnectionSession.visibility = View.VISIBLE
-                    binding.fsRecyclerSession.visibility = View.GONE
-                    binding.fsNotInfoSession.visibility = View.GONE
-                }
-            })
-
-
-        } else {
-            binding.fsNotConnectionSession.visibility = View.VISIBLE
-            binding.fsRecyclerSession.visibility = View.GONE
-            binding.fsNotInfoSession.visibility = View.GONE
-        }
+        al_sessions = repository.fetchSessionsS(c_drawerS)
+        binding.fsRecyclerSession.visibility = View.VISIBLE
+        binding.fsNotInfoSession.visibility = View.GONE
+        updateRecyclerAdapter()
     }
 
     private fun updateRecyclerAdapter() {
@@ -127,11 +89,9 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         if (al_sessions.isEmpty()) {
             binding.fsNotInfoSession.visibility = View.VISIBLE
             binding.fsRecyclerSession.visibility = View.GONE
-            binding.fsNotConnectionSession.visibility = View.GONE
         } else {
             binding.fsNotInfoSession.visibility = View.GONE
             binding.fsRecyclerSession.visibility = View.VISIBLE
-            binding.fsNotConnectionSession.visibility = View.GONE
         }
         adapterRSessions = AdapterRSessions(al_sessions, binding.root.context)
 
@@ -189,60 +149,19 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
     }
 
     private fun addNewSessionInternet(sessionCode: String) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSessionImpl.addSession(Constants.PHP_TOKEN, sessionCode, c_drawerS)
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        val model = ModelSessionS(sessionCode, c_drawerS)
-                        al_sessions.add(model)
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                    } else {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
 
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    binding.refresh.isRefreshing = false
-                    FancyToast.makeText(
-                        requireContext(),
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                }
-            })
-        }else{
-            FancyToast.makeText(
+        repository.addSessionS( sessionCode, c_drawerS)
+
+        val model = ModelSessionS(sessionCode, c_drawerS)
+        al_sessions.add(model)
+        updateRecyclerAdapter()
+        FancyToast.makeText(
                 requireContext(),
-                getString(R.string.Revise_su_conexion),
+                getString(R.string.Operacion_realizada_con_exito),
                 FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
-            ).show()
-        }
+                FancyToast.SUCCESS,
+                false).show()
+
     }
 
     private fun isDuplicated(name: String): Boolean{
@@ -289,66 +208,22 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
     }
 
     private fun editSessionInternet(sessionCodeOld: String, sessionCodeNew: String, position: Int) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing = true
-            val call =
-                retrofitSessionImpl.updateSessions(
-                    Constants.PHP_TOKEN,
-                    sessionCodeOld,
-                    sessionCodeNew,
-                    al_sessions[position].fk_c_drawerS,
-                    al_sessions[position].amount
-                )
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        al_sessions[position].c_sessionS = sessionCodeNew
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                    } else {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
+        repository.updateSessionS(
+                sessionCodeOld,
+                sessionCodeNew,
+                al_sessions[position].fk_c_drawerS,
+                al_sessions[position].amount
+        )
 
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    binding.refresh.isRefreshing = false
-                    FancyToast.makeText(
-                        requireContext(),
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                }
-            })
-        }else{
-            FancyToast.makeText(
+        al_sessions[position].c_sessionS = sessionCodeNew
+        updateRecyclerAdapter()
+        FancyToast.makeText(
                 requireContext(),
-                getString(R.string.Revise_su_conexion),
+                getString(R.string.Operacion_realizada_con_exito),
                 FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
+                FancyToast.SUCCESS,
                 false
-            ).show()
-        }
+        ).show()
     }
 
     //Delete session
@@ -395,63 +270,20 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
     }
 
     private fun deleteSessionInternet(sessionCode: String, position: Int) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSessionImpl.deleteSessions(
-                Constants.PHP_TOKEN,
+        repository.deleteSessionS(
                 sessionCode,
                 al_sessions.get(position).fk_c_drawerS
-            )
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        al_sessions.removeAt(position)
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                    } else {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
+        )
 
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    FancyToast.makeText(
-                        requireContext(),
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        }else{
-            FancyToast.makeText(
+        al_sessions.removeAt(position)
+        updateRecyclerAdapter()
+        FancyToast.makeText(
                 requireContext(),
-                getString(R.string.Revise_su_conexion),
+                getString(R.string.Operacion_realizada_con_exito),
                 FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
+                FancyToast.SUCCESS,
                 false
-            ).show()
-        }
+        ).show()
     }
 
     fun setOpenSessionListener(openSession: OpenSession) {

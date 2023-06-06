@@ -3,13 +3,15 @@ package com.qnecesitas.elreteninventario.database
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Update
+import com.qnecesitas.elreteninventario.data.ModelSale
+import com.qnecesitas.elreteninventario.data.ModelShelfS
 
 
 @Dao
 interface ShelfSDao {
 
     @Query("SELECT * FROM ShelfS")
-    fun selectShelfS()
+    fun selectShelfS() : ArrayList<ModelShelfS>
 
     @Query("INSERT INTO ShelfS (c_shelfS)VALUES(:c_shelfS)")
     fun insertShelfS(c_shelfS: String)

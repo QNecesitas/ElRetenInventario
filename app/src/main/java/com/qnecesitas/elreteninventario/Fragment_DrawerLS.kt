@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRDrawers
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelDrawerS
 import com.qnecesitas.elreteninventario.databinding.FragmentDrawerLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddDrawerBinding

@@ -18,7 +18,7 @@ interface DrawerSDao {
     fun insertDrawerSUp(c_drawerSNew: String,fk_c_shelfS: String,amount: Int)
 
     @Query("SELECT * FROM DrawerS WHERE fk_c_shelfS = :fk_c_shelfS")
-    fun selectDrawerS(fk_c_shelfS: String)
+    fun selectDrawerS(fk_c_shelfS: String) : ArrayList<ModelDrawerS>
 
     @Query("UPDATE DrawerS SET amount = amount+1 WHERE c_drawerS = :fk_c_drawerS")
     fun updateDrawerSmore(fk_c_drawerS: String)

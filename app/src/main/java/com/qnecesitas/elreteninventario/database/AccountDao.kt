@@ -2,6 +2,7 @@ package com.qnecesitas.elreteninventario.database
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.qnecesitas.elreteninventario.data.ModelPassword
 
 
 @Dao
@@ -12,6 +13,6 @@ interface AccountDao {
 
 
     @Query("SELECT * FROM `Account`")
-    fun selectAccount()
+    fun selectAccount() : ArrayList<ModelPassword>
 
 }

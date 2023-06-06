@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRShelves
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelShelfS
+import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.FragmentShelvesBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddShelfBinding
 import com.qnecesitas.elreteninventario.network.RetrofitShelvesImplS
@@ -34,7 +34,7 @@ class Fragment_Shelves : Fragment() {
     private lateinit var adapterRShelves: AdapterRShelves
 
     //Internet
-    private lateinit var retrofitShelvesImpl: RetrofitShelvesImplS
+    private lateinit var repository: Repository
 
     //Add Shelf
     private lateinit var li_binding: LiAddShelfBinding
@@ -51,11 +51,7 @@ class Fragment_Shelves : Fragment() {
         binding.fsAdd.setOnClickListener { click_add() }
 
         //Refresh
-        binding.refresh.setOnRefreshListener( object : SwipeRefreshLayout.OnRefreshListener{
-            override fun onRefresh() {
-                loadRecyclerInfo()
-            }
-        } )
+        binding.refresh.setOnRefreshListener { loadRecyclerInfo() }
 
         //Recycler
         al_shelves = ArrayList()
@@ -65,12 +61,8 @@ class Fragment_Shelves : Fragment() {
         binding.fsRecycler.adapter = adapterRShelves
 
         //Retrofit
-        retrofitShelvesImpl = RetrofitShelvesImplS()
+        repository = Repository(requireActivity().application)
 
-        //Internet
-        binding.fsRetryConnection.setOnClickListener {
-            loadRecyclerInfo()
-        }
         loadRecyclerInfo()
         return binding.root
     }
@@ -78,45 +70,10 @@ class Fragment_Shelves : Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitShelvesImpl.fetchShelves(Constants.PHP_TOKEN)
-            call.enqueue(object : Callback<ArrayList<ModelShelfS>> {
-                override fun onResponse(
-                        call: Call<ArrayList<ModelShelfS>>,
-                        response: Response<java.util.ArrayList<ModelShelfS>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        binding.fsNotConnection.visibility = View.GONE
-                        binding.fsRecycler.visibility = View.VISIBLE
-                        binding.fsNotInfo.visibility = View.GONE
-                        al_shelves = response.body()!!
-                        updateRecyclerAdapter()
-                    } else {
-                        binding.fsNotConnection.visibility = View.VISIBLE
-                        binding.fsRecycler.visibility = View.GONE
-                        binding.fsNotInfo.visibility = View.GONE
-                    }
-                }
+        al_shelves = repository.fetchShelvesS()
+        binding.fsRecycler.visibility = View.VISIBLE
+        updateRecyclerAdapter()
 
-                override fun onFailure(
-                        call: Call<java.util.ArrayList<ModelShelfS>>,
-                        t: Throwable
-                ) {
-                    binding.fsNotConnection.visibility = View.VISIBLE
-                    binding.fsRecycler.visibility = View.GONE
-                    binding.fsNotInfo.visibility = View.GONE
-                    binding.refresh.isRefreshing = false
-                }
-            })
-
-
-        } else {
-            binding.fsNotConnection.visibility = View.VISIBLE
-            binding.fsRecycler.visibility = View.GONE
-            binding.fsNotInfo.visibility = View.GONE
-        }
     }
 
     private fun updateRecyclerAdapter() {
@@ -127,11 +84,9 @@ class Fragment_Shelves : Fragment() {
         if (al_shelves.isEmpty()) {
             binding.fsNotInfo.visibility = View.VISIBLE
             binding.fsRecycler.visibility = View.GONE
-            binding.fsNotConnection.visibility = View.GONE
         } else {
             binding.fsNotInfo.visibility = View.GONE
             binding.fsRecycler.visibility = View.VISIBLE
-            binding.fsNotConnection.visibility = View.GONE
         }
         adapterRShelves = AdapterRShelves(al_shelves, binding.root.context)
         adapterRShelves.setEditListener(object : AdapterRShelves.RecyclerClickListener {
@@ -190,60 +145,18 @@ class Fragment_Shelves : Fragment() {
     }
 
     private fun addNewShelfInternet(shelfCode: String) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitShelvesImpl.addShelf(Constants.PHP_TOKEN, shelfCode)
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        val model = ModelShelfS(shelfCode, 0)
-                        al_shelves.add(model)
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                    } else {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
+        repository.addShelfS( shelfCode)
 
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    FancyToast.makeText(
-                        requireContext(),
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        }else{
-            FancyToast.makeText(
+        val model = ModelShelfS(shelfCode, 0)
+        al_shelves.add(model)
+        updateRecyclerAdapter()
+        FancyToast.makeText(
                 requireContext(),
-                getString(R.string.Revise_su_conexion),
+                getString(R.string.Operacion_realizada_con_exito),
                 FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
+                FancyToast.SUCCESS,
                 false
-            ).show()
-        }
+        ).show()
     }
 
     private fun isDuplicated(name: String): Boolean{
@@ -288,60 +201,18 @@ class Fragment_Shelves : Fragment() {
     }
 
     private fun editShelfInternet(shelfCodeOld: String, shelfCodeNew: String, position: Int) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing = true
-            val call =
-                retrofitShelvesImpl.updateShelf(Constants.PHP_TOKEN, shelfCodeOld, shelfCodeNew, al_shelves[position].amount)
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        al_shelves[position].c_shelfS = shelfCodeNew
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                    } else {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
+        repository.updateShelfS(shelfCodeOld, shelfCodeNew, al_shelves[position].amount)
 
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    FancyToast.makeText(
-                        requireContext(),
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        }else{
-            FancyToast.makeText(
+        al_shelves[position].c_shelfS = shelfCodeNew
+        updateRecyclerAdapter()
+        FancyToast.makeText(
                 requireContext(),
-                getString(R.string.Revise_su_conexion),
+                getString(R.string.Operacion_realizada_con_exito),
                 FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
+                FancyToast.SUCCESS,
                 false
-            ).show()
-        }
+        ).show()
+
     }
 
 
@@ -389,59 +260,16 @@ class Fragment_Shelves : Fragment() {
     }
 
     private fun deleteShelfInternet(shelfCode: String, position: Int) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitShelvesImpl.deleteShelf(Constants.PHP_TOKEN, shelfCode)
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        al_shelves.removeAt(position)
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                    } else {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    FancyToast.makeText(
-                        requireContext(),
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        }else{
-            FancyToast.makeText(
+        repository.deleteShelfS(shelfCode)
+        al_shelves.removeAt(position)
+        updateRecyclerAdapter()
+        FancyToast.makeText(
                 requireContext(),
-                getString(R.string.Revise_su_conexion),
+                getString(R.string.Operacion_realizada_con_exito),
                 FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
+                FancyToast.SUCCESS,
                 false
-            ).show()
-        }
+        ).show()
     }
 
     fun setOpenShelfSListener(openShelfS: OpenShelfS) {

@@ -2,6 +2,17 @@ package com.qnecesitas.elreteninventario.database
 
 import android.app.Application
 import com.qnecesitas.elreteninventario.ElRetenApplication
+import com.qnecesitas.elreteninventario.data.ModelDrawerLS
+import com.qnecesitas.elreteninventario.data.ModelDrawerS
+import com.qnecesitas.elreteninventario.data.ModelEditProductLS
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
+import com.qnecesitas.elreteninventario.data.ModelPassword
+import com.qnecesitas.elreteninventario.data.ModelProductPath
+import com.qnecesitas.elreteninventario.data.ModelSale
+import com.qnecesitas.elreteninventario.data.ModelSessionLS
+import com.qnecesitas.elreteninventario.data.ModelSessionS
+import com.qnecesitas.elreteninventario.data.ModelShelfLS
+import com.qnecesitas.elreteninventario.data.ModelShelfS
 
 class Repository(private val application: Application) {
     val drawerLSDao = (application as ElRetenApplication).database.drawerLSDao()
@@ -110,85 +121,86 @@ class Repository(private val application: Application) {
         shelfSSDao.deleteShelfS(c_shelfS)
     }
 
-    fun fetchAccounts(){
-        accountDao.selectAccount()
+    fun fetchAccounts() : ArrayList<ModelPassword>{
+        return accountDao.selectAccount()
     }
 
-    fun fetchDrawersLS(fk_c_shelfLS: String){
-        drawerLSDao.selectDrawerLS(fk_c_shelfLS)
+    fun fetchDrawersLS(fk_c_shelfLS: String) :ArrayList<ModelDrawerLS>{
+        return drawerLSDao.selectDrawerLS(fk_c_shelfLS)
     }
 
-    fun fetchDrawersS(fk_c_shelfS: String){
-        drawerSDao.selectDrawerS(fk_c_shelfS)
+    fun fetchDrawersS(fk_c_shelfS: String) : ArrayList<ModelDrawerS>{
+        return drawerSDao.selectDrawerS(fk_c_shelfS)
     }
 
-    fun fetchOrdersAll(){
-        ordersDao.selectOrderAll()
+    fun fetchOrdersAll() : ArrayList<ModelSale>{
+        return ordersDao.selectOrderAll()
     }
 
-    fun fetchOrdersD(year:Int,month: Int,day: Int){
-        ordersDao.selectOrderD(day,month,year)
+    fun fetchOrdersD(year:Int,month: Int,day: Int) : ArrayList<ModelSale>{
+        return ordersDao.selectOrderD(day,month,year)
     }
 
-    fun fetchOrdersM(year: Int,month: Int){
-        ordersDao.selectOrdersM(month,year)
+    fun fetchOrdersM(year: Int,month: Int) : ArrayList<ModelSale>{
+        return ordersDao.selectOrdersM(month,year)
     }
 
-    fun fetchOrdersY(year: Int){
-        ordersDao.selectOrderY(year)
+    fun fetchOrdersY(year: Int) : ArrayList<ModelSale>{
+        return ordersDao.selectOrderY(year)
     }
 
-    fun fetchProductLSPath(c_productLS: String){
-        productLSDao.selectProductLSPath(c_productLS)
+    fun fetchProductLSPath(c_productLS: String) : ArrayList<ModelProductPath>{
+        return productLSDao.selectProductLSPath(c_productLS)
     }
 
-    fun fetchProductSPath(c_productS: String){
-        productSDao.selectProductLSPath(c_productS)
+    fun fetchProductSPath(c_productS: String): ArrayList<ModelProductPath>{
+        return productSDao.selectProductLSPath(c_productS)
     }
 
-    fun fetchProductsCounter(){
-        productSDao.selectProdcutSCounter()
+    fun fetchProductsCounter() : ArrayList<ModelEditProductS>{
+        return productSDao.selectProdcutSCounter()
     }
 
-    fun fetchProductsDeficit(button:String){
+    fun fetchProductsDeficit(button:String) : ArrayList<ModelEditProductS>{
         if(button == "Almacén"){
-            productSDao.selectProductSDeficit()
+            return productSDao.selectProductSDeficit()
         }else{
-            productLSDao.selectProductLSDeficit()
+            return productLSDao.selectProductLSDeficit()
         }
     }
 
-    fun fetchProductsLS(fk_c_sessionLS: String){
-        productLSDao.selectProductLS(fk_c_sessionLS)
+    fun fetchProductsLS(fk_c_sessionLS: String) : ArrayList<ModelEditProductLS>{
+        return productLSDao.selectProductLS(fk_c_sessionLS)
     }
 
-    fun fetchProductsLSAll(){
-        productLSDao.selectProductLSAll()
+    fun fetchProductsLSAll() : ArrayList<ModelEditProductS>{
+        return productLSDao.selectProductLSAll()
     }
 
-    fun fetchProductsS(fk_c_sessionS:String){
-        productSDao.selectProductS(fk_c_sessionS)
+    fun fetchProductsS(fk_c_sessionS:String) : ArrayList<ModelEditProductS>{
+        return productSDao.selectProductS(fk_c_sessionS)
     }
 
-    fun fetchProductsSAll(){
-        productSDao.selectProductSAll()
-        productLSDao.selectProductLSAll()
+    fun fetchProductsSAll() : ArrayList<ModelEditProductS> {
+        val result = productLSDao.selectProductLSAll()
+        result.addAll(productSDao.selectProductSAll())
+        return result
     }
 
-    fun fetchSessionsLS(fk_c_drawerLS: String){
-        sessionLSDao.selectSessionLS(fk_c_drawerLS)
+    fun fetchSessionsLS(fk_c_drawerLS: String) : ArrayList<ModelSessionLS>{
+        return sessionLSDao.selectSessionLS(fk_c_drawerLS)
     }
 
-    fun fetchSessionsS(fk_c_drawerS: String){
-        sessionSDao.selectSessionS(fk_c_drawerS)
+    fun fetchSessionsS(fk_c_drawerS: String): ArrayList<ModelSessionS>{
+        return sessionSDao.selectSessionS(fk_c_drawerS)
     }
 
-    fun fetchShelvesLS(){
-        shelfSLSDao.selectShelfLS()
+    fun fetchShelvesLS(): ArrayList<ModelShelfLS>{
+        return shelfSLSDao.selectShelfLS()
     }
 
-    fun fetchShelvesS(){
-        shelfSSDao.selectShelfS()
+    fun fetchShelvesS() : ArrayList<ModelShelfS>{
+        return shelfSSDao.selectShelfS()
     }
 
     fun transferProductLS_S(c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionS: String,deficit: Int,exists:Int,sendAll: Int,size: String,brand: String){

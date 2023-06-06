@@ -60,47 +60,6 @@
 
     </LinearLayout>
 
-    <!-- CL Not Connection  -->
-    <LinearLayout
-        android:id="@+id/fs_not_connection_session"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        tools:ignore="UseCompoundDrawables"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:importantForAccessibility="no"
-            app:srcCompat="@drawable/baseline_wifi_off_24"
-            app:tint="@color/gray_icon_h" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8sp"
-            android:maxWidth="300dp"
-            android:layout_gravity="center"
-            android:text="@string/Revise_su_conexion"
-            android:textColor="@color/gray_icon_h"
-            android:textSize="@dimen/textSize_h"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/fs_retryConnection_session"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8sp"
-            android:text="@string/Reintentar"
-            android:layout_gravity="center"/>
-
-    </LinearLayout>
-
         </FrameLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

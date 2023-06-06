@@ -14,7 +14,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.qnecesitas.elreteninventario.adapters.AdapterR_Sales
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelSale
 import com.qnecesitas.elreteninventario.databinding.ActivitySalesBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYBinding

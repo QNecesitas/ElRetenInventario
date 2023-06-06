@@ -2,6 +2,9 @@ package com.qnecesitas.elreteninventario.database
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.qnecesitas.elreteninventario.data.ModelSale
+import com.qnecesitas.elreteninventario.data.ModelSessionLS
+import com.qnecesitas.elreteninventario.data.ModelSessionS
 
 
 @Dao
@@ -17,7 +20,7 @@ interface SessionLSDao {
     fun updateSessionLSTransLess(fk_c_sessionLS: String)
 
     @Query("SELECT * FROM SessionLS WHERE fk_c_drawerLS = :fk_c_drawerLS")
-    fun selectSessionLS(fk_c_drawerLS: String)
+    fun selectSessionLS(fk_c_drawerLS: String) : ArrayList<ModelSessionLS>
 
     @Query("INSERT INTO SessionLS VALUES (:c_sessionLS,:fk_c_drawerLS,0)")
     fun insertSessionLS(c_sessionLS: String,fk_c_drawerLS: String)

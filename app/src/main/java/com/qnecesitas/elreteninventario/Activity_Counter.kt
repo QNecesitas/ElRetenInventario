@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductShow
 import com.qnecesitas.elreteninventario.auxiliary.Constants
-import com.qnecesitas.elreteninventario.auxiliary.NetworkTools
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
 import com.qnecesitas.elreteninventario.databinding.ActivityCounterBinding
