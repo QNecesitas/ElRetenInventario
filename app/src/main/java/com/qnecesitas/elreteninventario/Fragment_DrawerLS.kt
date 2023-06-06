@@ -13,11 +13,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRDrawers
+import com.qnecesitas.elreteninventario.adapters.AdapterRDrawersLS
 import com.qnecesitas.elreteninventario.auxiliary.Constants
+import com.qnecesitas.elreteninventario.data.ModelDrawerLS
 import com.qnecesitas.elreteninventario.data.ModelDrawerS
+import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.FragmentDrawerLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddDrawerBinding
-import com.qnecesitas.elreteninventario.network.RetrofitDrawerImplLS
 import com.shashank.sony.fancytoastlib.FancyToast
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,11 +30,11 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
     private var openDrawer: OpenDrawerLS? = null
     //Recycler
     private lateinit var binding: FragmentDrawerLsBinding
-    private lateinit var al_drawers: ArrayList<ModelDrawerS>
-    private lateinit var adapterRDrawers: AdapterRDrawers
+    private lateinit var al_drawerLS: ArrayList<ModelDrawerLS>
+    private lateinit var adapterRDrawersLS: AdapterRDrawersLS
 
     //Internet
-    private lateinit var retrofitDrawersImpl: RetrofitDrawerImplLS
+    private lateinit var repository: Repository
 
     //Add Drawer
     private lateinit var li_binding: LiAddDrawerBinding
@@ -56,100 +58,60 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
         } )
 
         //Recycler
-        al_drawers = ArrayList()
-        adapterRDrawers = AdapterRDrawers(al_drawers, binding.root.context)
+        al_drawerLS = ArrayList()
+        adapterRDrawersLS = AdapterRDrawersLS(al_drawerLS, binding.root.context)
         binding.fdRecycler.setHasFixedSize(true)
         binding.fdRecycler.layoutManager = LinearLayoutManager(binding.root.context)
-        binding.fdRecycler.adapter = adapterRDrawers
+        binding.fdRecycler.adapter = adapterRDrawersLS
 
         //Retrofit
-        retrofitDrawersImpl = RetrofitDrawerImplLS()
+        repository = Repository(requireActivity().application)
 
         //Internet
-        binding.fdRetryConnection.setOnClickListener {
-            loadRecyclerInfo()
-        }
         loadRecyclerInfo()
         return binding.root
     }
 
     //Recycler information
     private fun loadRecyclerInfo() {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing =true
-            val call = retrofitDrawersImpl.fetchDrawers(Constants.PHP_TOKEN,c_shelfLS)
-            call.enqueue(object : Callback<ArrayList<ModelDrawerS>> {
-                override fun onResponse(
-                        call: Call<ArrayList<ModelDrawerS>>,
-                        response: Response<java.util.ArrayList<ModelDrawerS>>
-                ) {
-                    binding.refresh.isRefreshing =false
-                    if (response.isSuccessful) {
-                        binding.fdNotConnection.visibility = View.GONE
-                        binding.fdRecycler.visibility = View.VISIBLE
-                        binding.fdNotInfo.visibility = View.GONE
-                        al_drawers = response.body()!!
-                        updateRecyclerAdapter()
-                    } else {
-                        binding.fdNotConnection.visibility = View.VISIBLE
-                        binding.fdRecycler.visibility = View.GONE
-                        binding.fdNotInfo.visibility = View.GONE
-                    }
-                }
-
-                override fun onFailure(
-                        call: Call<java.util.ArrayList<ModelDrawerS>>,
-                        t: Throwable
-                ) {
-                    binding.refresh.isRefreshing =false
-                    binding.fdNotConnection.visibility = View.VISIBLE
-                    binding.fdRecycler.visibility = View.GONE
-                    binding.fdNotInfo.visibility = View.GONE
-                }
-            })
-
-
-        } else {
-            binding.fdNotConnection.visibility = View.VISIBLE
-            binding.fdRecycler.visibility = View.GONE
-            binding.fdNotInfo.visibility = View.GONE
-        }
+        al_drawerLS = repository.fetchDrawersLS(c_shelfLS)
+        binding.fdRecycler.visibility = View.VISIBLE
+        binding.fdNotInfo.visibility = View.GONE
+        updateRecyclerAdapter()
     }
 
     private fun updateRecyclerAdapter() {
-        if(al_drawers.isNotEmpty()){
-            al_drawers.sortBy { it.c_drawerS }
+        if(al_drawerLS.isNotEmpty()){
+            al_drawerLS.sortBy { it.c_drawerLS }
         }
 
-        if (al_drawers.isEmpty()) {
+        if (al_drawerLS.isEmpty()) {
             binding.fdNotInfo.visibility = View.VISIBLE
             binding.fdRecycler.visibility = View.GONE
-            binding.fdNotConnection.visibility = View.GONE
         } else {
             binding.fdNotInfo.visibility = View.GONE
             binding.fdRecycler.visibility = View.VISIBLE
-            binding.fdNotConnection.visibility = View.GONE
         }
-        adapterRDrawers = AdapterRDrawers(al_drawers, binding.root.context)
+        adapterRDrawersLS = AdapterRDrawersLS(al_drawerLS, binding.root.context)
 
-        adapterRDrawers.setEditListener(object: AdapterRDrawers.RecyclerClickListener{
+        adapterRDrawersLS.setEditListener(object: AdapterRDrawersLS.RecyclerClickListener{
             override fun onClick(position: Int) {
                 click_edit(position)
             }
         })
-        adapterRDrawers.setDeleteListener(object: AdapterRDrawers.RecyclerClickListener{
+        adapterRDrawersLS.setDeleteListener(object: AdapterRDrawersLS.RecyclerClickListener{
             override fun onClick(position: Int) {
                 click_delete(position)
             }
         })
-        adapterRDrawers.setTouchListener(object: AdapterRDrawers.RecyclerClickListener{
+        adapterRDrawersLS.setTouchListener(object: AdapterRDrawersLS.RecyclerClickListener{
             override fun onClick(position: Int) {
-                val c_drawer = al_drawers.get(position).c_drawerS
+                val c_drawer = al_drawerLS.get(position).c_drawerLS
                 openDrawer?.onDrawerLSClicked(c_drawer)
             }
 
         })
-        binding.fdRecycler.adapter = adapterRDrawers
+        binding.fdRecycler.adapter = adapterRDrawersLS
     }
 
     //Add Drawer
@@ -188,18 +150,10 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
     }
 
     private fun addNewDrawerInternet(drawerCode: String) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing =true
-            val call = retrofitDrawersImpl.addDrawer(Constants.PHP_TOKEN, drawerCode,c_shelfLS)
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    binding.refresh.isRefreshing =false
-                    if (response.isSuccessful) {
-                        val model = ModelDrawerS(drawerCode, c_shelfLS)
-                        al_drawers.add(model)
+        repository.addDrawerLs(c_shelfLS,drawerCode)
+
+        val model = ModelDrawerLS(drawerCode, c_shelfLS)
+        al_drawerLS.add(model)
                         updateRecyclerAdapter()
                         FancyToast.makeText(
                             requireContext(),
@@ -208,38 +162,12 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
                             FancyToast.SUCCESS,
                             false
                         ).show()
-                    } else {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    binding.refresh.isRefreshing =false
-                    FancyToast.makeText(
-                        requireContext(),
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                }
-            })
-        }
     }
 
     private fun isDuplicated(name: String): Boolean{
-        for(shelf in al_drawers){
-            val positionSymbol = shelf.c_drawerS.lastIndexOf("_")
-            val codePrepared = shelf.c_drawerS.substring(positionSymbol+1)
+        for(shelf in al_drawerLS){
+            val positionSymbol = shelf.c_drawerLS.lastIndexOf("_")
+            val codePrepared = shelf.c_drawerLS.substring(positionSymbol+1)
             if(codePrepared == name){
                 return true
             }
@@ -249,7 +177,7 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
 
     //Edit drawer
     private fun click_edit(position: Int) {
-        li_editDrawer(al_drawers[position].c_drawerS, position)
+        li_editDrawer(al_drawerLS[position].c_drawerLS, position)
     }
 
     private fun li_editDrawer(codeDrawerOld: String, position: Int) {
@@ -282,58 +210,28 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
 
 
     private fun editDrawerInternet(drawerCodeOld: String, drawerCodeNew: String, position: Int) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing =true
-            val call =
-                retrofitDrawersImpl.updateDrawer(Constants.PHP_TOKEN, drawerCodeOld, drawerCodeNew,al_drawers[position].fk_c_shelfS,  al_drawers[position].amount)
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    binding.refresh.isRefreshing =false
-                    if (response.isSuccessful) {
-                        al_drawers[position].c_drawerS = drawerCodeNew
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                    } else {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    binding.refresh.isRefreshing =false
-                    FancyToast.makeText(
-                        requireContext(),
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                }
-            })
-        }
+        repository.updateDrawerLS(
+            drawerCodeOld,
+            drawerCodeNew,
+            al_drawerLS[position].fk_c_shelfLS,
+            al_drawerLS[position].amount
+        )
+        al_drawerLS[position].c_drawerLS = drawerCodeNew
+        updateRecyclerAdapter()
+        FancyToast.makeText(
+            requireContext(),
+            getString(R.string.Operacion_realizada_con_exito),
+            FancyToast.LENGTH_LONG,
+            FancyToast.SUCCESS,
+            false
+        ).show()
     }
+
 
 
     //Delete drawer
     private fun click_delete(position: Int) {
-        val amount = al_drawers[position].amount
+        val amount = al_drawerLS[position].amount
         if(amount == 0) {
             showAlertDialogDeleteDrawer(position)
         }else{
@@ -351,10 +249,9 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
         builder.setPositiveButton(
             R.string.Si
         ) { dialog, _ ->
-            if (NetworkTools.isOnline(requireContext(), true)) {
-                dialog.dismiss()
-                deleteDrawerInternet(al_drawers[position].c_drawerS, position)
-            }
+            dialog.dismiss()
+            deleteDrawerInternet(al_drawerLS[position].c_drawerLS, position)
+
         }
         builder.setNegativeButton(R.string.No,
             DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
@@ -377,17 +274,8 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
     }
 
     private fun deleteDrawerInternet(drawerCode: String, position: Int) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing =true
-            val call = retrofitDrawersImpl.deleteDrawer(Constants.PHP_TOKEN, drawerCode,al_drawers.get(position).fk_c_shelfS)
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    binding.refresh.isRefreshing =false
-                    if (response.isSuccessful) {
-                        al_drawers.removeAt(position)
+        repository.deleteDrawerLS(drawerCode,al_drawerLS.get(position).fk_c_shelfLS)
+                        al_drawerLS.removeAt(position)
                         updateRecyclerAdapter()
                         FancyToast.makeText(
                             requireContext(),
@@ -396,32 +284,6 @@ class Fragment_DrawerLS(var c_shelfLS : String) : Fragment() {
                             FancyToast.SUCCESS,
                             false
                         ).show()
-                    } else {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    binding.refresh.isRefreshing =false
-                    FancyToast.makeText(
-                        requireContext(),
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                }
-            })
-        }
     }
 
     fun setOpenDrawerLSListener(openDrawerLS: OpenDrawerLS){
