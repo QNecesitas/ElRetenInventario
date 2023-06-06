@@ -1,10 +1,12 @@
 package com.qnecesitas.elreteninventario
 
+import android.app.Application
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelPassword
+import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivitySettingsBinding
 import com.qnecesitas.elreteninventario.network.RetrofitPasswords
 import com.shashank.sony.fancytoastlib.FancyToast
@@ -19,7 +21,7 @@ class Activity_Settings : AppCompatActivity() {
 
     //Intenert
     private lateinit var alPassword: ArrayList<ModelPassword>
-    private lateinit var retrofitPasswords: RetrofitPasswords
+    private lateinit var repository: Repository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,7 @@ class Activity_Settings : AppCompatActivity() {
 
         //Internet
         alPassword = ArrayList()
-        retrofitPasswords = RetrofitPasswords()
+        repository= Repository(Application())
     }
 
     /*Listeners
@@ -179,102 +181,31 @@ class Activity_Settings : AppCompatActivity() {
      *-----------------------------------
      **/
     private fun loadPasswordInternet(callBack: ()->Unit) {
-        if (NetworkTools.isOnline(this@Activity_Settings, false)) {
-            binding.refresh.isRefreshing = true
 
-            val call = retrofitPasswords.fetchAccounts(Constants.PHP_TOKEN)
 
-            call.enqueue(object : Callback<ArrayList<ModelPassword>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelPassword>>,
-                    response: Response<ArrayList<ModelPassword>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        alPassword = response.body()!!
+        alPassword = repository.fetchAccounts()
+
+
+
                         callBack()
-                    } else {
-                        Snackbar.make(
-                            binding.root,
-                            getString(R.string.Revise_su_conexion),
-                            Snackbar.LENGTH_LONG
-                        ).show()
-                    }
-                }
 
-                override fun onFailure(call: Call<ArrayList<ModelPassword>>, t: Throwable) {
-                    binding.refresh.isRefreshing = false
-                    Snackbar.make(
-                        binding.root,
-                        getString(R.string.Revise_su_conexion),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
-            })
-        } else {
-            Snackbar.make(
-                binding.root,
-                getString(R.string.Revise_su_conexion),
-                Snackbar.LENGTH_LONG
-            ).show()
-        }
     }
 
-    private fun updatePassword(user: String, password: String){
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitPasswords.updateAccount(
-                Constants.PHP_TOKEN,
-                password,
-                user
-            )
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        FancyToast.makeText(
-                            applicationContext,
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                        loadPasswordInternet { {} }
-                    } else {
-                        FancyToast.makeText(
-                            applicationContext,
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
+    private fun updatePassword(user: String, password: String) {
 
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    FancyToast.makeText(
-                        applicationContext,
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                    binding.refresh.isRefreshing = false
-                }
+        repository.updateAccount(
+            password ,
+            user
+        )
 
-            })
-        }else{
-            FancyToast.makeText(
-                applicationContext,
-                getString(R.string.Revise_su_conexion),
-                FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
-            ).show()
-        }
+        FancyToast.makeText(
+            applicationContext ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
+        ).show()
+        loadPasswordInternet { {} }
     }
 
 

@@ -86,7 +86,7 @@ class Repository(private val application: Application) {
         shelfSSDao.updateShelfSless(fk_c_shelfS)
     }
 
-    fun deleteOrder(c_order: String){
+    fun deleteOrder(c_order: Int){
         ordersDao.deleteOrders(c_order)
     }
 

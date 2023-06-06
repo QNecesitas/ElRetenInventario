@@ -817,7 +817,6 @@ class Activity_EditProduct : AppCompatActivity() {
                 salePrice,
                 descr,
                 deficit,
-                statePhoto,
                 size,
                 brand
             )
@@ -888,7 +887,7 @@ class Activity_EditProduct : AppCompatActivity() {
     private fun deleteProductInternetLS(position: Int) {
 
 
-            val call = repository.deleteProductLS(
+            repository.deleteProductLS(
                 al_editProduct[position].c_productS,
                 prepareForaing(al_editProduct[position].fk_c_sessionS)
             )

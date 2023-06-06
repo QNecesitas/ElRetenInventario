@@ -24,6 +24,6 @@ interface OrdersDao {
     fun insertOrders(name: String, products: String, totalPrice: Double, totalInv: Double, discount: Double, day: Int, month: Int, year: Int, type: String, totalTransf: Double)
 
     @Query("DELETE FROM `Order` WHERE c_order = :c_order")
-    fun deleteOrders(c_order: String)
+    fun deleteOrders(c_order: Int)
 
 }
