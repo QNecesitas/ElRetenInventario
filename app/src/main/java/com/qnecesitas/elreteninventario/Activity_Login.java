@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.qnecesitas.elreteninventario.auxiliary.Constants;
 import com.qnecesitas.elreteninventario.data.ModelEditProductS;
 import com.qnecesitas.elreteninventario.data.ModelPassword;
+import com.qnecesitas.elreteninventario.database.Repository;
 import com.qnecesitas.elreteninventario.databinding.ActivityLoginBinding;
 import com.qnecesitas.elreteninventario.network.RetrofitPasswords;
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS;
@@ -33,12 +34,11 @@ import retrofit2.Response;
 public class Activity_Login extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
-    private RetrofitPasswords retrofitPasswords;
+    private Repository repository;
     private ArrayList<ModelPassword> al_password;
     private int countBadPassword = 0;
 
     //Deficit
-    private RetrofitProductsImplS retrofitProductsImplS;
     private ArrayList<ModelEditProductS> alProductsDeficitS;
     private ArrayList<ModelEditProductS> alProductsDeficitLS;
 
@@ -54,7 +54,7 @@ public class Activity_Login extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        retrofitPasswords = new RetrofitPasswords();
+        repository = new Repository(getApplication());
         al_password = new ArrayList<>();
 
         binding.ALTIETPassword.setOnKeyListener((view, i, keyEvent)
@@ -63,7 +63,6 @@ public class Activity_Login extends AppCompatActivity {
         binding.ALBTNStartSession.setOnClickListener(view
                 -> click_login());
 
-        retrofitProductsImplS = new RetrofitProductsImplS();
         alProductsDeficitS = new ArrayList<>();
         alProductsDeficitLS = new ArrayList<>();
 
@@ -92,39 +91,12 @@ public class Activity_Login extends AppCompatActivity {
 
 
     private void loadPasswordInternet() {
-        if (NetworkTools.isOnline(Activity_Login.this, false)) {
-            binding.ALPBCargando.setVisibility(View.VISIBLE);
-
-            Call<ArrayList<ModelPassword>> call = retrofitPasswords.fetchAccounts(Constants.PHP_TOKEN);
-            call.enqueue(new Callback<>() {
-                @Override
-                public void onResponse(@NonNull Call<ArrayList<ModelPassword>> call, @NonNull Response<ArrayList<ModelPassword>> response) {
-
-                    binding.ALPBCargando.setVisibility(View.GONE);
-                    if (response.isSuccessful()) {
-                        al_password = response.body();
-                        if (al_password != null) {
-                            checkPassword();
-                        } else {
-                            Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
-                            binding.ALPBCargando.setVisibility(View.GONE);
-                        }
-                    } else {
-                        Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
-                        binding.ALPBCargando.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ArrayList<ModelPassword>> call, @NonNull Throwable t) {
-                    binding.ALPBCargando.setVisibility(View.GONE);
-                    Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
-                }
-            });
-        } else {
-            Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
+        al_password = repository.fetchAccounts();
+        if (!al_password.isEmpty()) {
+            checkPassword();
         }
     }
+
 
     private void click_dev(){
         Intent intent = new Intent(this, Activity_AboutDev.class);
@@ -156,7 +128,6 @@ public class Activity_Login extends AppCompatActivity {
                     binding.ALTILPassword.setError(null);
                 }else{
                     binding.ALTILPassword.setError(null);
-                    binding.ALPBCargando.setVisibility(View.GONE);
                     Intent intent = new Intent(Activity_Login.this, Activity_MenuSelesperson.class);
                     startActivity(intent);
                 }
@@ -173,59 +144,13 @@ public class Activity_Login extends AppCompatActivity {
     }
 
     private void loadDeficitInternetS(){
-        if (NetworkTools.isOnline(Activity_Login.this, false)) {
-
-            Call<ArrayList<ModelEditProductS>> call = retrofitProductsImplS.fetchProductsDeficit(Constants.PHP_TOKEN, "Almacén");
-            call.enqueue(new Callback<ArrayList<ModelEditProductS>>() {
-                @Override
-                public void onResponse(Call<ArrayList<ModelEditProductS>> call, Response<ArrayList<ModelEditProductS>> response) {
-                    if(response.isSuccessful()){
-                        alProductsDeficitS = response.body();
+        alProductsDeficitS = repository.fetchProductsDeficit( "Almacén");
                         loadDeficitInternetLS();
-                    }else{
-                        Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
-                        binding.ALPBCargando.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ArrayList<ModelEditProductS>> call, Throwable t) {
-                    Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
-                    binding.ALPBCargando.setVisibility(View.GONE);
-                }
-            });
-        }else{
-            Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
-            binding.ALPBCargando.setVisibility(View.GONE);
-        }
     }
 
     private void loadDeficitInternetLS(){
-        if (NetworkTools.isOnline(Activity_Login.this, false)) {
-
-            Call<ArrayList<ModelEditProductS>> call = retrofitProductsImplS.fetchProductsDeficit(Constants.PHP_TOKEN, "Mostrador");
-            call.enqueue(new Callback<ArrayList<ModelEditProductS>>() {
-                @Override
-                public void onResponse(Call<ArrayList<ModelEditProductS>> call, Response<ArrayList<ModelEditProductS>> response) {
-                    binding.ALPBCargando.setVisibility(View.GONE);
-                    if(response.isSuccessful()){
-                        alProductsDeficitLS = response.body();
+      alProductsDeficitLS = repository.fetchProductsDeficit( "Mostrador");
                         notifyNews();
-                    }else{
-                        Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ArrayList<ModelEditProductS>> call, Throwable t) {
-                    Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
-                    binding.ALPBCargando.setVisibility(View.GONE);
-                }
-            });
-        }else{
-            Snackbar.make(binding.ALCLContainerAll, getString(R.string.Revise_su_conexion), Snackbar.LENGTH_LONG).show();
-            binding.ALPBCargando.setVisibility(View.GONE);
-        }
     }
 
     private void notifyNews(){
