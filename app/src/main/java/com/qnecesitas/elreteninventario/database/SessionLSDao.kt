@@ -20,7 +20,7 @@ interface SessionLSDao {
     fun updateSessionLSTransLess(fk_c_sessionLS: String)
 
     @Query("SELECT * FROM SessionLS WHERE fk_c_drawerLS = :fk_c_drawerLS")
-    fun selectSessionLS(fk_c_drawerLS: String) : ArrayList<ModelSessionLS>
+    fun selectSessionLS(fk_c_drawerLS: String) : List<ModelSessionLS>
 
     @Query("INSERT INTO SessionLS VALUES (:c_sessionLS,:fk_c_drawerLS,0)")
     fun insertSessionLS(c_sessionLS: String,fk_c_drawerLS: String)

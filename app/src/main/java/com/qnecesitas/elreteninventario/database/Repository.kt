@@ -121,68 +121,68 @@ class Repository(private val application: Application) {
         shelfSSDao.deleteShelfS(c_shelfS)
     }
 
-    fun fetchAccounts() : ArrayList<ModelPassword>{
-        return accountDao.selectAccount()
+    fun fetchAccounts() : MutableList<ModelPassword>{
+        return accountDao.selectAccount().toMutableList()
     }
 
-    fun fetchDrawersLS(fk_c_shelfLS: String) :ArrayList<ModelDrawerLS>{
-        return drawerLSDao.selectDrawerLS(fk_c_shelfLS)
+    fun fetchDrawersLS(fk_c_shelfLS: String) :MutableList<ModelDrawerLS>{
+        return drawerLSDao.selectDrawerLS(fk_c_shelfLS).toMutableList()
     }
 
-    fun fetchDrawersS(fk_c_shelfS: String) : ArrayList<ModelDrawerS>{
-        return drawerSDao.selectDrawerS(fk_c_shelfS)
+    fun fetchDrawersS(fk_c_shelfS: String) : MutableList<ModelDrawerS>{
+        return drawerSDao.selectDrawerS(fk_c_shelfS).toMutableList()
     }
 
-    fun fetchOrdersAll() : ArrayList<ModelSale>{
-        return ordersDao.selectOrderAll()
+    fun fetchOrdersAll() : MutableList<ModelSale>{
+        return ordersDao.selectOrderAll().toMutableList()
     }
 
-    fun fetchOrdersD(year:Int,month: Int,day: Int) : ArrayList<ModelSale>{
-        return ordersDao.selectOrderD(day,month,year)
+    fun fetchOrdersD(year:Int,month: Int,day: Int) : MutableList<ModelSale>{
+        return ordersDao.selectOrderD(day,month,year).toMutableList()
     }
 
-    fun fetchOrdersM(year: Int,month: Int) : ArrayList<ModelSale>{
-        return ordersDao.selectOrdersM(month,year)
+    fun fetchOrdersM(year: Int,month: Int) : MutableList<ModelSale>{
+        return ordersDao.selectOrdersM(month,year).toMutableList()
     }
 
-    fun fetchOrdersY(year: Int) : ArrayList<ModelSale>{
-        return ordersDao.selectOrderY(year)
+    fun fetchOrdersY(year: Int) : MutableList<ModelSale>{
+        return ordersDao.selectOrderY(year).toMutableList()
     }
 
-    fun fetchProductLSPath(c_productLS: String) : ArrayList<ModelProductPath>{
-        return productLSDao.selectProductLSPath(c_productLS)
+    //fun fetchProductLSPath(c_productLS: String) : MutableList<ModelProductPath>{
+    //    return productLSDao.selectProductLSPath(c_productLS)
+    //}
+
+    //fun fetchProductSPath(c_productS: String): MutableList<ModelProductPath>{
+    //    return productSDao.selectProductLSPath(c_productS)
+    //}
+
+    fun fetchProductsCounter() : MutableList<ModelEditProductS>{
+        return productSDao.selectProdcutSCounter().toMutableList()
     }
 
-    fun fetchProductSPath(c_productS: String): ArrayList<ModelProductPath>{
-        return productSDao.selectProductLSPath(c_productS)
+    //fun fetchProductsDeficit(button:String) : MutableList<ModelEditProductS>{
+    //    if(button == "Almacén"){
+    //        return productSDao.selectProductSDeficit()
+     //   }else{
+     //       return productLSDao.selectProductLSDeficit()
+      //  }
+    //}
+
+    fun fetchProductsLS(fk_c_sessionLS: String) : MutableList<ModelEditProductLS>{
+        return productLSDao.selectProductLS(fk_c_sessionLS).toMutableList()
     }
 
-    fun fetchProductsCounter() : ArrayList<ModelEditProductS>{
-        return productSDao.selectProdcutSCounter()
+    fun fetchProductsLSAll() : MutableList<ModelEditProductLS>{
+        return productLSDao.selectProductLSAll().toMutableList()
     }
 
-    fun fetchProductsDeficit(button:String) : ArrayList<ModelEditProductS>{
-        if(button == "Almacén"){
-            return productSDao.selectProductSDeficit()
-        }else{
-            return productLSDao.selectProductLSDeficit()
-        }
+    fun fetchProductsS(fk_c_sessionS:String) : MutableList<ModelEditProductS>{
+        return productSDao.selectProductS(fk_c_sessionS).toMutableList()
     }
 
-    fun fetchProductsLS(fk_c_sessionLS: String) : ArrayList<ModelEditProductLS>{
-        return productLSDao.selectProductLS(fk_c_sessionLS)
-    }
-
-    fun fetchProductsLSAll() : ArrayList<ModelEditProductLS>{
-        return productLSDao.selectProductLSAll()
-    }
-
-    fun fetchProductsS(fk_c_sessionS:String) : ArrayList<ModelEditProductS>{
-        return productSDao.selectProductS(fk_c_sessionS)
-    }
-
-    fun fetchProductsSAll() : ArrayList<ModelEditProductS> {
-        val result = productSDao.selectProductSAll()
+    fun fetchProductsSAll() : MutableList<ModelEditProductS> {
+        val result = productSDao.selectProductSAll().toMutableList()
         for (it in productLSDao.selectProductLSAll()){
             val newModel = ModelEditProductS(
                 it.c_productLS,
@@ -203,20 +203,20 @@ class Repository(private val application: Application) {
         return result
     }
 
-    fun fetchSessionsLS(fk_c_drawerLS: String) : ArrayList<ModelSessionLS>{
-        return sessionLSDao.selectSessionLS(fk_c_drawerLS)
+    fun fetchSessionsLS(fk_c_drawerLS: String) : MutableList<ModelSessionLS>{
+        return sessionLSDao.selectSessionLS(fk_c_drawerLS).toMutableList()
     }
 
-    fun fetchSessionsS(fk_c_drawerS: String): ArrayList<ModelSessionS>{
-        return sessionSDao.selectSessionS(fk_c_drawerS)
+    fun fetchSessionsS(fk_c_drawerS: String): MutableList<ModelSessionS>{
+        return sessionSDao.selectSessionS(fk_c_drawerS).toMutableList()
     }
 
-    fun fetchShelvesLS(): ArrayList<ModelShelfLS>{
-        return shelfSLSDao.selectShelfLS()
+    fun fetchShelvesLS(): MutableList<ModelShelfLS>{
+        return shelfSLSDao.selectShelfLS().toMutableList()
     }
 
-    fun fetchShelvesS() : ArrayList<ModelShelfS>{
-        return shelfSSDao.selectShelfS()
+    fun fetchShelvesS() : MutableList<ModelShelfS>{
+        return shelfSSDao.selectShelfS().toMutableList()
     }
 
     fun transferProductLS_S(c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionS: String,deficit: Int,exists:Int,sendAll: Int,size: String,brand: String){

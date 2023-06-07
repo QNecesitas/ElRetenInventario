@@ -359,9 +359,9 @@ class Activity_Counter : AppCompatActivity() {
     --------------
      */
     private fun fetchProductsPathInternet(position: Int){
-        val alModelPath = repository.fetchProductSPath(
-            alCounter[position].c_productS
-        )
+       // val alModelPath = repository.fetchProductSPath(
+       //     alCounter[position].c_productS
+        //)
 
 
                     FancyToast.makeText(
@@ -371,8 +371,8 @@ class Activity_Counter : AppCompatActivity() {
                         FancyToast.SUCCESS,
                         false
                     ).show()
-                    val path = alModelPath?.let { makePath(it, position) }
-                    path?.let { showAlertDialogPath(it) }
+                    //val path = alModelPath?.let { makePath(it, position) }
+                    //path?.let { showAlertDialogPath(it) }
                     updateRecyclerAdapter()
 
     }

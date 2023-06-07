@@ -13,6 +13,6 @@ interface AccountDao {
 
 
     @Query("SELECT * FROM `Account`")
-    fun selectAccount() : ArrayList<ModelPassword>
+    fun selectAccount() : List<ModelPassword>
 
 }

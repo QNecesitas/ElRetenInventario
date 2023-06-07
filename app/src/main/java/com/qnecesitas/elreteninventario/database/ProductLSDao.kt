@@ -4,8 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.qnecesitas.elreteninventario.data.ModelEditProductLS
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
-import com.qnecesitas.elreteninventario.data.ModelProductPath
-import com.qnecesitas.elreteninventario.data.ModelSale
 
 @Dao
 interface ProductLSDao {
@@ -27,19 +25,19 @@ interface ProductLSDao {
 
 
     @Query("SELECT * FROM ProductLS ORDER BY name ASC")
-    fun selectProductLSAll() : ArrayList<ModelEditProductLS>
+    fun selectProductLSAll() : List<ModelEditProductLS>
 
 
     @Query("SELECT * FROM ProductLS WHERE fk_c_sessionLS = :fk_c_sessionLS ORDER BY name ASC")
-    fun selectProductLS(fk_c_sessionLS: String) : ArrayList<ModelEditProductLS>
+    fun selectProductLS(fk_c_sessionLS: String) : List<ModelEditProductLS>
 
 
-    @Query("SELECT * FROM ProductLS WHERE amount <= deficit")
-    fun selectProductLSDeficit() : ArrayList<ModelEditProductS>
+    //@Query("SELECT * FROM ProductLS WHERE amount <= deficit")
+    //fun selectProductLSDeficit() : List<ModelEditProductS>
 
 
-    @Query("SELECT ShelfLS.c_shelfLS, DrawerLS.c_drawerLS FROM ProductLS JOIN SessionLS ON ProductLS.fk_c_sessionLS = SessionLS.c_sessionLS JOIN DrawerLS ON SessionLS.fk_c_drawerLS = DrawerLS.c_drawerLS JOIN ShelfLS ON DrawerLS.fk_c_shelfLS = ShelfLS.c_shelfLS WHERE ProductLS.c_productLS = :c_productLS")
-    fun selectProductLSPath(c_productLS: String) : ArrayList<ModelProductPath>
+    //@Query("SELECT ShelfLS.c_shelfLS, DrawerLS.c_drawerLS FROM ProductLS JOIN SessionLS ON ProductLS.fk_c_sessionLS = SessionLS.c_sessionLS JOIN DrawerLS ON SessionLS.fk_c_drawerLS = DrawerLS.c_drawerLS JOIN ShelfLS ON DrawerLS.fk_c_shelfLS = ShelfLS.c_shelfLS WHERE ProductLS.c_productLS = :c_productLS")
+    //fun selectProductLSPath(c_productLS: String) : List<ModelEditProductLS>
 
 
     @Query("UPDATE ProductLS SET amount = :amount WHERE c_productLS = :c_productLS")

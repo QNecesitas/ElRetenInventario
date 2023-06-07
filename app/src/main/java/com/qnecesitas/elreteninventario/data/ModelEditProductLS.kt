@@ -17,7 +17,7 @@ data class ModelEditProductLS(
         @ColumnInfo(name = "deficit") var deficit: Int,
         @ColumnInfo(name = "size") var size: String,
         @ColumnInfo(name = "brand") var brand : String
-): Cloneable, ModelProductG{
+): Cloneable{
     public override fun clone(): ModelEditProductLS{
         return super.clone() as ModelEditProductLS
     }

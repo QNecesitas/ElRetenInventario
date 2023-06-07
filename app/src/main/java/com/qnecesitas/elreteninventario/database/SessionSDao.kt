@@ -19,7 +19,7 @@ interface SessionSDao {
     fun updateSessionSTransMore(c_sessionS: String)
 
     @Query("SELECT * FROM SessionS WHERE fk_c_drawerS = :fk_c_drawerS")
-    fun selectSessionS(fk_c_drawerS: String) : ArrayList<ModelSessionS>
+    fun selectSessionS(fk_c_drawerS: String) : List<ModelSessionS>
 
     @Query("INSERT INTO SessionS VALUES (:c_sessionS,:fk_c_drawerS,0)")
     fun insertSessionS(c_sessionS: String,fk_c_drawerS: String)

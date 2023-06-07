@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.qnecesitas.elreteninventario.data.ModelDrawerS
 import com.qnecesitas.elreteninventario.data.ModelDrawerLS
 import com.qnecesitas.elreteninventario.data.ModelEditProductS

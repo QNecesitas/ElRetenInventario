@@ -12,7 +12,7 @@ import com.qnecesitas.elreteninventario.data.ModelShelfS
 interface ShelfLSDao {
 
     @Query("SELECT * FROM ShelfLS")
-    fun selectShelfLS() : ArrayList<ModelShelfLS>
+    fun selectShelfLS() : List<ModelShelfLS>
 
     @Query("INSERT INTO ShelfLS (c_shelfLS, amount)VALUES(:c_shelfLS,0)")
     fun insertShelfLS(c_shelfLS: String)

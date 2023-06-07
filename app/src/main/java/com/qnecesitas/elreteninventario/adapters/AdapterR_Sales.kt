@@ -11,7 +11,7 @@ import com.qnecesitas.elreteninventario.data.ModelSale
 import com.qnecesitas.elreteninventario.databinding.RecyclerSalesBinding
 import java.util.Locale
 
-class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Context):
+class AdapterR_Sales(val alSales: List<ModelSale>, private val context: Context):
     RecyclerView.Adapter<AdapterR_Sales.SalesViewHolder>() {
 
     private var customFilter: AdapterR_Sales.CustomFilter? = null
@@ -36,14 +36,14 @@ class AdapterR_Sales(val alSales: ArrayList<ModelSale>, private val context: Con
             val mes = modelSale.month.toString()
             val anio = modelSale.year.toString()
             val type = modelSale.type
-            val tranfer = modelSale.totalTranf
+           // TODO val tranfer = modelSale.totalTranf
 
             binding.tvNumeroVenta.text = c_order.toString()
             binding.tvNombVenta.text = nombre
             binding.tvRebajaVenta.text = descuento
             binding.tvPriceTotalVenta.text = precio
             binding.tvType.text = type
-            binding.tvPriceTotalTransferS?.text = tranfer.toString()
+           //TODO binding.tvPriceTotalTransferS?.text = tranfer.toString()
             binding.tvOrderVenta.text = producto.replace("--n--", "\n")
                 .replace("--s--", "   ")
             binding.tvFechaVenta.text = context.getString(R.string.Fecha,dia,mes,anio)

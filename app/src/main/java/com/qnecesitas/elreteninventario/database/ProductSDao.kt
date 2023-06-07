@@ -27,23 +27,23 @@ interface ProductSDao {
 
 
     @Query("SELECT * FROM ProductS ORDER BY name ASC")
-    fun selectProductSAll() : ArrayList<ModelEditProductS>
+    fun selectProductSAll() : List<ModelEditProductS>
 
 
     @Query("SELECT * FROM ProductS WHERE fk_c_sessionS= :fk_c_sessionS ORDER BY name ASC")
-    fun selectProductS(fk_c_sessionS: String) : ArrayList<ModelEditProductS>
+    fun selectProductS(fk_c_sessionS: String) : List<ModelEditProductS>
 
 
     @Query("SELECT * FROM ProductS WHERE amount <= deficit ORDER BY name ASC")
-    fun selectProductSDeficit() : ArrayList<ModelEditProductS>
+    fun selectProductSDeficit() : List<ModelEditProductS>
 
 
     @Query("SELECT * FROM products ORDER BY name ASC")
-    fun selectProdcutSCounter() : ArrayList<ModelEditProductS>
+    fun selectProdcutSCounter() : List<ModelEditProductS>
 
 
-    @Query("SELECT ShelfS.c_shelfS, DrawerS.c_drawerS FROM ProductS JOIN SessionS ON ProductS.fk_c_sessionS = SessionS.c_sessionS JOIN DrawerS ON SessionS.fk_c_drawerS = DrawerS.c_drawerS JOIN ShelfS ON DrawerS.fk_c_shelfS = ShelfS.c_shelfS WHERE ProductS.c_productS = :c_productS")
-    fun selectProductLSPath(c_productS: String): ArrayList<ModelProductPath>
+   // @Query("SELECT ShelfS.c_shelfS, DrawerS.c_drawerS FROM ProductS JOIN SessionS ON ProductS.fk_c_sessionS = SessionS.c_sessionS JOIN DrawerS ON SessionS.fk_c_drawerS = DrawerS.c_drawerS JOIN ShelfS ON DrawerS.fk_c_shelfS = ShelfS.c_shelfS WHERE ProductS.c_productS = :c_productS")
+   // fun selectProductLSPath(c_productS: String): List<ModelProductPath>
 
 
     @Query("UPDATE ProductS SET amount = :amount WHERE c_productS = :c_productS")

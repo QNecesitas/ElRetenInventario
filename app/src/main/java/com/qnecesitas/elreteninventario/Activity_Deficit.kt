@@ -74,10 +74,6 @@ class Activity_Deficit : AppCompatActivity() {
             }
         }
 
-        //No Internet
-        binding.adRetryConnection.setOnClickListener {
-            loadRecyclerInfo()
-        }
 
 
         loadRecyclerInfo()
@@ -96,14 +92,13 @@ class Activity_Deficit : AppCompatActivity() {
 
 
     private fun loadRecyclerInfo() {
-                 al_deficitProduct = repository.fetchProductsDeficit(
-                    selectButton
-                )
+                // al_deficitProduct = repository.fetchProductsDeficit(
+                //    selectButton
+                //) TODO
                             binding.adRecycler.visibility = View.VISIBLE
                             binding.adNotInfo.visibility = View.GONE
                             updateRecyclerAdapter()
     }
-
 
     private fun updateRecyclerAdapter() {
         if (al_deficitProduct.isEmpty()) {

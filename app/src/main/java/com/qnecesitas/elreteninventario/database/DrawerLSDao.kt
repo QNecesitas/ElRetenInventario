@@ -19,7 +19,7 @@ interface DrawerLSDao {
     fun insertDrawerLSUp(c_drawerLSNew: String,fk_c_shelfLS: String,amount: Int)
 
     @Query("SELECT * FROM DrawerLS WHERE fk_c_shelfLS = :fk_c_shelfLS")
-    fun selectDrawerLS(fk_c_shelfLS: String): ArrayList<ModelDrawerLS>
+    fun selectDrawerLS(fk_c_shelfLS: String): List<ModelDrawerLS>
 
     @Query("UPDATE DrawerLS SET amount = amount+1 WHERE c_drawerLS = :fk_c_drawerLS")
     fun updateDrawerLSmore(fk_c_drawerLS: String)

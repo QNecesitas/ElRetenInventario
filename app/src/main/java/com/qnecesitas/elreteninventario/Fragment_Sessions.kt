@@ -13,17 +13,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRSessions
-import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelSessionS
 import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.FragmentSessionsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddSessionBinding
-import com.qnecesitas.elreteninventario.network.RetrofitSessionImpIS
 import com.shashank.sony.fancytoastlib.FancyToast
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
 
 class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 

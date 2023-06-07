@@ -173,17 +173,17 @@ class Activity_Sales : AppCompatActivity() {
     * */
     private fun loadRecyclerInfoAll() {
 
-            al_sales = repository.fetchOrdersAll()
+        al_sales = repository.fetchOrdersAll()
 
                         alertNotInternet(false)
                         updateRecyclerAdapter()
+
 
     }
 
     private fun loadRecyclerInfoYear() {
 
             al_sales = repository.fetchOrdersY(year)
-
                         alertNotInternet(false)
                         updateRecyclerAdapter()
 
