@@ -65,11 +65,11 @@ class Activity_EditProductLS : AppCompatActivity() {
     private var li_info_binding: LiInfoProductBinding? = null
 
     //Edit amount
-    private lateinit var li_alter_amount_binding : LiAlterAmountBinding
+    private lateinit var li_alter_amount_binding: LiAlterAmountBinding
 
     //Edit Product
-    private lateinit var al_editProduct: ArrayList<ModelEditProductLS>
-    private lateinit var al_editProductSAll: ArrayList<ModelEditProductLS>
+    private lateinit var al_editProduct: MutableList<ModelEditProductLS>
+    private lateinit var al_editProductSAll: MutableList<ModelEditProductLS>
     private lateinit var adapterR_editProducts: AdapterR_EditProductLS
     private var isContracted = false
 
@@ -106,7 +106,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         repository = Repository(application)
         //Button Add
 
-        if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin){
+        if (FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
             binding.aepFabAdd.visibility = View.VISIBLE
             binding.aepFabAdd.setOnClickListener { click_add() }
         }
@@ -130,19 +130,25 @@ class Activity_EditProductLS : AppCompatActivity() {
         binding.aepRecycler.setHasFixedSize(true)
         al_editProduct = ArrayList()
         al_editProductSAll = ArrayList()
-        binding.aepIvContract.setOnClickListener{
-            isContracted = if(isContracted) {
+        binding.aepIvContract.setOnClickListener {
+            isContracted = if (isContracted) {
                 binding.aepIvContract.setImageDrawable(
-                    AppCompatResources.getDrawable(this,R.drawable.baseline_format_list_bulleted_24))
+                    AppCompatResources.getDrawable(
+                        this,
+                        R.drawable.baseline_format_list_bulleted_24
+                    )
+                )
                 false
-            }else{
+            } else {
                 binding.aepIvContract.setImageDrawable(
-                    AppCompatResources.getDrawable(this,R.drawable.baseline_grid_on_24))
+                    AppCompatResources.getDrawable(this, R.drawable.baseline_grid_on_24)
+                )
                 true
             }
             updateRecyclerAdapter()
         }
-        adapterR_editProducts = AdapterR_EditProductLS(al_editProduct, applicationContext,isContracted, false)
+        adapterR_editProducts =
+            AdapterR_EditProductLS(al_editProduct, applicationContext, isContracted, false)
 
         //Search
         binding.aepSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -163,10 +169,10 @@ class Activity_EditProductLS : AppCompatActivity() {
     /**Initial thread**/
     private fun loadRecyclerInfo() {
         al_editProduct =
-                if (FragmentsInfo.LAST_CODE_SESSION_LS_SENDED == "no") repository.fetchProductsLSAll()
-                else repository.fetchProductsLS(
-                        FragmentsInfo.LAST_CODE_SESSION_LS_SENDED
-                )
+            if (FragmentsInfo.LAST_CODE_SESSION_LS_SENDED == "no") repository.fetchProductsLSAll()
+            else repository.fetchProductsLS(
+                FragmentsInfo.LAST_CODE_SESSION_LS_SENDED
+            )
         loadRecyclerAllS()
 
     }
@@ -178,14 +184,14 @@ class Activity_EditProductLS : AppCompatActivity() {
     }
 
     private fun updateRecyclerAdapter() {
-        if(al_editProduct.isNotEmpty()){
+        if (al_editProduct.isNotEmpty()) {
             al_editProduct.sortBy { it.name }
         }
-        if(al_editProductSAll.isNotEmpty()){
+        if (al_editProductSAll.isNotEmpty()) {
             al_editProductSAll.sortBy { it.name }
         }
 
-        val layoutManager =binding.aepRecycler.layoutManager as LinearLayoutManager
+        val layoutManager = binding.aepRecycler.layoutManager as LinearLayoutManager
         lastPositionRecycler = layoutManager.findFirstVisibleItemPosition()
 
         if (al_editProduct.isEmpty()) {
@@ -195,7 +201,8 @@ class Activity_EditProductLS : AppCompatActivity() {
         }
 
 
-        adapterR_editProducts = AdapterR_EditProductLS(al_editProduct, binding.root.context, isContracted, false)
+        adapterR_editProducts =
+            AdapterR_EditProductLS(al_editProduct, binding.root.context, isContracted, false)
 
         adapterR_editProducts.setRecyclerOnClickListener(object :
             AdapterR_EditProductLS.RecyclerClickListener {
@@ -204,28 +211,29 @@ class Activity_EditProductLS : AppCompatActivity() {
             }
         })
         binding.aepRecycler.adapter = adapterR_editProducts
-        if(isContracted){
-            binding.aepRecycler.layoutManager = LinearLayoutManager(this,
-                LinearLayoutManager.VERTICAL,false)
-        }else{
+        if (isContracted) {
+            binding.aepRecycler.layoutManager = LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL, false
+            )
+        } else {
             val displayMetrics = DisplayMetrics()
             windowManager.defaultDisplay.getMetrics(displayMetrics)
             val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
-            if(screenWidthDp >= 600){
+            if (screenWidthDp >= 600) {
                 binding.aepRecycler.layoutManager = GridLayoutManager(this, 7)
-            }else {
+            } else {
                 binding.aepRecycler.layoutManager = GridLayoutManager(this, 2)
             }
         }
 
-        if(lastFilterStr.trim().isNotEmpty()){
+        if (lastFilterStr.trim().isNotEmpty()) {
             adapterR_editProducts.getFilter()?.filter(lastFilterStr)
         }
 
-        val layoutManager1 =binding.aepRecycler.layoutManager as LinearLayoutManager
+        val layoutManager1 = binding.aepRecycler.layoutManager as LinearLayoutManager
         layoutManager1.scrollToPosition(lastPositionRecycler)
     }
-
 
 
     /** Alerts in the background**/
@@ -329,61 +337,65 @@ class Activity_EditProductLS : AppCompatActivity() {
             popupMenu.menuInflater.inflate(R.menu.menu_product_options, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 alertDialog.dismiss()
-                    when (menuItem.itemId) {
-                        R.id.option_cantidad -> {
-                            if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
-                                li_amount(position)
-                            }else{
-                                FancyToast.makeText(
-                                    applicationContext,
-                                    getString(R.string.No_acceso),
-                                    FancyToast.LENGTH_LONG,
-                                    FancyToast.WARNING,
-                                    false
-                                ).show()
-                            }
+                when (menuItem.itemId) {
+                    R.id.option_cantidad -> {
+                        if (FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
+                            li_amount(position)
+                        } else {
+                            FancyToast.makeText(
+                                applicationContext,
+                                getString(R.string.No_acceso),
+                                FancyToast.LENGTH_LONG,
+                                FancyToast.WARNING,
+                                false
+                            ).show()
                         }
-                        R.id.option_editar -> {
-                            if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
-                                li_editProduct(position)
-                            }else{
-                                FancyToast.makeText(
-                                    applicationContext,
-                                    getString(R.string.No_acceso),
-                                    FancyToast.LENGTH_LONG,
-                                    FancyToast.WARNING,
-                                    false
-                                ).show()
-                            }
-                        }
-                        R.id.option_transferir -> {
-                            if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
-                                li_amountTransf(position)
-                            }else{
-                                FancyToast.makeText(
-                                    applicationContext,
-                                    getString(R.string.No_acceso),
-                                    FancyToast.LENGTH_LONG,
-                                    FancyToast.WARNING,
-                                    false
-                                ).show()
-                            }
-                        }
-                        R.id.option_eliminar -> {
-                            if(FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
-                                showAlertDialogDeleteProducts(position)
-                            }else{
-                                FancyToast.makeText(
-                                    applicationContext,
-                                    getString(R.string.No_acceso),
-                                    FancyToast.LENGTH_LONG,
-                                    FancyToast.WARNING,
-                                    false
-                                ).show()
-                            }
-                        }
-                        R.id.option_ubicacion -> findLocationClick(position)
                     }
+
+                    R.id.option_editar -> {
+                        if (FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
+                            li_editProduct(position)
+                        } else {
+                            FancyToast.makeText(
+                                applicationContext,
+                                getString(R.string.No_acceso),
+                                FancyToast.LENGTH_LONG,
+                                FancyToast.WARNING,
+                                false
+                            ).show()
+                        }
+                    }
+
+                    R.id.option_transferir -> {
+                        if (FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
+                            li_amountTransf(position)
+                        } else {
+                            FancyToast.makeText(
+                                applicationContext,
+                                getString(R.string.No_acceso),
+                                FancyToast.LENGTH_LONG,
+                                FancyToast.WARNING,
+                                false
+                            ).show()
+                        }
+                    }
+
+                    R.id.option_eliminar -> {
+                        if (FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
+                            showAlertDialogDeleteProducts(position)
+                        } else {
+                            FancyToast.makeText(
+                                applicationContext,
+                                getString(R.string.No_acceso),
+                                FancyToast.LENGTH_LONG,
+                                FancyToast.WARNING,
+                                false
+                            ).show()
+                        }
+                    }
+
+                    R.id.option_ubicacion -> findLocationClick(position)
+                }
                 false
             }
             popupMenu.show()
@@ -434,7 +446,7 @@ class Activity_EditProductLS : AppCompatActivity() {
                 .skipMemoryCache(true)
                 .into(it)
         }
-        li_add_binding?.tietCode?.isEnabled =false
+        li_add_binding?.tietCode?.isEnabled = false
         li_add_binding?.tietDeficit?.setText(deficit.toString())
 
 
@@ -502,7 +514,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         var statePhoto: Int
         var deficit: Int
         var size: String
-        var brand : String
+        var brand: String
 
         li_add_binding?.tietCode?.setText(c_Product)
 
@@ -567,7 +579,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Filling and listeners
-        var currentAmount : Int = al_editProduct.get(position).amount
+        var currentAmount: Int = al_editProduct.get(position).amount
         li_alter_amount_binding.et.setText(currentAmount.toString())
 
         li_alter_amount_binding.ivBtnMore.setOnClickListener(View.OnClickListener {
@@ -595,20 +607,21 @@ class Activity_EditProductLS : AppCompatActivity() {
                     currentAmount = li_alter_amount_binding.et.getText().toString().toInt()
                 }
             }
+
             override fun afterTextChanged(editable: Editable) {}
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         })
 
-        li_alter_amount_binding.btnAccept.setOnClickListener{
+        li_alter_amount_binding.btnAccept.setOnClickListener {
             alertDialog.dismiss()
-            if(li_alter_amount_binding.et.text.toString().trim().isNotEmpty()) {
+            if (li_alter_amount_binding.et.text.toString().trim().isNotEmpty()) {
                 uploadAmountChangesInternet(currentAmount, position)
-            }else{
+            } else {
                 li_alter_amount_binding.et.error = getString(R.string.este_campo_no_debe_vacio)
             }
         }
 
-        li_alter_amount_binding.btnCancel.setOnClickListener{
+        li_alter_amount_binding.btnCancel.setOnClickListener {
             alertDialog.dismiss()
         }
 
@@ -627,7 +640,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Filling and listeners
-        var currentAmount : Int = al_editProduct.get(position).amount
+        var currentAmount: Int = al_editProduct.get(position).amount
         li_alter_amount_binding.et.setText(currentAmount.toString())
 
         li_alter_amount_binding.ivBtnMore.setOnClickListener(View.OnClickListener {
@@ -651,28 +664,31 @@ class Activity_EditProductLS : AppCompatActivity() {
                     li_alter_amount_binding.et.setText(currentAmount.toString())
                 } else if (li_alter_amount_binding.et.getText().toString() == "") {
                     currentAmount = 1
-                } else if(li_alter_amount_binding.et.getText().toString().toInt() > al_editProduct.get(position).amount ){
+                } else if (li_alter_amount_binding.et.getText().toString()
+                        .toInt() > al_editProduct.get(position).amount
+                ) {
                     li_alter_amount_binding.et.setText(al_editProduct.get(position).amount.toString())
-                }else{
+                } else {
                     currentAmount = li_alter_amount_binding.et.getText().toString().toInt()
                 }
             }
+
             override fun afterTextChanged(editable: Editable) {}
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         })
 
-        li_alter_amount_binding.btnAccept.setOnClickListener{
+        li_alter_amount_binding.btnAccept.setOnClickListener {
             alertDialog.dismiss()
-            if(li_alter_amount_binding.et.text.toString().trim().isNotEmpty()) {
+            if (li_alter_amount_binding.et.text.toString().trim().isNotEmpty()) {
                 lastTranferAmount = li_alter_amount_binding.et.text.toString().toInt()
                 checkIfExistIfAllSended(position);
                 showClTransfer(position)
-            }else{
+            } else {
                 li_alter_amount_binding.et.error = getString(R.string.este_campo_no_debe_vacio)
             }
         }
 
-        li_alter_amount_binding.btnCancel.setOnClickListener{
+        li_alter_amount_binding.btnCancel.setOnClickListener {
             alertDialog.dismiss()
         }
 
@@ -687,20 +703,20 @@ class Activity_EditProductLS : AppCompatActivity() {
         lastTransferAllFill = 0
         lastTransferExist = 0
 
-        for (it in al_editProductSAll){
-            if(it.c_productLS == al_editProduct[position].c_productLS ){
+        for (it in al_editProductSAll) {
+            if (it.c_productLS == al_editProduct[position].c_productLS) {
                 lastTransferExist = 1
             }
         }
 
-        if(al_editProduct[position].amount == lastTranferAmount){
+        if (al_editProduct[position].amount == lastTranferAmount) {
             lastTransferAllFill = 1
         }
 
 
     }
 
-    private fun findLocationClick(position: Int){
+    private fun findLocationClick(position: Int) {
         fetchProductsPathInternet(position)
     }
 
@@ -721,7 +737,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         statePhoto: Int,
         deficit: Int,
         size: String,
-        brand : String
+        brand: String
     ) {
         repository.addProductLS(
             c_Product,
@@ -737,28 +753,28 @@ class Activity_EditProductLS : AppCompatActivity() {
             brand
         )
 
-                        val model = ModelEditProductLS(
-                            c_Product,
-                            n_Product,
-                            FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
-                            amount,
-                            buyPrice,
-                            salePrice,
-                            descr,
-                            statePhoto,
-                            deficit,
-                            size,
-                            brand
-                        )
-                        al_editProduct.add(model)
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            applicationContext,
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
+        val model = ModelEditProductLS(
+            c_Product,
+            n_Product,
+            FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
+            amount,
+            buyPrice,
+            salePrice,
+            descr,
+            statePhoto,
+            deficit,
+            size,
+            brand
+        )
+        al_editProduct.add(model)
+        updateRecyclerAdapter()
+        FancyToast.makeText(
+            applicationContext,
+            getString(R.string.Operacion_realizada_con_exito),
+            FancyToast.LENGTH_LONG,
+            FancyToast.SUCCESS,
+            false
+        ).show()
     }
 
     private fun updateProductInternet(
@@ -773,7 +789,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         position: Int,
         deficit: Int,
         size: String,
-        brand : String
+        brand: String
     ) {
         repository.updateProductLS(
             c_ProductOld,
@@ -789,105 +805,105 @@ class Activity_EditProductLS : AppCompatActivity() {
             size,
             brand
         )
-                        val model = ModelEditProductLS(
-                            c_Product,
-                            name,
-                            FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
-                            amount,
-                            buyPrice,
-                            salePrice,
-                            descr,
-                            statePhoto,
-                            deficit,
-                            size,
-                            brand
-                        )
-                        al_editProduct[position] = model
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            this@Activity_EditProductLS,
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
+        val model = ModelEditProductLS(
+            c_Product,
+            name,
+            FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
+            amount,
+            buyPrice,
+            salePrice,
+            descr,
+            statePhoto,
+            deficit,
+            size,
+            brand
+        )
+        al_editProduct[position] = model
+        updateRecyclerAdapter()
+        FancyToast.makeText(
+            this@Activity_EditProductLS,
+            getString(R.string.Operacion_realizada_con_exito),
+            FancyToast.LENGTH_LONG,
+            FancyToast.SUCCESS,
+            false
+        ).show()
     }
 
     private fun deleteProductInternet(position: Int) {
         repository.deleteProductLS(
-                al_editProduct[position].c_productLS,
-                al_editProduct[position].fk_c_sessionLS
-            )
-                        FancyToast.makeText(
-                            this@Activity_EditProductLS,
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                        al_editProduct.removeAt(position)
-                        updateRecyclerAdapter()
+            al_editProduct[position].c_productLS,
+            al_editProduct[position].fk_c_sessionLS
+        )
+        FancyToast.makeText(
+            this@Activity_EditProductLS,
+            getString(R.string.Operacion_realizada_con_exito),
+            FancyToast.LENGTH_LONG,
+            FancyToast.SUCCESS,
+            false
+        ).show()
+        al_editProduct.removeAt(position)
+        updateRecyclerAdapter()
     }
 
     private fun transferProductInternet(position: Int, codeSession: String) {
         repository.transferProductLS_S(
-                al_editProduct[position].c_productLS,
-                al_editProduct[position].name,
-                al_editProduct[position].fk_c_sessionLS,
-                lastTranferAmount,
-                al_editProduct[position].buyPrice,
-                al_editProduct[position].salePrice,
-                al_editProduct[position].descr,
-                al_editProduct[position].statePhoto,
-                codeSession,
-                al_editProduct[position].deficit,
-                lastTransferExist,
-                lastTransferAllFill,
-                al_editProduct[position].size,
-                al_editProduct[position].brand
-            )
-                        FancyToast.makeText(
-                            this@Activity_EditProductLS,
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                        loadRecyclerInfo()
+            al_editProduct[position].c_productLS,
+            al_editProduct[position].name,
+            al_editProduct[position].fk_c_sessionLS,
+            lastTranferAmount,
+            al_editProduct[position].buyPrice,
+            al_editProduct[position].salePrice,
+            al_editProduct[position].descr,
+            al_editProduct[position].statePhoto,
+            codeSession,
+            al_editProduct[position].deficit,
+            lastTransferExist,
+            lastTransferAllFill,
+            al_editProduct[position].size,
+            al_editProduct[position].brand
+        )
+        FancyToast.makeText(
+            this@Activity_EditProductLS,
+            getString(R.string.Operacion_realizada_con_exito),
+            FancyToast.LENGTH_LONG,
+            FancyToast.SUCCESS,
+            false
+        ).show()
+        loadRecyclerInfo()
     }
 
-    private fun uploadAmountChangesInternet(amount: Int, position: Int){
-       repository.alterAmountLS(
-                al_editProduct[position].c_productLS,
-                amount
-            )
-                        FancyToast.makeText(
-                            this@Activity_EditProductLS,
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                        al_editProduct[position].amount = amount
-                        updateRecyclerAdapter()
+    private fun uploadAmountChangesInternet(amount: Int, position: Int) {
+        repository.alterAmountLS(
+            al_editProduct[position].c_productLS,
+            amount
+        )
+        FancyToast.makeText(
+            this@Activity_EditProductLS,
+            getString(R.string.Operacion_realizada_con_exito),
+            FancyToast.LENGTH_LONG,
+            FancyToast.SUCCESS,
+            false
+        ).show()
+        al_editProduct[position].amount = amount
+        updateRecyclerAdapter()
     }
 
-    private fun fetchProductsPathInternet(position: Int){
+    private fun fetchProductsPathInternet(position: Int) {
 
-                    FancyToast.makeText(
-                        this@Activity_EditProductLS,
-                        getString(R.string.Operacion_realizada_con_exito),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.SUCCESS,
-                        false
-                    ).show()
-
-                    val alModelPath = repository.fetchProductLSPath(
-                        al_editProduct[position].c_productLS
-                    )
-                   val path = alModelPath?.let { makePath(it, position) }
-                   path?.let { showAlertDialogPath(it) }
-                    updateRecyclerAdapter()
+        FancyToast.makeText(
+            this@Activity_EditProductLS,
+            getString(R.string.Operacion_realizada_con_exito),
+            FancyToast.LENGTH_LONG,
+            FancyToast.SUCCESS,
+            false
+        ).show()
+/*
+        val alModelPath = repository.fetchProductLSPath(
+            al_editProduct[position].c_productLS
+        )
+        val path = alModelPath?.let { makePath(it, position) }
+        path?.let { showAlertDialogPath(it) }*/
+        updateRecyclerAdapter()
     }
 
 
@@ -1020,7 +1036,11 @@ class Activity_EditProductLS : AppCompatActivity() {
                 )
                 .start(this)
         } catch (e: Exception) {
-            Toast.makeText(this@Activity_EditProductLS, getString(R.string.error), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@Activity_EditProductLS,
+                getString(R.string.error),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -1034,7 +1054,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         }
     }
 
-    private fun makePath(al_modelPath: ArrayList<ModelProductPath>,position: Int): String{
+    private fun makePath(al_modelPath: ArrayList<ModelProductPath>, position: Int): String {
         val shelfCode = al_modelPath[0].fk_c_shelfS
 
         val drawerCode = al_modelPath[0].fk_c_drawerS

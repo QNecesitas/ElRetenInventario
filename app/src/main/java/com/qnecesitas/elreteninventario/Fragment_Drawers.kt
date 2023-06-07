@@ -29,7 +29,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     private var openDrawer: OpenDrawerS? = null
     //Recycler
     private lateinit var binding: FragmentDrawersBinding
-    private lateinit var al_drawers: ArrayList<ModelDrawerS>
+    private lateinit var al_drawers: MutableList<ModelDrawerS>
     private lateinit var adapterRDrawers: AdapterRDrawers
 
     //Internet
