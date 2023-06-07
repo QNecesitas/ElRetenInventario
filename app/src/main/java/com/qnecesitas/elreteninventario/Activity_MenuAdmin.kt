@@ -19,7 +19,7 @@ class Activity_MenuAdmin : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
-        binding.toolbar.setNavigationOnClickListener {finish()}
+        binding.toolbar.setNavigationOnClickListener { finish() }
 
         binding.amaCvStore.setOnClickListener { click_store() }
 
@@ -29,48 +29,48 @@ class Activity_MenuAdmin : AppCompatActivity() {
 
         binding.amaCvOrders.setOnClickListener { click_orders() }
 
-        binding.settings.setOnClickListener{click_settings()}
+        binding.settings.setOnClickListener { click_settings() }
 
-        binding.cvProductsLs.setOnClickListener{click_products_ls()}
+        binding.cvProductsLs.setOnClickListener { click_products_ls() }
 
         binding.amaCvDeficit.setOnClickListener { click_deficit() }
 
     }
 
     private fun click_store() {
-        val intent = Intent(this, Activity_Store::class.java)
+        val intent = Intent(this , Activity_Store::class.java)
         startActivity(intent)
     }
 
     private fun click_statistics() {
-        val intent = Intent(this, Statistics::class.java)
+        val intent = Intent(this , Statistics::class.java)
         startActivity(intent)
     }
 
     private fun click_products() {
         FragmentsInfo.LAST_CODE_SESSION_SENDED = "no"
-        val intent = Intent(this, Activity_EditProduct::class.java)
+        val intent = Intent(this , Activity_EditProduct::class.java)
         startActivity(intent)
     }
 
     private fun click_orders() {
-        val intent = Intent(this, Activity_Sales::class.java)
+        val intent = Intent(this , Activity_Sales::class.java)
         startActivity(intent)
     }
 
-    private fun click_settings(){
-        val intent = Intent(this, Activity_Settings::class.java)
+    private fun click_settings() {
+        val intent = Intent(this , Activity_Settings::class.java)
         startActivity(intent)
     }
 
-    private fun click_products_ls(){
+    private fun click_products_ls() {
         FragmentsInfo.STORE_ACCESS = FragmentsInfo.Companion.EAccess.Admin
-        val intent = Intent(this, Activity_LittleStore::class.java)
+        val intent = Intent(this , Activity_LittleStore::class.java)
         startActivity(intent)
     }
 
-    private fun click_deficit(){
-        val intent = Intent(this, Activity_Deficit::class.java)
+    private fun click_deficit() {
+        val intent = Intent(this , Activity_Deficit::class.java)
         startActivity(intent)
     }
 

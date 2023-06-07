@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.qnecesitas.elreteninventario.adapters.AdapterR_Sales
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelSale
@@ -23,6 +24,7 @@ import com.qnecesitas.elreteninventario.databinding.LiDateYmBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYmdBinding
 import com.qnecesitas.elreteninventario.network.RetrofitSalesImpl
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -73,19 +75,19 @@ class Activity_Sales : AppCompatActivity() {
 
         //Spinner
         val alSpinner = arrayListOf(
-            getString(R.string.todo),
-            getString(R.string.Dia),
-            getString(R.string.Mes),
+            getString(R.string.todo) ,
+            getString(R.string.Dia) ,
+            getString(R.string.Mes) ,
             getString(R.string.Anno)
         )
         val adapterSpinner =
-            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, alSpinner);
+            ArrayAdapter<String>(this , android.R.layout.simple_spinner_item , alSpinner);
         binding.spinner.adapter = adapterSpinner
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
+                parent: AdapterView<*>? ,
+                view: View? ,
+                position: Int ,
                 long: Long
             ) {
                 val value: String = parent?.getItemAtPosition(position).toString()
@@ -160,7 +162,7 @@ class Activity_Sales : AppCompatActivity() {
 
         //Recycler
         al_sales = ArrayList()
-        adapterrSales = AdapterR_Sales(al_sales, this)
+        adapterrSales = AdapterR_Sales(al_sales , this)
         binding.rvSales.adapter = adapterrSales
         adapterrSales.setCloseClick(object : AdapterR_Sales.ITouchClose {
             override fun onClickClose(position: Int) {
@@ -182,38 +184,50 @@ class Activity_Sales : AppCompatActivity() {
     * ---------------------------------
     * */
     private fun loadRecyclerInfoAll() {
+        lifecycleScope.launch {
 
-        al_sales = repository.fetchOrdersAll()
 
-        alertNotInternet(false)
-        updateRecyclerAdapter()
+            al_sales = repository.fetchOrdersAll()
+
+            alertNotInternet(false)
+            updateRecyclerAdapter()
+        }
 
 
     }
 
     private fun loadRecyclerInfoYear() {
+        lifecycleScope.launch {
 
-        al_sales = repository.fetchOrdersY(year)
-        alertNotInternet(false)
-        updateRecyclerAdapter()
+
+            al_sales = repository.fetchOrdersY(year)
+            alertNotInternet(false)
+            updateRecyclerAdapter()
+        }
 
     }
 
     private fun loadRecyclerInfoMonth() {
+        lifecycleScope.launch {
 
-        al_sales = repository.fetchOrdersM(year, month)
 
-        alertNotInternet(false)
-        updateRecyclerAdapter()
+            al_sales = repository.fetchOrdersM(year , month)
+
+            alertNotInternet(false)
+            updateRecyclerAdapter()
+        }
 
     }
 
     private fun loadRecyclerInfoDay() {
+        lifecycleScope.launch {
 
-        al_sales = repository.fetchOrdersD(year, month, day)
 
-        alertNotInternet(false)
-        updateRecyclerAdapter()
+            al_sales = repository.fetchOrdersD(year , month , day)
+
+            alertNotInternet(false)
+            updateRecyclerAdapter()
+        }
 
     }
 
@@ -228,7 +242,7 @@ class Activity_Sales : AppCompatActivity() {
             alertNotElements(false)
         }
 
-        adapterrSales = AdapterR_Sales(al_sales, this)
+        adapterrSales = AdapterR_Sales(al_sales , this)
         adapterrSales.setCloseClick(object : AdapterR_Sales.ITouchClose {
             override fun onClickClose(position: Int) {
                 showAlertCloseSales(position)
@@ -280,27 +294,30 @@ class Activity_Sales : AppCompatActivity() {
         //set listeners for dialog buttons
         builder.setPositiveButton(
             R.string.Si
-        ) { dialog, _ ->
+        ) { dialog , _ ->
             dialog.dismiss()
-            deleteSaleInternet(al_sales[position].c_order, position)
+            deleteSaleInternet(al_sales[position].c_order , position)
         }
-        builder.setNegativeButton(R.string.No,
-            DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
+        builder.setNegativeButton(R.string.No ,
+            DialogInterface.OnClickListener { dialog , _ -> dialog.dismiss() })
 
         //create the alert dialog and show it
         builder.create().show()
     }
 
-    private fun deleteSaleInternet(orderCode: Int, position: Int) {
+    private fun deleteSaleInternet(orderCode: Int , position: Int) {
+        lifecycleScope.launch {
 
-        val call = repository.deleteOrder(orderCode)
+
+            repository.deleteOrder(orderCode)
+        }
 
         loadRecyclerInfoAll()
         FancyToast.makeText(
-            this@Activity_Sales,
-            getString(R.string.Operacion_realizada_con_exito),
-            FancyToast.LENGTH_LONG,
-            FancyToast.SUCCESS,
+            this@Activity_Sales ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
             false
         ).show()
 
@@ -362,17 +379,17 @@ class Activity_Sales : AppCompatActivity() {
         liBinding.ilNpMonth.maxValue = 11
         liBinding.ilNpMonth.minValue = 0
         val months = arrayOf(
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
+            "Enero" ,
+            "Febrero" ,
+            "Marzo" ,
+            "Abril" ,
+            "Mayo" ,
+            "Junio" ,
+            "Julio" ,
+            "Agosto" ,
+            "Septiembre" ,
+            "Octubre" ,
+            "Noviembre" ,
             "Diciembre"
         )
         liBinding.ilNpMonth.displayedValues = months
@@ -414,17 +431,17 @@ class Activity_Sales : AppCompatActivity() {
         liBinding.ilNpDay.minValue = 1
         liBinding.ilNpDay.maxValue = 31
         val months = arrayOf(
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
+            "Enero" ,
+            "Febrero" ,
+            "Marzo" ,
+            "Abril" ,
+            "Mayo" ,
+            "Junio" ,
+            "Julio" ,
+            "Agosto" ,
+            "Septiembre" ,
+            "Octubre" ,
+            "Noviembre" ,
             "Diciembre"
         )
         liBinding.ilNpMonth.displayedValues = months

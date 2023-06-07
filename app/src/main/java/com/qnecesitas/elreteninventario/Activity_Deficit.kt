@@ -48,7 +48,7 @@ class Activity_Deficit : AppCompatActivity() {
         //RecyclerView
         binding.adRecycler.setHasFixedSize(true)
         al_deficitProduct = ArrayList()
-        adapterR_DeficitProduct = AdapterR_DeficitProduct(al_deficitProduct, applicationContext)
+        adapterR_DeficitProduct = AdapterR_DeficitProduct(al_deficitProduct , applicationContext)
 
         //Refresh
         repository = Repository(application as ElRetenApplication)
@@ -56,7 +56,7 @@ class Activity_Deficit : AppCompatActivity() {
 
 
         //Radio Group
-        binding.rg.setOnCheckedChangeListener { _, id ->
+        binding.rg.setOnCheckedChangeListener { _ , id ->
             when (id) {
                 R.id.rb_almacen -> {
                     selectButton = "Almacén"
@@ -80,10 +80,10 @@ class Activity_Deficit : AppCompatActivity() {
 
     }
 
-    private fun eventKeyboard(view: View, keyEvent: KeyEvent): Boolean {
+    private fun eventKeyboard(view: View , keyEvent: KeyEvent): Boolean {
         if (keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
             val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken , 0)
 
             loadRecyclerInfo()
         }
@@ -108,7 +108,7 @@ class Activity_Deficit : AppCompatActivity() {
             binding.adNotInfo.visibility = View.GONE
             binding.adRecycler.visibility = View.VISIBLE
         }
-        adapterR_DeficitProduct = AdapterR_DeficitProduct(al_deficitProduct,this)
+        adapterR_DeficitProduct = AdapterR_DeficitProduct(al_deficitProduct , this)
         binding.adRecycler.adapter = adapterR_DeficitProduct
 
     }

@@ -27,6 +27,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -48,6 +49,7 @@ import com.qnecesitas.elreteninventario.network.RetrofitProductsImplLS
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -165,23 +167,26 @@ class Activity_EditProduct : AppCompatActivity() {
 
     /**Initial thread**/
     private fun loadRecyclerInfo() {
-        val call =
+        lifecycleScope.launch {
             if (FragmentsInfo.LAST_CODE_SESSION_SENDED == "no") repository.fetchProductsSAll()
             else repository.fetchProductsS(
                 FragmentsInfo.LAST_CODE_SESSION_SENDED
             )
 
-        alertNotInternet(false)
-        loadRecyclerAllLS()
+            alertNotInternet(false)
+            loadRecyclerAllLS()
+        }
 
     }
 
     private fun loadRecyclerAllLS() {
+        lifecycleScope.launch {
 
-        val call = repository.fetchProductsLSAll()
+            val call = repository.fetchProductsLSAll()
 
-        alertNotInternet(false)
-        updateRecyclerAdapter()
+            alertNotInternet(false)
+            updateRecyclerAdapter()
+        }
 
     }
 
@@ -746,20 +751,22 @@ class Activity_EditProduct : AppCompatActivity() {
         size: String ,
         brand: String
     ) {
+        lifecycleScope.launch {
 
-        repository.addProduct(
-            c_Product ,
-            n_Product ,
-            FragmentsInfo.LAST_CODE_SESSION_SENDED ,
-            amount ,
-            buyPrice ,
-            salePrice ,
-            descr ,
-            imageFile ,
-            deficit ,
-            size ,
-            brand
-        )
+            repository.addProduct(
+                c_Product ,
+                n_Product ,
+                FragmentsInfo.LAST_CODE_SESSION_SENDED ,
+                amount ,
+                buyPrice ,
+                salePrice ,
+                descr ,
+                imageFile ,
+                deficit ,
+                size ,
+                brand
+            )
+        }
 
         val model = ModelEditProductS(
             c_Product ,
@@ -799,21 +806,23 @@ class Activity_EditProduct : AppCompatActivity() {
         size: String ,
         brand: String
     ) {
+        lifecycleScope.launch {
 
-        repository.updateProduct(
-            imageFile ,
-            c_Product ,
-            name ,
-            al_editProduct[position].fk_c_sessionS ,
-            amount ,
-            buyPrice ,
-            salePrice ,
-            descr ,
-            deficit ,
-            statePhoto ,
-            size ,
-            brand
-        )
+            repository.updateProduct(
+                imageFile ,
+                c_Product ,
+                name ,
+                al_editProduct[position].fk_c_sessionS ,
+                amount ,
+                buyPrice ,
+                salePrice ,
+                descr ,
+                deficit ,
+                statePhoto ,
+                size ,
+                brand
+            )
+        }
 
         loadRecyclerInfo()
         updateRecyclerAdapter()
@@ -840,21 +849,23 @@ class Activity_EditProduct : AppCompatActivity() {
         size: String ,
         brand: String
     ) {
+        lifecycleScope.launch {
 
-        repository.updateProductLS(
-            c_Product ,
-            imageFile ,
-            c_Product ,
-            name ,
-            prepareForaing(al_editProduct[position].fk_c_sessionS) ,
-            amount ,
-            buyPrice ,
-            salePrice ,
-            descr ,
-            deficit ,
-            size ,
-            brand
-        )
+            repository.updateProductLS(
+                c_Product ,
+                imageFile ,
+                c_Product ,
+                name ,
+                prepareForaing(al_editProduct[position].fk_c_sessionS) ,
+                amount ,
+                buyPrice ,
+                salePrice ,
+                descr ,
+                deficit ,
+                size ,
+                brand
+            )
+        }
 
         loadRecyclerInfo()
         updateRecyclerAdapter()
@@ -880,20 +891,22 @@ class Activity_EditProduct : AppCompatActivity() {
         size: String ,
         brand: String
     ) {
-        if (isNotDuplicatedAd(repository.fetchProductsSAll() , c_Product))
+        lifecycleScope.launch {
+            if (isNotDuplicatedAd(repository.fetchProductsSAll() , c_Product))
 
-            addProductInternet(
-                c_Product ,
-                n_Product ,
-                amount ,
-                buyPrice ,
-                salePrice ,
-                descr ,
-                statePhoto ,
-                deficit ,
-                size ,
-                brand
-            )
+                addProductInternet(
+                    c_Product ,
+                    n_Product ,
+                    amount ,
+                    buyPrice ,
+                    salePrice ,
+                    descr ,
+                    statePhoto ,
+                    deficit ,
+                    size ,
+                    brand
+                )
+        }
 
     }
 
@@ -911,12 +924,14 @@ class Activity_EditProduct : AppCompatActivity() {
     }
 
     private fun deleteProductInternet(position: Int) {
+        lifecycleScope.launch {
 
 
-        repository.deleteProduct(
-            al_editProduct[position].c_productS ,
-            al_editProduct[position].fk_c_sessionS
-        )
+            repository.deleteProduct(
+                al_editProduct[position].c_productS ,
+                al_editProduct[position].fk_c_sessionS
+            )
+        }
 
 
 
@@ -934,12 +949,14 @@ class Activity_EditProduct : AppCompatActivity() {
     }
 
     private fun deleteProductInternetLS(position: Int) {
+        lifecycleScope.launch {
 
 
-        repository.deleteProductLS(
-            al_editProduct[position].c_productS ,
-            prepareForaing(al_editProduct[position].fk_c_sessionS)
-        )
+            repository.deleteProductLS(
+                al_editProduct[position].c_productS ,
+                prepareForaing(al_editProduct[position].fk_c_sessionS)
+            )
+        }
 
 
 
@@ -956,23 +973,25 @@ class Activity_EditProduct : AppCompatActivity() {
     }
 
     private fun transferProductInternet(position: Int , codeSession: String) {
+        lifecycleScope.launch {
 
-        repository.transferProductS_LS(
-            al_editProduct[position].c_productS ,
-            al_editProduct[position].name ,
-            prepareForaing(al_editProduct[position].fk_c_sessionS) ,
-            lastTranferAmount ,
-            al_editProduct[position].buyPrice ,
-            al_editProduct[position].salePrice ,
-            al_editProduct[position].descr ,
-            al_editProduct[position].statePhoto ,
-            codeSession ,
-            al_editProduct[position].deficit ,
-            lastTransferExist ,
-            lastTransferAllFill ,
-            al_editProduct[position].size ,
-            al_editProduct[position].brand
-        )
+            repository.transferProductS_LS(
+                al_editProduct[position].c_productS ,
+                al_editProduct[position].name ,
+                prepareForaing(al_editProduct[position].fk_c_sessionS) ,
+                lastTranferAmount ,
+                al_editProduct[position].buyPrice ,
+                al_editProduct[position].salePrice ,
+                al_editProduct[position].descr ,
+                al_editProduct[position].statePhoto ,
+                codeSession ,
+                al_editProduct[position].deficit ,
+                lastTransferExist ,
+                lastTransferAllFill ,
+                al_editProduct[position].size ,
+                al_editProduct[position].brand
+            )
+        }
 
         FancyToast.makeText(
             this@Activity_EditProduct ,
@@ -987,12 +1006,14 @@ class Activity_EditProduct : AppCompatActivity() {
 
 
     private fun uploadAmountChangesInternet(amount: Int , position: Int) {
+        lifecycleScope.launch {
 
 
-        val call = repository.alterAmountS(
-            al_editProduct[position].c_productS ,
-            amount
-        )
+            repository.alterAmountS(
+                al_editProduct[position].c_productS ,
+                amount
+            )
+        }
 
 
 
@@ -1009,12 +1030,14 @@ class Activity_EditProduct : AppCompatActivity() {
     }
 
     private fun uploadAmountChangesInternetLS(amount: Int , position: Int) {
+        lifecycleScope.launch {
 
 
-        repository.alterAmountS(
-            al_editProduct[position].c_productS ,
-            amount
-        )
+            repository.alterAmountS(
+                al_editProduct[position].c_productS ,
+                amount
+            )
+        }
 
 
 
@@ -1051,9 +1074,9 @@ class Activity_EditProduct : AppCompatActivity() {
     }
 
     private fun fetchProductsPathInternetLS(position: Int) {
-       /* val alModelPath = repository.fetchProductSPath(
-            al_editProduct[position].c_productS
-        )TODO */
+        /* val alModelPath = repository.fetchProductSPath(
+             al_editProduct[position].c_productS
+         )TODO */
 
 
         FancyToast.makeText(

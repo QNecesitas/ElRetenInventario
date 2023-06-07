@@ -16,7 +16,6 @@ class Activity_AboutUs : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
         //Toolbar
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

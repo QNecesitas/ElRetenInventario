@@ -3,6 +3,7 @@ package com.qnecesitas.elreteninventario
 import android.app.Application
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelPassword
@@ -10,6 +11,7 @@ import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivitySettingsBinding
 import com.qnecesitas.elreteninventario.network.RetrofitPasswords
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -156,7 +158,7 @@ class Activity_Settings : AppCompatActivity() {
         }
 
         if (introducedPassword == bdPassword) {
-            updatePassword("Administrador", newPassword)
+            updatePassword("Administrador" , newPassword)
         } else {
             binding.tietPasswAdminCurrent.error = getString(R.string.Contrasena_incorrecta)
         }
@@ -173,7 +175,7 @@ class Activity_Settings : AppCompatActivity() {
         }
 
         if (introducedPassword == bdPassword) {
-            updatePassword("Dependiente", newPassword)
+            updatePassword("Dependiente" , newPassword)
         } else {
             binding.tietPasswSalespCurrent.error = getString(R.string.Contrasena_incorrecta)
         }
@@ -183,28 +185,33 @@ class Activity_Settings : AppCompatActivity() {
      *-----------------------------------
      **/
     private fun loadPasswordInternet(callBack: () -> Unit) {
+        lifecycleScope.launch {
 
 
-        alPassword = repository.fetchAccounts()
+            alPassword = repository.fetchAccounts()
 
 
 
-        callBack()
+            callBack()
+        }
 
     }
 
-    private fun updatePassword(user: String, password: String) {
+    private fun updatePassword(user: String , password: String) {
+        lifecycleScope.launch {
 
-        repository.updateAccount(
-            password,
-            user
-        )
+
+            repository.updateAccount(
+                password ,
+                user
+            )
+        }
 
         FancyToast.makeText(
-            applicationContext,
-            getString(R.string.Operacion_realizada_con_exito),
-            FancyToast.LENGTH_LONG,
-            FancyToast.SUCCESS,
+            applicationContext ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
             false
         ).show()
         loadPasswordInternet { {} }
