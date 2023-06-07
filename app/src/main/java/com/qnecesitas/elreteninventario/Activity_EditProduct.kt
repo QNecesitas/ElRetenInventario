@@ -834,22 +834,21 @@ class Activity_EditProduct : AppCompatActivity() {
     }
 
     private fun checkDuplicatedInternet(c_Product: String, n_Product: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, statePhoto: Int, deficit: Int, size: String, brand: String){
-       /* if(isNotDuplicatedAd(repository.fetchProductsSAll(),c_Product))
+        if (isNotDuplicatedAd(repository.fetchProductsSAll(), c_Product))
 
             addProductInternet(
-                c_Product,
-                n_Product,
-                amount,
-                buyPrice,
-                salePrice,
-                descr,
-                statePhoto,
-                deficit,
-                size,
-                brand
+                    c_Product,
+                    n_Product,
+                    amount,
+                    buyPrice,
+                    salePrice,
+                    descr,
+                    statePhoto,
+                    deficit,
+                    size,
+                    brand
             )
-            TODO
-        */
+
     }
 
     private fun isNotDuplicatedAd(array: ArrayList<ModelEditProductS>, c_Product: String): Boolean{
@@ -983,11 +982,10 @@ class Activity_EditProduct : AppCompatActivity() {
     }
 
     private fun fetchProductsPathInternet(position: Int){
-       /* val alModelPath = repository.fetchProductSPath(
+        val alModelPath = repository.fetchProductSPath(
             al_editProduct[position].c_productS
         )
-        TODO
- */
+
 
                     FancyToast.makeText(
                         this@Activity_EditProduct,
@@ -996,16 +994,16 @@ class Activity_EditProduct : AppCompatActivity() {
                         FancyToast.SUCCESS,
                         false
                     ).show()
-                    // TODO val path = alModelPath?.let { makePath(it, position) }
-                    // TODO path?.let { showAlertDialogPath(it) }
+                    val path = alModelPath?.let { makePath(it, position) }
+                    path?.let { showAlertDialogPath(it) }
                     updateRecyclerAdapter()
 
     }
 
     private fun fetchProductsPathInternetLS(position: Int){
-        //val alModelPath = repository.fetchProductSPath(
-         //   al_editProduct[position].c_productS
-        //) TODO
+           val alModelPath = repository.fetchProductSPath(
+            al_editProduct[position].c_productS
+        )
 
 
                     FancyToast.makeText(
@@ -1015,8 +1013,8 @@ class Activity_EditProduct : AppCompatActivity() {
                         FancyToast.SUCCESS,
                         false
                     ).show()
-                    // TODO val path = alModelPath?.let { makePath(it, position) }
-                    //TODO path?.let { showAlertDialogPath(it) }
+                    val path = alModelPath?.let { makePath(it, position) }
+                    path?.let { showAlertDialogPath(it) }
                     updateRecyclerAdapter()
 
 

@@ -162,22 +162,19 @@ class Activity_EditProductLS : AppCompatActivity() {
 
     /**Initial thread**/
     private fun loadRecyclerInfo() {
-           /* al_editProduct =
+        al_editProduct =
                 if (FragmentsInfo.LAST_CODE_SESSION_LS_SENDED == "no") repository.fetchProductsLSAll()
                 else repository.fetchProductsLS(
-                    FragmentsInfo.LAST_CODE_SESSION_LS_SENDED
+                        FragmentsInfo.LAST_CODE_SESSION_LS_SENDED
                 )
-                        loadRecyclerAllS()
+        loadRecyclerAllS()
 
-                       TODO
-            */
     }
 
     private fun loadRecyclerAllS() {
-              //al_editProductSAll =
-                //repository.fetchProductsLSAll()
-                  //      updateRecyclerAdapter()
-                   // TODO
+        al_editProductSAll = repository.fetchProductsLSAll()
+        updateRecyclerAdapter()
+
     }
 
     private fun updateRecyclerAdapter() {
@@ -885,11 +882,11 @@ class Activity_EditProductLS : AppCompatActivity() {
                         false
                     ).show()
 
-                  //  val alModelPath = repository.fetchProductLSPath(
-                   //     al_editProduct[position].c_productLS
-                  //TODO  )
-                   //TODO val path = alModelPath?.let { makePath(it, position) }
-                   //TODO path?.let { showAlertDialogPath(it) }
+                    val alModelPath = repository.fetchProductLSPath(
+                        al_editProduct[position].c_productLS
+                    )
+                   val path = alModelPath?.let { makePath(it, position) }
+                   path?.let { showAlertDialogPath(it) }
                     updateRecyclerAdapter()
     }
 
