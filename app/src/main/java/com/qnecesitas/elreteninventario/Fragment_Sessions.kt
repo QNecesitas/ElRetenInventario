@@ -25,7 +25,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
     //Recycler
     private lateinit var binding: FragmentSessionsBinding
-    private lateinit var al_sessions: ArrayList<ModelSessionS>
+    private lateinit var al_sessions: MutableList<ModelSessionS>
     private lateinit var adapterRSessions: AdapterRSessions
 
     //Internet

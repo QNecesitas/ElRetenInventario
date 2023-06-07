@@ -32,7 +32,7 @@ class Fragment_ShelvesLS : Fragment() {
 
     //Recycler
     private lateinit var binding: FragmentShelvesLsBinding
-    private lateinit var al_shelves: ArrayList<ModelShelfLS>
+    private lateinit var al_shelves: MutableList<ModelShelfLS>
     private lateinit var adapterRShelves: AdapterRShelvesLS
 
     //Internet

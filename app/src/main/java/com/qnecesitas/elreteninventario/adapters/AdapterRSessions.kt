@@ -9,7 +9,7 @@ import com.qnecesitas.elreteninventario.data.ModelSessionS
 import com.qnecesitas.elreteninventario.databinding.RecyclerSessionsBinding
 
 class AdapterRSessions(
-        private val al_session: ArrayList<ModelSessionS>,
+        private val al_session: MutableList<ModelSessionS>,
         private val context: Context
 ) :
     RecyclerView.Adapter<AdapterRSessions.SessionViewHolder>() {
