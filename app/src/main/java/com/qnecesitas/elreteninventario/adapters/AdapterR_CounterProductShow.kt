@@ -18,7 +18,7 @@ import com.qnecesitas.elreteninventario.databinding.RecyclerCounterProductShowBi
 import java.util.Locale
 
 class AdapterR_CounterProductShow(
-        val al_CPShow: ArrayList<ModelEditProductS>,
+        val al_CPShow: MutableList<ModelEditProductS>,
         private val context: Context
 ) : RecyclerView.Adapter<AdapterR_CounterProductShow.CounterProductShowViewHolder>() {
 
