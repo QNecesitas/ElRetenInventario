@@ -1,5 +1,6 @@
 package com.qnecesitas.elreteninventario
 
+import android.app.Application
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,24 +13,18 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductAdd
-import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelCart
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelSale
+import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.FragmentCartBinding
 import com.qnecesitas.elreteninventario.databinding.LiCartAceptBinding
 import com.qnecesitas.elreteninventario.databinding.LiVoucherBinding
-import com.qnecesitas.elreteninventario.network.RetrofitCartImpl
-import com.qnecesitas.elreteninventario.network.RetrofitProductsImplLS
 import com.shashank.sony.fancytoastlib.FancyToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.awaitResponse
 import java.util.Calendar
 
 
@@ -49,8 +44,8 @@ class Fragment_Cart : Fragment() {
     private var listenerDelete : IDeleteProduct? = null
 
     //Internet
-    private lateinit var retrofitCart: RetrofitCartImpl
-    private lateinit var retrofitProducts: RetrofitProductsImplLS
+    private lateinit var repository: Repository
+
 
     //Value
     private var lastModelSale: ModelSale? = null
@@ -71,8 +66,7 @@ class Fragment_Cart : Fragment() {
 
 
         //Internet
-        retrofitCart = RetrofitCartImpl()
-        retrofitProducts = RetrofitProductsImplLS()
+       repository= Repository(Application())
 
         //Listener
         binding.btnDeleteProduct.setOnClickListener{
@@ -211,7 +205,7 @@ class Fragment_Cart : Fragment() {
 
 
                     alertDialog.dismiss()
-                    startCoroutines(name, discount, type, totalTransf)
+                    startProcess(name, discount, type, totalTransf)
                 }
             })
 
@@ -262,114 +256,41 @@ class Fragment_Cart : Fragment() {
         alertDialog.show()
     }
 
-    private fun startCoroutines(name: String, discount: Double, type: String, totalTransf: Double){
-        binding.progress.visibility = View.VISIBLE
-        binding.progress.max = alCart.size+1
-        var progress = 0;
-
-        CoroutineScope(Dispatchers.Default).launch {
-            alCart.forEach {
-                val response = updateProductInternet(it)
-
-                if(response.isSuccessful){
-                    progress++
-                    withContext(Dispatchers.Main){
-                        binding.progress.progress = progress
-                    }
-                    if(progress == alCart.size){
-                        addOrderInternet(name,discount, type, totalTransf)
-                    }
-                }else{
-                    progress = 0
-                    withContext(Dispatchers.Main){
-                        binding.progress.progress = progress
-                        binding.progress.progress = progress
-                        binding.progress.visibility = View.GONE
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
-
-            }
+    private fun startProcess(name: String , discount: Double , type: String , totalTransf: Double){
+        alCart.forEach {
+            updateProductInternet(it)
         }
+        addOrderInternet(name,discount, type, totalTransf)
+
     }
 
-    private suspend fun updateProductInternet(model: ModelCart): Response<String>{
-        val call = retrofitProducts.alterAmountSLS(
-            Constants.PHP_TOKEN,
+    private fun updateProductInternet(model: ModelCart){
+        repository.alterAmountS(
             model.product.c_productS,
             model.product.amount - model.amount
         )
-
-        return call.awaitResponse()
     }
 
     private fun addOrderInternet(nomb: String, descuento: Double, type: String, totalTransf: Double){
-        if(NetworkTools.isOnline(binding.root.context, false)){
-            binding.progress.visibility = View.VISIBLE
-            val call = retrofitCart.addOrder(Constants.PHP_TOKEN,nomb,makeProducts(),makeTotalPrice(), makeTotalInv(), descuento, type, totalTransf)
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    binding.progress.visibility = View.GONE
-                    if (response.isSuccessful) {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
-                        alCart.clear()
-                        binding.progress.progress = binding.progress.max
-                        binding.progress.visibility = View.GONE
-                        binding.progress.progress = 0
-                        precioT = 0.0
-                        updateRecyclerAdapter()
-                        liVoucher()
-                    } else {
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                        binding.progress.progress = 0
-                        binding.progress.visibility = View.GONE
-                    }
-                }
 
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                    binding.progress.visibility = View.GONE
-                    FancyToast.makeText(
-                        requireContext(),
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                    binding.progress.progress = 0
-                    binding.progress.visibility = View.GONE
-                }
-            })
+        val calendar = Calendar.getInstance()
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val month = calendar.get(Calendar.MONTH)
+        val year = calendar.get(Calendar.YEAR)
 
-        }else{
-            FancyToast.makeText(
-                requireContext(),
-                getString(R.string.Revise_su_conexion),
-                FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
-            ).show()
-            binding.progress.progress = 0
-            binding.progress.visibility = View.GONE
-        }
+        repository.addOrder(nomb,makeProducts(),makeTotalPrice(), makeTotalInv(), descuento, type, totalTransf,day, month, year)
 
+        FancyToast.makeText(
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
+        ).show()
+        alCart.clear()
+        precioT = 0.0
+        updateRecyclerAdapter()
+        liVoucher()
 
     }
 

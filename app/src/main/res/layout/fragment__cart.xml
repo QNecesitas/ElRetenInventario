@@ -61,14 +61,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cv_top_recycler">
 
-            <ProgressBar
-                android:layout_marginTop="-7dp"
-                android:visibility="gone"
-                android:id="@+id/progress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <!--Recycler-->
             <androidx.recyclerview.widget.RecyclerView
@@ -80,7 +72,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/progress" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- LL Not info -->
             <LinearLayout

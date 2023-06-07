@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.qnecesitas.elreteninventario.adapters.AdapterR_DeficitProduct
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
+import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivityDeficitBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS
 import retrofit2.Call
@@ -24,7 +25,7 @@ class Activity_Deficit : AppCompatActivity() {
     private lateinit var adapterR_DeficitProduct: AdapterR_DeficitProduct
 
     //Internet
-    private lateinit var retrofitProductsImplS: RetrofitProductsImplS
+    private lateinit var repository: Repository
 
     //Filter
     private var filter = 10
@@ -50,7 +51,7 @@ class Activity_Deficit : AppCompatActivity() {
         adapterR_DeficitProduct = AdapterR_DeficitProduct(al_deficitProduct, applicationContext)
 
         //Refresh
-        retrofitProductsImplS = RetrofitProductsImplS()
+        repository = Repository(application)
         binding.adRefresh.setOnRefreshListener { loadRecyclerInfo() }
 
 
@@ -95,47 +96,12 @@ class Activity_Deficit : AppCompatActivity() {
 
 
     private fun loadRecyclerInfo() {
-            if (NetworkTools.isOnline(binding.root.context, false)) {
-                binding.adRefresh.isRefreshing = true
-
-                val call = retrofitProductsImplS.fetchProductsDeficit(
-                    Constants.PHP_TOKEN,
+                 al_deficitProduct = repository.fetchProductsDeficit(
                     selectButton
                 )
-                call.enqueue(object : Callback<ArrayList<ModelEditProductS>> {
-                    override fun onResponse(
-                            call: Call<ArrayList<ModelEditProductS>>,
-                            response: Response<java.util.ArrayList<ModelEditProductS>>
-                    ) {
-                        binding.adRefresh.isRefreshing = false
-                        if (response.isSuccessful) {
-                            binding.adNotConnection.visibility = View.GONE
                             binding.adRecycler.visibility = View.VISIBLE
                             binding.adNotInfo.visibility = View.GONE
-                            al_deficitProduct = response.body()!!
                             updateRecyclerAdapter()
-                        } else {
-                            binding.adNotConnection.visibility = View.VISIBLE
-                            binding.adRecycler.visibility = View.GONE
-                            binding.adNotInfo.visibility = View.GONE
-                        }
-                    }
-
-                    override fun onFailure(
-                            call: Call<java.util.ArrayList<ModelEditProductS>>,
-                            t: Throwable
-                    ) {
-                        binding.adRefresh.isRefreshing = false
-                        binding.adNotInfo.visibility = View.GONE
-                        binding.adNotConnection.visibility = View.VISIBLE
-                        binding.adRecycler.visibility = View.GONE
-                    }
-                })
-            } else {
-                binding.adNotInfo.visibility = View.GONE
-                binding.adNotConnection.visibility = View.VISIBLE
-                binding.adRecycler.visibility = View.GONE
-            }
     }
 
 
@@ -143,11 +109,9 @@ class Activity_Deficit : AppCompatActivity() {
         if (al_deficitProduct.isEmpty()) {
             binding.adNotInfo.visibility = View.VISIBLE
             binding.adRecycler.visibility = View.GONE
-            binding.adNotConnection.visibility = View.GONE
         } else {
             binding.adNotInfo.visibility = View.GONE
             binding.adRecycler.visibility = View.VISIBLE
-            binding.adNotConnection.visibility = View.GONE
         }
         adapterR_DeficitProduct = AdapterR_DeficitProduct(al_deficitProduct,this)
         binding.adRecycler.adapter = adapterR_DeficitProduct

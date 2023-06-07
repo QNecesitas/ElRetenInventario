@@ -10,20 +10,21 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.auxiliary.Constants
+import com.qnecesitas.elreteninventario.data.ModelEditProductLS
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.databinding.RecyclerEditProductBinding
 import java.util.Locale
 
 class AdapterR_EditProductLS(
-        private val al_editProdut: ArrayList<ModelEditProductS>,
-        private val context: Context,
-        private val isContracted: Boolean,
-        private val isAllInto: Boolean
+    private val al_editProdut: ArrayList<ModelEditProductLS>,
+    private val context: Context,
+    private val isContracted: Boolean,
+    private val isAllInto: Boolean
 ) :
     RecyclerView.Adapter<AdapterR_EditProductLS.EditProductViewHolder>() {
 
     private var listener: RecyclerClickListener? = null
-    private var al_filter: ArrayList<ModelEditProductS> = ArrayList()
+    private var al_filter: ArrayList<ModelEditProductLS> = ArrayList()
 
     //Custom
     private var customFilter: CustomFilter? = null
@@ -42,7 +43,7 @@ class AdapterR_EditProductLS(
 
 
         fun bind(
-                model: ModelEditProductS,
+                model: ModelEditProductLS,
                 context: Context,
                 position: Int
         ) {
@@ -82,7 +83,7 @@ class AdapterR_EditProductLS(
 
             if(isAllInto){
                 binding.ivLocation.visibility = View.VISIBLE
-                if(model.fk_c_sessionS.contains(Constants.KEY_SALESPERSON_PRODUCT)){
+                if(model.fk_c_sessionLS.contains(Constants.KEY_SALESPERSON_PRODUCT)){
                     binding.ivLocation.setImageResource(R.drawable.baseline_account_circle_24)
                 }else{
                     binding.ivLocation.setImageResource(R.drawable.baseline_admin_panel_settings_24)
@@ -100,7 +101,7 @@ class AdapterR_EditProductLS(
                 }else{
                     binding.REPIVImageProduct.setImageBitmap(null)
                     Glide.with(context)
-                        .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
+                        .load(Constants.PHP_IMAGES + "P_" + model.c_productLS + ".jpg")
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true)
@@ -110,7 +111,7 @@ class AdapterR_EditProductLS(
                 binding.REPIVImageProduct.setImageBitmap(null)
                 if(model.statePhoto==1){
                     Glide.with(context)
-                        .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
+                        .load(Constants.PHP_IMAGES + "P_" + model.c_productLS + ".jpg")
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true)
@@ -164,11 +165,11 @@ class AdapterR_EditProductLS(
                 for (product in al_editProdut) {
                     if (product.name.lowercase(Locale.ROOT).trim().contains(filterPattern)) {
                         al_filter.add(product)
-                    }else if(product.c_productS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
+                    }else if(product.c_productLS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         al_filter.add(product)
                     }else if(product.size.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         al_filter.add(product)
-                    }else if(product.fk_c_sessionS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
+                    }else if(product.fk_c_sessionLS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         al_filter.add(product)
                     }
                 }

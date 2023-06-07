@@ -1,5 +1,6 @@
 package com.qnecesitas.elreteninventario
 
+import android.app.Application
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.qnecesitas.elreteninventario.adapters.AdapterR_Sales
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelSale
+import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivitySalesBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYmBinding
@@ -36,7 +38,7 @@ class Activity_Sales : AppCompatActivity() {
     private lateinit var al_sales: ArrayList<ModelSale>
 
     //Internet
-    private lateinit var retrofitImp: RetrofitSalesImpl
+    private lateinit var repository: Repository
     private var lastFilterStr = ""
 
     //Date
@@ -157,10 +159,8 @@ class Activity_Sales : AppCompatActivity() {
 
 
         //Internet
-        retrofitImp = RetrofitSalesImpl()
-        binding.retryConnection.setOnClickListener{
-            loadRecyclerInfoAll()
-        }
+        repository= Repository(Application())
+
 
 
         //Recycler
@@ -172,132 +172,39 @@ class Activity_Sales : AppCompatActivity() {
     * ---------------------------------
     * */
     private fun loadRecyclerInfoAll() {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            dateSelected = "Todo"
-            val call = retrofitImp.fetchOrdersAll(Constants.PHP_TOKEN)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        alertNotInternet(false)
-                        al_sales = response.body()!!
-                        updateRecyclerAdapter()
-                    } else {
-                        alertNotInternet(true)
-                    }
-                }
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    alertNotInternet(true)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            alertNotInternet(true)
-        }
+            al_sales = repository.fetchOrdersAll()
+
+                        alertNotInternet(false)
+                        updateRecyclerAdapter()
+
     }
 
     private fun loadRecyclerInfoYear() {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitImp.fetchOrdersY(Constants.PHP_TOKEN,year)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        alertNotInternet(false)
-                        al_sales = response.body()!!
-                        updateRecyclerAdapter()
-                    } else {
-                        alertNotInternet(true)
-                    }
-                }
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    alertNotInternet(true)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            alertNotInternet(true)
-        }
+            al_sales = repository.fetchOrdersY(year)
+
+                        alertNotInternet(false)
+                        updateRecyclerAdapter()
+
     }
 
     private fun loadRecyclerInfoMonth() {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitImp.fetchOrdersM(Constants.PHP_TOKEN,year,month)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        alertNotInternet(false)
-                        al_sales = response.body()!!
-                        updateRecyclerAdapter()
-                    } else {
-                        alertNotInternet(true)
-                    }
-                }
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    alertNotInternet(true)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            alertNotInternet(true)
-        }
+        al_sales = repository.fetchOrdersM(year,month)
+
+                        alertNotInternet(false)
+                        updateRecyclerAdapter()
+
     }
 
     private fun loadRecyclerInfoDay() {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitImp.fetchOrdersD(Constants.PHP_TOKEN,year,month,day)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        alertNotInternet(false)
-                        al_sales = response.body()!!
-                        updateRecyclerAdapter()
-                    } else {
-                        alertNotInternet(true)
-                    }
-                }
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    alertNotInternet(true)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            alertNotInternet(true)
-        }
+        al_sales = repository.fetchOrdersD(year,month,day)
+
+                        alertNotInternet(false)
+                        updateRecyclerAdapter()
+
     }
 
     private fun updateRecyclerAdapter() {
@@ -336,20 +243,16 @@ class Activity_Sales : AppCompatActivity() {
         if (open) {
             binding.notInfo.visibility = View.VISIBLE
             binding.rvSales.visibility = View.GONE
-            binding.notConnection.visibility = View.GONE
         } else {
             binding.notInfo.visibility = View.GONE
             binding.rvSales.visibility = View.VISIBLE
-            binding.notConnection.visibility = View.GONE
         }
     }
     private fun alertNotInternet(open: Boolean) {
         if (open) {
-            binding.notConnection.visibility = View.VISIBLE
             binding.rvSales.visibility = View.GONE
             binding.notInfo.visibility = View.GONE
         } else {
-            binding.notConnection.visibility = View.GONE
             binding.rvSales.visibility = View.VISIBLE
             binding.notInfo.visibility = View.GONE
         }
@@ -379,16 +282,9 @@ class Activity_Sales : AppCompatActivity() {
     }
 
     private fun deleteSaleInternet(orderCode: Int, position: Int) {
-        if (NetworkTools.isOnline(binding.root.context, true)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitImp.deleteOrder(Constants.PHP_TOKEN, orderCode)
-            call.enqueue(object : Callback<String> {
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
+
+            val call = repository.deleteOrder(orderCode)
+
                         loadRecyclerInfoAll()
                         FancyToast.makeText(
                             this@Activity_Sales,
@@ -397,40 +293,7 @@ class Activity_Sales : AppCompatActivity() {
                             FancyToast.SUCCESS,
                             false
                         ).show()
-                    } else {
-                        FancyToast.makeText(
-                            this@Activity_Sales,
-                            getString(R.string.Revise_su_conexion),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.ERROR,
-                            false
-                        ).show()
-                    }
-                }
 
-                override fun onFailure(
-                    call: Call<String>,
-                    t: Throwable
-                ) {
-                    binding.refresh.isRefreshing = false
-                    FancyToast.makeText(
-                        this@Activity_Sales,
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                }
-            })
-        }else{
-            FancyToast.makeText(
-                this,
-                getString(R.string.Revise_su_conexion),
-                FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
-            ).show()
-        }
     }
 
     /*Date Pickers

@@ -1,5 +1,6 @@
 package com.qnecesitas.elreteninventario
 
+import android.app.Application
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductShow
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
+import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivityCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiShowProductBinding
@@ -44,7 +46,7 @@ class Activity_Counter : AppCompatActivity() {
     lateinit var fragmentManager: FragmentManager
 
     //Internet
-    private lateinit var retrofitImp: RetrofitProductsImplLS
+    private lateinit var repository: Repository
     private var lastFilterStr = ""
     private var lastPositionRecycler = 0
 
@@ -88,10 +90,8 @@ class Activity_Counter : AppCompatActivity() {
 
 
         //Internet
-        retrofitImp = RetrofitProductsImplLS()
-        binding.retryConnection.setOnClickListener {
-            loadRecyclerInfo()
-        }
+        repository= Repository(Application())
+
         binding.refresh.setOnRefreshListener {
             if(fragment_carrito.isEmpty()){ loadRecyclerInfo()
             }else{ binding.refresh.isRefreshing = false}
@@ -107,36 +107,13 @@ class Activity_Counter : AppCompatActivity() {
     * ---------------------------------
     * */
     private fun loadRecyclerInfo() {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
 
-            val call = retrofitImp.fetchProductsSAllLS(Constants.PHP_TOKEN)
-            call.enqueue(object : Callback<ArrayList<ModelEditProductS>> {
-                override fun onResponse(
-                        call: Call<ArrayList<ModelEditProductS>>,
-                        response: Response<java.util.ArrayList<ModelEditProductS>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
+
+            val alCounter = repository.fetchProductsSAll()
+
                         alertNotInternet(false)
-                        alCounter = response.body()!!
                         updateRecyclerAdapter()
-                    } else {
-                        alertNotInternet(true)
-                    }
-                }
 
-                override fun onFailure(
-                        call: Call<java.util.ArrayList<ModelEditProductS>>,
-                        t: Throwable
-                ) {
-                    alertNotInternet(true)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            alertNotInternet(true)
-        }
     }
 
     private fun updateRecyclerAdapter() {
@@ -210,11 +187,9 @@ class Activity_Counter : AppCompatActivity() {
         if (open) {
             binding.notInfo.visibility = View.VISIBLE
             binding.rvProductsShow.visibility = View.GONE
-            binding.notConnection.visibility = View.GONE
         } else {
             binding.notInfo.visibility = View.GONE
             binding.rvProductsShow.visibility = View.VISIBLE
-            binding.notConnection.visibility = View.GONE
         }
     }
 
@@ -235,11 +210,9 @@ class Activity_Counter : AppCompatActivity() {
 
     private fun alertNotInternet(open: Boolean) {
         if (open) {
-            binding.notConnection.visibility = View.VISIBLE
             binding.rvProductsShow.visibility = View.GONE
             binding.notInfo.visibility = View.GONE
         } else {
-            binding.notConnection.visibility = View.GONE
             binding.rvProductsShow.visibility = View.VISIBLE
             binding.notInfo.visibility = View.GONE
         }
@@ -386,15 +359,11 @@ class Activity_Counter : AppCompatActivity() {
     --------------
      */
     private fun fetchProductsPathInternet(position: Int){
-        val call = retrofitImp.fetchProductSPathLS(
-            Constants.PHP_TOKEN,
+        val alModelPath = repository.fetchProductSPath(
             alCounter[position].c_productS
         )
 
-        call.enqueue(object : Callback<ArrayList<ModelProductPath>> {
-            override fun onResponse(call: Call<ArrayList<ModelProductPath>>, response: Response<ArrayList<ModelProductPath>>) {
-                binding.refresh.isRefreshing = false
-                if (response.isSuccessful) {
+
                     FancyToast.makeText(
                         this@Activity_Counter,
                         getString(R.string.Operacion_realizada_con_exito),
@@ -402,33 +371,10 @@ class Activity_Counter : AppCompatActivity() {
                         FancyToast.SUCCESS,
                         false
                     ).show()
-                    val al_modelPath = response.body()
-                    val alModelPath = response.body()
                     val path = alModelPath?.let { makePath(it, position) }
                     path?.let { showAlertDialogPath(it) }
                     updateRecyclerAdapter()
-                } else {
-                    FancyToast.makeText(
-                        this@Activity_Counter,
-                        getString(R.string.Revise_su_conexion),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.ERROR,
-                        false
-                    ).show()
-                }
-            }
 
-            override fun onFailure(call: Call<ArrayList<ModelProductPath>>, t: Throwable) {
-                binding.refresh.isRefreshing = false
-                FancyToast.makeText(
-                    this@Activity_Counter,
-                    getString(R.string.Revise_su_conexion),
-                    FancyToast.LENGTH_LONG,
-                    FancyToast.ERROR,
-                    false
-                ).show()
-            }
-        })
     }
 
     /*Auxiliary
