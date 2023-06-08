@@ -302,7 +302,7 @@ class Repository(application: ElRetenApplication) {
     }
 
     suspend fun updateShelfS(c_shelfSOld: String,c_shelfSNew: String,amount: Int){
-        shelfSSDao.insertShelfS(c_shelfSOld)
+        shelfSSDao.insertShelfS(c_shelfSNew)
         drawerSDao.updateDrawerSforain(c_shelfSNew,c_shelfSOld)
         shelfSSDao.deleteShelfS(c_shelfSOld)
     }

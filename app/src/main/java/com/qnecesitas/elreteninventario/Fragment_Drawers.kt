@@ -77,8 +77,6 @@ class Fragment_Drawers(var c_shelfS: String) : Fragment() {
     //Recycler information
     private fun loadRecyclerInfo() {
         lifecycleScope.launch {
-
-
             al_drawers = repository.fetchDrawersS(c_shelfS)
 
             binding.fdRecycler.visibility = View.VISIBLE
@@ -222,8 +220,6 @@ class Fragment_Drawers(var c_shelfS: String) : Fragment() {
 
     private fun editDrawerInternet(drawerCodeOld: String , drawerCodeNew: String , position: Int) {
         lifecycleScope.launch {
-
-
             repository.updateDrawerS(
                 drawerCodeOld ,
                 drawerCodeNew ,

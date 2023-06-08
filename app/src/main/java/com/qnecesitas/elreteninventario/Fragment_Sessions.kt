@@ -72,12 +72,11 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
     //Recycler information
     private fun loadRecyclerInfo() {
         lifecycleScope.launch {
-
             al_sessions = repository.fetchSessionsS(c_drawerS)
+            binding.fsRecyclerSession.visibility = View.VISIBLE
+            updateRecyclerAdapter()
         }
-        binding.fsRecyclerSession.visibility = View.VISIBLE
-        binding.fsNotInfoSession.visibility = View.GONE
-        updateRecyclerAdapter()
+
     }
 
     private fun updateRecyclerAdapter() {
@@ -216,7 +215,6 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         position: Int
     ) {
         lifecycleScope.launch {
-
             repository.updateSessionS(
                 sessionCodeOld ,
                 sessionCodeNew ,
