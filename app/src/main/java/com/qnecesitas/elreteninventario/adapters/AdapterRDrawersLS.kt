@@ -10,7 +10,7 @@ import com.qnecesitas.elreteninventario.data.ModelDrawerS
 import com.qnecesitas.elreteninventario.databinding.RecyclerDrawersBinding
 
 
-class AdapterRDrawersLS(private val al_drawerLS: ArrayList<ModelDrawerLS>, private val context: Context) :
+class AdapterRDrawersLS(private val al_drawerLS: MutableList<ModelDrawerLS>, private val context: Context) :
     RecyclerView.Adapter<AdapterRDrawersLS.DrawerViewHolder>() {
 
 

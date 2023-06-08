@@ -9,7 +9,7 @@ import com.qnecesitas.elreteninventario.data.ModelShelfS
 import com.qnecesitas.elreteninventario.databinding.RecyclerShelvesBinding
 
 
-class AdapterRShelves(private val al_shelves: ArrayList<ModelShelfS>, private val context: Context) :
+class AdapterRShelves(private val al_shelves: MutableList<ModelShelfS>, private val context: Context) :
     RecyclerView.Adapter<AdapterRShelves.ShelvesViewHolder>() {
 
     private var editListener: RecyclerClickListener? = null

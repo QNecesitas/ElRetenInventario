@@ -20,7 +20,7 @@ class Activity_Settings : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
 
     //Intenert
-    private lateinit var alPassword: ArrayList<ModelPassword>
+    private lateinit var alPassword: MutableList<ModelPassword>
     private lateinit var repository: Repository
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,38 +32,38 @@ class Activity_Settings : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
-        binding.toolbar.setNavigationOnClickListener {finish()}
+        binding.toolbar.setNavigationOnClickListener { finish() }
 
         //Refresh
         binding.refresh.setOnRefreshListener { loadPasswordInternet {} }
 
-        binding.btnAdminAccept.setOnClickListener{clickAcceptAdmin()}
+        binding.btnAdminAccept.setOnClickListener { clickAcceptAdmin() }
 
-        binding.btnSalespAccept.setOnClickListener{clickAcceptSalesperson()}
+        binding.btnSalespAccept.setOnClickListener { clickAcceptSalesperson() }
 
         //Internet
         alPassword = ArrayList()
-        repository= Repository(Application())
+        repository = Repository(Application())
     }
 
     /*Listeners
      *-----------------------------------
      **/
-    private fun clickAcceptAdmin(){
-        if(checkInfoAdmin()){
-            if(alPassword.isEmpty()){
-                loadPasswordInternet{checkPasswordAdmin()}
-            }else{
+    private fun clickAcceptAdmin() {
+        if (checkInfoAdmin()) {
+            if (alPassword.isEmpty()) {
+                loadPasswordInternet { checkPasswordAdmin() }
+            } else {
                 checkPasswordAdmin()
             }
         }
     }
 
-    private fun clickAcceptSalesperson(){
-        if(checkInfoSalesperson()){
-            if(alPassword.isEmpty()){
-                loadPasswordInternet{checkPasswordSalesperson()}
-            }else{
+    private fun clickAcceptSalesperson() {
+        if (checkInfoSalesperson()) {
+            if (alPassword.isEmpty()) {
+                loadPasswordInternet { checkPasswordSalesperson() }
+            } else {
                 checkPasswordSalesperson()
             }
         }
@@ -73,78 +73,80 @@ class Activity_Settings : AppCompatActivity() {
     /*Auxiliary
      *-----------------------------------
      **/
-    private fun checkInfoAdmin(): Boolean{
+    private fun checkInfoAdmin(): Boolean {
         var result = true
 
-        if(binding.tietPasswAdminCurrent.text?.isEmpty() == true){
-            result =false
+        if (binding.tietPasswAdminCurrent.text?.isEmpty() == true) {
+            result = false
             binding.tietPasswAdminCurrent.error = getString(R.string.este_campo_no_debe_vacio)
-        }else{
+        } else {
             binding.tietPasswAdminCurrent.error = null
         }
 
-        if(binding.tietPasswAdminNew.text?.isEmpty() == true){
-            result =false
+        if (binding.tietPasswAdminNew.text?.isEmpty() == true) {
+            result = false
             binding.tietPasswAdminNew.error = getString(R.string.este_campo_no_debe_vacio)
-        }else{
+        } else {
             binding.tietPasswAdminNew.error = null
         }
 
-        if(binding.tietPasswAdminConfirm.text?.isEmpty() == true){
-            result =false
+        if (binding.tietPasswAdminConfirm.text?.isEmpty() == true) {
+            result = false
             binding.tietPasswAdminConfirm.error = getString(R.string.este_campo_no_debe_vacio)
-        }else{
+        } else {
             binding.tietPasswAdminConfirm.error = null
         }
 
-        if(binding.tietPasswAdminConfirm.text.toString() !=
-            binding.tietPasswAdminNew.text.toString()){
-            result =false
+        if (binding.tietPasswAdminConfirm.text.toString() !=
+            binding.tietPasswAdminNew.text.toString()
+        ) {
+            result = false
             binding.tietPasswAdminConfirm.error = getString(R.string.los_campos_no_coinciden)
-        }else{
-            if(binding.tietPasswAdminConfirm.text?.trim()?.isNotEmpty()==true){
+        } else {
+            if (binding.tietPasswAdminConfirm.text?.trim()?.isNotEmpty() == true) {
                 binding.tietPasswAdminConfirm.error = null
             }
         }
         return result
     }
 
-    private fun checkInfoSalesperson(): Boolean{
+    private fun checkInfoSalesperson(): Boolean {
         var result = true
 
-        if(binding.tietPasswSalespCurrent.text?.isEmpty() == true){
-            result =false
+        if (binding.tietPasswSalespCurrent.text?.isEmpty() == true) {
+            result = false
             binding.tietPasswSalespCurrent.error = getString(R.string.este_campo_no_debe_vacio)
-        }else{
+        } else {
             binding.tietPasswSalespCurrent.error = null
         }
 
-        if(binding.tietPasswSalespNew.text?.isEmpty() == true){
-            result =false
+        if (binding.tietPasswSalespNew.text?.isEmpty() == true) {
+            result = false
             binding.tietPasswSalespNew.error = getString(R.string.este_campo_no_debe_vacio)
-        }else{
+        } else {
             binding.tietPasswSalespNew.error = null
         }
 
-        if(binding.tietPasswSalespConfirm.text?.isEmpty() == true){
-            result =false
+        if (binding.tietPasswSalespConfirm.text?.isEmpty() == true) {
+            result = false
             binding.tietPasswSalespConfirm.error = getString(R.string.este_campo_no_debe_vacio)
-        }else{
+        } else {
             binding.tietPasswSalespConfirm.error = null
         }
 
-        if(binding.tietPasswSalespConfirm.text.toString() !=
-            binding.tietPasswSalespNew.text.toString()){
-            result =false
+        if (binding.tietPasswSalespConfirm.text.toString() !=
+            binding.tietPasswSalespNew.text.toString()
+        ) {
+            result = false
             binding.tietPasswSalespConfirm.error = getString(R.string.los_campos_no_coinciden)
-        }else{
+        } else {
             binding.tietPasswSalespConfirm.error = null
         }
 
         return result
     }
 
-    private fun checkPasswordAdmin(){
+    private fun checkPasswordAdmin() {
         val introducedPassword = binding.tietPasswAdminCurrent.text.toString()
         val newPassword = binding.tietPasswAdminNew.text.toString()
         val bdPassword = if (alPassword[0].user == "Administrador") {
@@ -153,15 +155,15 @@ class Activity_Settings : AppCompatActivity() {
             alPassword[1].password
         }
 
-        if(introducedPassword == bdPassword){
+        if (introducedPassword == bdPassword) {
             updatePassword("Administrador", newPassword)
-        }else{
+        } else {
             binding.tietPasswAdminCurrent.error = getString(R.string.Contrasena_incorrecta)
         }
 
     }
 
-    private fun checkPasswordSalesperson(){
+    private fun checkPasswordSalesperson() {
         val introducedPassword = binding.tietPasswSalespCurrent.text.toString()
         val newPassword = binding.tietPasswSalespNew.text.toString()
         val bdPassword = if (alPassword[0].user == "Dependiente") {
@@ -170,9 +172,9 @@ class Activity_Settings : AppCompatActivity() {
             alPassword[1].password
         }
 
-        if(introducedPassword == bdPassword){
+        if (introducedPassword == bdPassword) {
             updatePassword("Dependiente", newPassword)
-        }else{
+        } else {
             binding.tietPasswSalespCurrent.error = getString(R.string.Contrasena_incorrecta)
         }
     }
@@ -180,34 +182,33 @@ class Activity_Settings : AppCompatActivity() {
     /*Internet
      *-----------------------------------
      **/
-    private fun loadPasswordInternet(callBack: ()->Unit) {
+    private fun loadPasswordInternet(callBack: () -> Unit) {
 
 
         alPassword = repository.fetchAccounts()
 
 
 
-                        callBack()
+        callBack()
 
     }
 
     private fun updatePassword(user: String, password: String) {
 
         repository.updateAccount(
-            password ,
+            password,
             user
         )
 
         FancyToast.makeText(
-            applicationContext ,
-            getString(R.string.Operacion_realizada_con_exito) ,
-            FancyToast.LENGTH_LONG ,
-            FancyToast.SUCCESS ,
+            applicationContext,
+            getString(R.string.Operacion_realizada_con_exito),
+            FancyToast.LENGTH_LONG,
+            FancyToast.SUCCESS,
             false
         ).show()
         loadPasswordInternet { {} }
     }
-
 
 
 }

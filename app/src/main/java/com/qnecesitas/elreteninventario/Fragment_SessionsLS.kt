@@ -32,7 +32,7 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
 
     //Recycler
     private lateinit var binding: FragmentSessionsLsBinding
-    private lateinit var al_sessionLS: ArrayList<ModelSessionLS>
+    private lateinit var al_sessionLS: MutableList<ModelSessionLS>
     private lateinit var adapterRSessions: AdapterRSessionsLS
 
     //Internet
@@ -42,7 +42,7 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
     private lateinit var li_binding: LiAddSessionBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater , container: ViewGroup? ,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSessionsLsBinding.inflate(inflater)
@@ -76,14 +76,14 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
-             al_sessionLS = repository.fetchSessionsLS(c_drawerLS)
-                        binding.fsRecyclerSession.visibility = View.VISIBLE
-                        binding.fsNotInfoSession.visibility = View.GONE
-                        updateRecyclerAdapter()
+        al_sessionLS = repository.fetchSessionsLS(c_drawerLS)
+        binding.fsRecyclerSession.visibility = View.VISIBLE
+        binding.fsNotInfoSession.visibility = View.GONE
+        updateRecyclerAdapter()
     }
 
     private fun updateRecyclerAdapter() {
-        if(al_sessionLS.isNotEmpty()){
+        if (al_sessionLS.isNotEmpty()) {
             al_sessionLS.sortBy { it.c_sessionLS }
         }
 
@@ -94,7 +94,7 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
             binding.fsNotInfoSession.visibility = View.GONE
             binding.fsRecyclerSession.visibility = View.VISIBLE
         }
-        adapterRSessions = AdapterRSessionsLS(al_sessionLS, binding.root.context)
+        adapterRSessions = AdapterRSessionsLS(al_sessionLS , binding.root.context)
 
         adapterRSessions.setEditListener(object : AdapterRSessionsLS.RecyclerClickListener {
             override fun onClick(position: Int) {
@@ -106,7 +106,8 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
                 click_delete(position)
             }
         })
-        adapterRSessions.setRecyclerTouchListener(object : AdapterRSessionsLS.RecyclerClickListener {
+        adapterRSessions.setRecyclerTouchListener(object :
+            AdapterRSessionsLS.RecyclerClickListener {
             override fun onClick(position: Int) {
                 val c_sessionS = al_sessionLS.get(position).c_sessionLS
                 openSession?.onSessionLSClicked(c_sessionS)
@@ -136,8 +137,8 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
                     if (!tietContent.contains("_")) {
                         addNewSessionInternet(tietContent)
                         alertDialog.dismiss()
-                    }else li_binding.til.error = getString(R.string.No_permitido_simbol)
-                }else li_binding.til.error = getString(R.string.Ya_existe_seccion)
+                    } else li_binding.til.error = getString(R.string.No_permitido_simbol)
+                } else li_binding.til.error = getString(R.string.Ya_existe_seccion)
             } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
@@ -150,24 +151,24 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
     }
 
     private fun addNewSessionInternet(sessionCode: String) {
-        repository.addSessionLS(sessionCode, c_drawerLS)
-                        val model = ModelSessionLS(sessionCode, c_drawerLS)
-                        al_sessionLS.add(model)
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
+        repository.addSessionLS(sessionCode , c_drawerLS)
+        val model = ModelSessionLS(sessionCode , c_drawerLS)
+        al_sessionLS.add(model)
+        updateRecyclerAdapter()
+        FancyToast.makeText(
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
+        ).show()
     }
 
-    private fun isDuplicated(name: String): Boolean{
-        for(shelf in al_sessionLS){
+    private fun isDuplicated(name: String): Boolean {
+        for (shelf in al_sessionLS) {
             val positionSymbol = shelf.c_sessionLS.lastIndexOf("_")
-            val codeSessionPrepared = shelf.c_sessionLS.substring(positionSymbol+1)
-            if(codeSessionPrepared == name){
+            val codeSessionPrepared = shelf.c_sessionLS.substring(positionSymbol + 1)
+            if (codeSessionPrepared == name) {
                 return true
             }
         }
@@ -176,10 +177,10 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
 
     //Edit session
     private fun click_edit(position: Int) {
-        li_editSession(al_sessionLS[position].c_sessionLS, position)
+        li_editSession(al_sessionLS[position].c_sessionLS , position)
     }
 
-    private fun li_editSession(codeSessionOld: String, position: Int) {
+    private fun li_editSession(codeSessionOld: String , position: Int) {
         val inflater = LayoutInflater.from(binding.root.context)
         li_binding = LiAddSessionBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
@@ -193,7 +194,7 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
             if (tiedContent.trim().isNotEmpty()) {
-                editSessionInternet(codeSessionOld, tiedContent, position)
+                editSessionInternet(codeSessionOld , tiedContent , position)
                 alertDialog.dismiss()
             } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
@@ -206,20 +207,24 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
         alertDialog.show()
     }
 
-    private fun editSessionInternet(sessionCodeOld: String, sessionCodeNew: String, position: Int) {
+    private fun editSessionInternet(
+        sessionCodeOld: String ,
+        sessionCodeNew: String ,
+        position: Int
+    ) {
         repository.updateSessionLS(
-            sessionCodeOld,
-            sessionCodeNew,
-            al_sessionLS[position].fk_c_drawerLS,
+            sessionCodeOld ,
+            sessionCodeNew ,
+            al_sessionLS[position].fk_c_drawerLS ,
             al_sessionLS[position].amount
         )
         al_sessionLS[position].c_sessionLS = sessionCodeNew
         updateRecyclerAdapter()
         FancyToast.makeText(
-            requireContext(),
-            getString(R.string.Operacion_realizada_con_exito),
-            FancyToast.LENGTH_LONG,
-            FancyToast.SUCCESS,
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
             false
         ).show()
     }
@@ -227,9 +232,9 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
     //Delete session
     private fun click_delete(position: Int) {
         val amount = al_sessionLS[position].amount
-        if(amount == 0) {
+        if (amount == 0) {
             showAlertDialogDeleteSession(position)
-        }else{
+        } else {
             showAlertDialogNotEmpty(amount)
         }
     }
@@ -243,41 +248,41 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
         //set listeners for dialog buttons
         builder.setPositiveButton(
             R.string.Si
-        ) { dialog, _ ->
+        ) { dialog , _ ->
 
-                dialog.dismiss()
-                deleteSessionInternet(al_sessionLS[position].c_sessionLS, position)
+            dialog.dismiss()
+            deleteSessionInternet(al_sessionLS[position].c_sessionLS , position)
 
         }
-        builder.setNegativeButton(R.string.No,
-            DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
+        builder.setNegativeButton(R.string.No ,
+            DialogInterface.OnClickListener { dialog , _ -> dialog.dismiss() })
 
         //create the alert dialog and show it
         builder.create().show()
     }
 
-    private fun deleteSessionInternet(sessionCode: String, position: Int) {
-       repository.deleteSessionLS(
-                sessionCode,
-                al_sessionLS[position].fk_c_drawerLS
-            )
-                        al_sessionLS.removeAt(position)
-                        updateRecyclerAdapter()
-                        FancyToast.makeText(
-                            requireContext(),
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
+    private fun deleteSessionInternet(sessionCode: String , position: Int) {
+        repository.deleteSessionLS(
+            sessionCode ,
+            al_sessionLS[position].fk_c_drawerLS
+        )
+        al_sessionLS.removeAt(position)
+        updateRecyclerAdapter()
+        FancyToast.makeText(
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
+        ).show()
     }
 
     private fun showAlertDialogNotEmpty(amount: Int) {
         val builder = android.app.AlertDialog.Builder(requireContext())
         builder.setCancelable(true)
             .setTitle(getString(R.string.elemento_no_vaciado))
-            .setMessage(getString(R.string.debe_eliminar_todo,amount))
-            .setPositiveButton(R.string.Aceptar) { dialog, _ ->
+            .setMessage(getString(R.string.debe_eliminar_todo , amount))
+            .setPositiveButton(R.string.Aceptar) { dialog , _ ->
                 dialog.dismiss()
             }
 

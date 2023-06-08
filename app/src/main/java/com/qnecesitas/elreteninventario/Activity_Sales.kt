@@ -35,7 +35,7 @@ class Activity_Sales : AppCompatActivity() {
 
     //Recycler
     private lateinit var adapterrSales: AdapterR_Sales
-    private lateinit var al_sales: ArrayList<ModelSale>
+    private lateinit var al_sales: MutableList<ModelSale>
 
     //Internet
     private lateinit var repository: Repository
@@ -72,30 +72,44 @@ class Activity_Sales : AppCompatActivity() {
 
 
         //Spinner
-        val alSpinner = arrayListOf(getString(R.string.todo),getString(R.string.Dia),getString(R.string.Mes), getString(R.string.Anno))
-        val adapterSpinner = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, alSpinner);
+        val alSpinner = arrayListOf(
+            getString(R.string.todo),
+            getString(R.string.Dia),
+            getString(R.string.Mes),
+            getString(R.string.Anno)
+        )
+        val adapterSpinner =
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, alSpinner);
         binding.spinner.adapter = adapterSpinner
-        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, long: Long) {
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                long: Long
+            ) {
                 val value: String = parent?.getItemAtPosition(position).toString()
                 dateSelected = value
-                when(value) {
-                    "Todo"-> {
+                when (value) {
+                    "Todo" -> {
                         binding.ivDate.visibility = View.GONE
                         binding.tvDate.visibility = View.GONE
                         loadRecyclerInfoAll()
                     }
-                    "Día" ->{
+
+                    "Día" -> {
                         binding.ivDate.visibility = View.VISIBLE
                         binding.tvDate.visibility = View.VISIBLE
                         loadRecyclerInfoDay()
                     }
-                    "Mes" ->{
+
+                    "Mes" -> {
                         binding.ivDate.visibility = View.VISIBLE
                         binding.tvDate.visibility = View.VISIBLE
                         loadRecyclerInfoMonth()
                     }
-                    "Año" ->{
+
+                    "Año" -> {
                         binding.ivDate.visibility = View.VISIBLE
                         binding.tvDate.visibility = View.VISIBLE
                         loadRecyclerInfoYear()
@@ -110,9 +124,8 @@ class Activity_Sales : AppCompatActivity() {
         }
 
 
-
         //SearchView
-        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -134,10 +147,9 @@ class Activity_Sales : AppCompatActivity() {
         })
 
 
-
         //Refresh
         binding.refresh.setOnRefreshListener {
-            when(dateSelected){
+            when (dateSelected) {
                 "Todo" -> loadRecyclerInfoAll()
                 "Año" -> loadRecyclerInfoYear()
                 "Mes" -> loadRecyclerInfoMonth()
@@ -148,19 +160,17 @@ class Activity_Sales : AppCompatActivity() {
 
         //Recycler
         al_sales = ArrayList()
-        adapterrSales = AdapterR_Sales(al_sales,this)
+        adapterrSales = AdapterR_Sales(al_sales, this)
         binding.rvSales.adapter = adapterrSales
-        adapterrSales.setCloseClick(object : AdapterR_Sales.ITouchClose{
+        adapterrSales.setCloseClick(object : AdapterR_Sales.ITouchClose {
             override fun onClickClose(position: Int) {
                 showAlertCloseSales(position)
             }
         })
 
 
-
         //Internet
-        repository= Repository(Application())
-
+        repository = Repository(Application())
 
 
         //Recycler
@@ -175,40 +185,40 @@ class Activity_Sales : AppCompatActivity() {
 
         al_sales = repository.fetchOrdersAll()
 
-                        alertNotInternet(false)
-                        updateRecyclerAdapter()
+        alertNotInternet(false)
+        updateRecyclerAdapter()
 
 
     }
 
     private fun loadRecyclerInfoYear() {
 
-            al_sales = repository.fetchOrdersY(year)
-                        alertNotInternet(false)
-                        updateRecyclerAdapter()
+        al_sales = repository.fetchOrdersY(year)
+        alertNotInternet(false)
+        updateRecyclerAdapter()
 
     }
 
     private fun loadRecyclerInfoMonth() {
 
-        al_sales = repository.fetchOrdersM(year,month)
+        al_sales = repository.fetchOrdersM(year, month)
 
-                        alertNotInternet(false)
-                        updateRecyclerAdapter()
+        alertNotInternet(false)
+        updateRecyclerAdapter()
 
     }
 
     private fun loadRecyclerInfoDay() {
 
-        al_sales = repository.fetchOrdersD(year,month,day)
+        al_sales = repository.fetchOrdersD(year, month, day)
 
-                        alertNotInternet(false)
-                        updateRecyclerAdapter()
+        alertNotInternet(false)
+        updateRecyclerAdapter()
 
     }
 
     private fun updateRecyclerAdapter() {
-        if(al_sales.isNotEmpty()){
+        if (al_sales.isNotEmpty()) {
             al_sales.sortBy { it.name }
         }
 
@@ -218,8 +228,8 @@ class Activity_Sales : AppCompatActivity() {
             alertNotElements(false)
         }
 
-        adapterrSales = AdapterR_Sales(al_sales,this)
-        adapterrSales.setCloseClick(object : AdapterR_Sales.ITouchClose{
+        adapterrSales = AdapterR_Sales(al_sales, this)
+        adapterrSales.setCloseClick(object : AdapterR_Sales.ITouchClose {
             override fun onClickClose(position: Int) {
                 showAlertCloseSales(position)
             }
@@ -228,12 +238,11 @@ class Activity_Sales : AppCompatActivity() {
 
         binding.rvSales.adapter = adapterrSales
 
-        if(lastFilterStr.trim().isNotEmpty()){
+        if (lastFilterStr.trim().isNotEmpty()) {
             adapterrSales.getFilter()?.filter(lastFilterStr)
         }
 
     }
-
 
 
     /*Alerts
@@ -248,6 +257,7 @@ class Activity_Sales : AppCompatActivity() {
             binding.rvSales.visibility = View.VISIBLE
         }
     }
+
     private fun alertNotInternet(open: Boolean) {
         if (open) {
             binding.rvSales.visibility = View.GONE
@@ -261,7 +271,7 @@ class Activity_Sales : AppCompatActivity() {
     /*Close
     ------------------
      */
-    private fun showAlertCloseSales(position: Int){
+    private fun showAlertCloseSales(position: Int) {
         //init alert dialog
         val builder = android.app.AlertDialog.Builder(this)
         builder.setCancelable(true)
@@ -283,16 +293,16 @@ class Activity_Sales : AppCompatActivity() {
 
     private fun deleteSaleInternet(orderCode: Int, position: Int) {
 
-            val call = repository.deleteOrder(orderCode)
+        val call = repository.deleteOrder(orderCode)
 
-                        loadRecyclerInfoAll()
-                        FancyToast.makeText(
-                            this@Activity_Sales,
-                            getString(R.string.Operacion_realizada_con_exito),
-                            FancyToast.LENGTH_LONG,
-                            FancyToast.SUCCESS,
-                            false
-                        ).show()
+        loadRecyclerInfoAll()
+        FancyToast.makeText(
+            this@Activity_Sales,
+            getString(R.string.Operacion_realizada_con_exito),
+            FancyToast.LENGTH_LONG,
+            FancyToast.SUCCESS,
+            false
+        ).show()
 
     }
 
@@ -308,7 +318,7 @@ class Activity_Sales : AppCompatActivity() {
         }
     }
 
-    fun li_dateYear(){
+    fun li_dateYear() {
         val inflater = LayoutInflater.from(binding.root.context)
         val liBinding = LiDateYBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
@@ -320,10 +330,10 @@ class Activity_Sales : AppCompatActivity() {
         liBinding.ilNpAnno.minValue = 2020
 
         //Listeners
-        liBinding.btnCancel.setOnClickListener{
+        liBinding.btnCancel.setOnClickListener {
             alertDialog.dismiss()
         }
-        liBinding.btnAcept.setOnClickListener{
+        liBinding.btnAcept.setOnClickListener {
             alertDialog.dismiss()
             year = liBinding.ilNpAnno.value
             binding.tvDate.text = year.toString()
@@ -338,7 +348,7 @@ class Activity_Sales : AppCompatActivity() {
 
     }
 
-    fun li_dateMonth(){
+    fun li_dateMonth() {
 
         val inflater = LayoutInflater.from(binding.root.context)
         val liBinding = LiDateYmBinding.inflate(inflater)
@@ -351,18 +361,31 @@ class Activity_Sales : AppCompatActivity() {
         liBinding.ilNpAnnos.minValue = 2020
         liBinding.ilNpMonth.maxValue = 11
         liBinding.ilNpMonth.minValue = 0
-        val months = arrayOf("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre")
+        val months = arrayOf(
+            "Enero",
+            "Febrero",
+            "Marzo",
+            "Abril",
+            "Mayo",
+            "Junio",
+            "Julio",
+            "Agosto",
+            "Septiembre",
+            "Octubre",
+            "Noviembre",
+            "Diciembre"
+        )
         liBinding.ilNpMonth.displayedValues = months
 
         //Listeners
-        liBinding.btnCancel.setOnClickListener{
+        liBinding.btnCancel.setOnClickListener {
             alertDialog.dismiss()
         }
-        liBinding.btnAcept.setOnClickListener{
+        liBinding.btnAcept.setOnClickListener {
             alertDialog.dismiss()
             year = liBinding.ilNpAnnos.value
-            month = liBinding.ilNpMonth.value+1
-            val dateDisplay="${year}/${month}"
+            month = liBinding.ilNpMonth.value + 1
+            val dateDisplay = "${year}/${month}"
             binding.tvDate.text = dateDisplay
             loadRecyclerInfoMonth()
         }
@@ -375,7 +398,7 @@ class Activity_Sales : AppCompatActivity() {
 
     }
 
-    fun li_dateDay(){
+    fun li_dateDay() {
 
         val inflater = LayoutInflater.from(binding.root.context)
         val liBinding = LiDateYmdBinding.inflate(inflater)
@@ -390,19 +413,32 @@ class Activity_Sales : AppCompatActivity() {
         liBinding.ilNpMonth.minValue = 0
         liBinding.ilNpDay.minValue = 1
         liBinding.ilNpDay.maxValue = 31
-        val months = arrayOf("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre")
+        val months = arrayOf(
+            "Enero",
+            "Febrero",
+            "Marzo",
+            "Abril",
+            "Mayo",
+            "Junio",
+            "Julio",
+            "Agosto",
+            "Septiembre",
+            "Octubre",
+            "Noviembre",
+            "Diciembre"
+        )
         liBinding.ilNpMonth.displayedValues = months
 
         //Listeners
-        liBinding.btnCancel.setOnClickListener{
+        liBinding.btnCancel.setOnClickListener {
             alertDialog.dismiss()
         }
-        liBinding.btnAcept.setOnClickListener{
+        liBinding.btnAcept.setOnClickListener {
             alertDialog.dismiss()
             year = liBinding.ilNpAnnos.value
             month = liBinding.ilNpMonth.value + 1
             day = liBinding.ilNpDay.value
-            val dateDisplay="${year}/${month}/${day}"
+            val dateDisplay = "${year}/${month}/${day}"
             binding.tvDate.text = dateDisplay
             loadRecyclerInfoDay()
         }

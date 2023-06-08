@@ -34,7 +34,7 @@ class Activity_Counter : AppCompatActivity() {
 
     //Recyclers
     private lateinit var adapterCounter: AdapterR_CounterProductShow
-    private lateinit var alCounter: ArrayList<ModelEditProductS>
+    private lateinit var alCounter: MutableList<ModelEditProductS>
 
     //Binding
     private lateinit var binding: ActivityCounterBinding
@@ -66,7 +66,7 @@ class Activity_Counter : AppCompatActivity() {
         binding.acToolbar.setNavigationOnClickListener { finish() }
 
         //SearchView
-        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -84,17 +84,19 @@ class Activity_Counter : AppCompatActivity() {
 
         //Recycler
         alCounter = ArrayList()
-        adapterCounter = AdapterR_CounterProductShow(alCounter, this)
+        adapterCounter = AdapterR_CounterProductShow(alCounter , this)
         binding.rvProductsShow.adapter = adapterCounter
 
 
-
         //Internet
-        repository= Repository(Application())
+        repository = Repository(Application())
 
         binding.refresh.setOnRefreshListener {
-            if(fragment_carrito.isEmpty()){ loadRecyclerInfo()
-            }else{ binding.refresh.isRefreshing = false}
+            if (fragment_carrito.isEmpty()) {
+                loadRecyclerInfo()
+            } else {
+                binding.refresh.isRefreshing = false
+            }
         }
 
         //Start
@@ -109,15 +111,15 @@ class Activity_Counter : AppCompatActivity() {
     private fun loadRecyclerInfo() {
 
 
-            val alCounter = repository.fetchProductsSAll()
+        alCounter = repository.fetchProductsSAll()
 
-                        alertNotInternet(false)
-                        updateRecyclerAdapter()
+        alertNotInternet(false)
+        updateRecyclerAdapter()
 
     }
 
     private fun updateRecyclerAdapter() {
-        val layoutManager =binding.rvProductsShow.layoutManager as LinearLayoutManager
+        val layoutManager = binding.rvProductsShow.layoutManager as LinearLayoutManager
         lastPositionRecycler = layoutManager.findFirstVisibleItemPosition()
 
         if (alCounter.isEmpty()) {
@@ -126,7 +128,7 @@ class Activity_Counter : AppCompatActivity() {
             alertNotElements(false)
         }
 
-        adapterCounter = AdapterR_CounterProductShow(alCounter, binding.root.context)
+        adapterCounter = AdapterR_CounterProductShow(alCounter , binding.root.context)
 
         //Listeners
         adapterCounter.setClickListener(object : AdapterR_CounterProductShow.RecyclerClickListener {
@@ -141,42 +143,43 @@ class Activity_Counter : AppCompatActivity() {
             }
 
         })
-        adapterCounter.setClickPathListener(object : AdapterR_CounterProductShow.RecyclerClickListener{
+        adapterCounter.setClickPathListener(object :
+            AdapterR_CounterProductShow.RecyclerClickListener {
             override fun onClick(position: Int) {
                 fetchProductsPathInternet(position)
             }
         })
 
-        if(lastFilterStr.trim().isNotEmpty()){
+        if (lastFilterStr.trim().isNotEmpty()) {
             adapterCounter.getFilter()?.filter(lastFilterStr)
         }
 
         binding.rvProductsShow.adapter = adapterCounter
-        val layoutManager1 =binding.rvProductsShow.layoutManager as LinearLayoutManager
+        val layoutManager1 = binding.rvProductsShow.layoutManager as LinearLayoutManager
         layoutManager1.scrollToPosition(lastPositionRecycler)
     }
 
     private fun showFragment() {
         fragmentManager = supportFragmentManager
         fragment_carrito = Fragment_Cart()
-        fragment_carrito.setOnReloadListener(object : Fragment_Cart.IReload{
+        fragment_carrito.setOnReloadListener(object : Fragment_Cart.IReload {
             override fun onReload() {
                 loadRecyclerInfo()
             }
 
         })
-        fragment_carrito.setListenerDelete(object : Fragment_Cart.IDeleteProduct{
-            override fun onDeleteProduct(code: String, amount: Int ) {
-                for(model in alCounter){
-                   if(model.c_productS == code){
-                       model.amount += amount
-                       updateRecyclerAdapter()
-                   }
+        fragment_carrito.setListenerDelete(object : Fragment_Cart.IDeleteProduct {
+            override fun onDeleteProduct(code: String , amount: Int) {
+                for (model in alCounter) {
+                    if (model.c_productS == code) {
+                        model.amount += amount
+                        updateRecyclerAdapter()
+                    }
                 }
             }
         })
         fragmentManager.beginTransaction()
-            .replace(binding.flCart.id, fragment_carrito)
+            .replace(binding.flCart.id , fragment_carrito)
             .commit()
     }
 
@@ -200,7 +203,7 @@ class Activity_Counter : AppCompatActivity() {
         builder.setTitle(R.string.Ubicacion)
         builder.setMessage(path)
         //set listeners for dialog buttons
-        builder.setPositiveButton(R.string.Aceptar) { dialog, _ ->
+        builder.setPositiveButton(R.string.Aceptar) { dialog , _ ->
             dialog.dismiss()
         }
 
@@ -222,9 +225,15 @@ class Activity_Counter : AppCompatActivity() {
     * ---------------------------------
     * */
     private fun rootRecyclerClick(position: Int) {
-        if(alCounter[position].amount == 0){
-            FancyToast.makeText(this,getString(R.string.no_puede_acceder_con_0),FancyToast.LENGTH_LONG,FancyToast.WARNING,false).show()
-        }else{
+        if (alCounter[position].amount == 0) {
+            FancyToast.makeText(
+                this ,
+                getString(R.string.no_puede_acceder_con_0) ,
+                FancyToast.LENGTH_LONG ,
+                FancyToast.WARNING ,
+                false
+            ).show()
+        } else {
             li_cant(position)
         }
     }
@@ -244,13 +253,13 @@ class Activity_Counter : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Init
-        val name = getString(R.string.Producto_Info, alCounter[position].name)
-        val code = getString(R.string.Codigo_Info, alCounter[position].c_productS)
-        val amount = getString(R.string.Cantidad_Info, alCounter[position].amount)
-        val salePrice = getString(R.string.PrecioV_Info, alCounter[position].salePrice)
-        val descr = getString(R.string.Descripcion_Info, alCounter[position].descr)
-        val size = getString(R.string.Size_Info, alCounter[position].size)
-        val brand = getString(R.string.Brand_Info, alCounter[position].brand)
+        val name = getString(R.string.Producto_Info , alCounter[position].name)
+        val code = getString(R.string.Codigo_Info , alCounter[position].c_productS)
+        val amount = getString(R.string.Cantidad_Info , alCounter[position].amount)
+        val salePrice = getString(R.string.PrecioV_Info , alCounter[position].salePrice)
+        val descr = getString(R.string.Descripcion_Info , alCounter[position].descr)
+        val size = getString(R.string.Size_Info , alCounter[position].size)
+        val brand = getString(R.string.Brand_Info , alCounter[position].brand)
         val codeImage = alCounter[position].c_productS
 
         //Fill out
@@ -259,8 +268,8 @@ class Activity_Counter : AppCompatActivity() {
         li_info_binding.tvAmount.text = amount
         li_info_binding.tvPrice.text = salePrice
         li_info_binding.tvDesc.text = descr
-        li_info_binding.tvSize.text= size
-        li_info_binding.tvBrand.text= brand
+        li_info_binding.tvSize.text = size
+        li_info_binding.tvBrand.text = brand
         li_info_binding.ivImageProduct.let {
             Glide.with(applicationContext)
                 .load(Constants.PHP_IMAGES + "P_" + codeImage + ".jpg")
@@ -291,7 +300,7 @@ class Activity_Counter : AppCompatActivity() {
 
         //Filling and listeners
         var currentAmount: Int = 1
-        val maxAmount =alCounter[position].amount
+        val maxAmount = alCounter[position].amount
 
         li_add_counter_binding.etCantidad.setText(currentAmount.toString())
 
@@ -310,8 +319,8 @@ class Activity_Counter : AppCompatActivity() {
         })
 
         li_add_counter_binding.etCantidad.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                if(li_add_counter_binding.etCantidad.text.toString().trim().isNotEmpty()){
+            override fun onTextChanged(charSequence: CharSequence , i: Int , i1: Int , i2: Int) {
+                if (li_add_counter_binding.etCantidad.text.toString().trim().isNotEmpty()) {
                     if (li_add_counter_binding.etCantidad.text.toString() == "0") {
                         currentAmount = 1
                         li_add_counter_binding.etCantidad.setText(currentAmount.toString())
@@ -327,7 +336,13 @@ class Activity_Counter : AppCompatActivity() {
             }
 
             override fun afterTextChanged(editable: Editable) {}
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun beforeTextChanged(
+                charSequence: CharSequence ,
+                i: Int ,
+                i1: Int ,
+                i2: Int
+            ) {
+            }
         })
 
         li_add_counter_binding.tvAccept.setOnClickListener {
@@ -336,7 +351,7 @@ class Activity_Counter : AppCompatActivity() {
                     getString(R.string.este_campo_no_debe_vacio)
             } else {
                 alertDialog.dismiss()
-                fragment_carrito.addProduct(alCounter[position], currentAmount)
+                fragment_carrito.addProduct(alCounter[position] , currentAmount)
                 alCounter[position].amount = maxAmount - currentAmount
                 updateRecyclerAdapter()
             }
@@ -358,29 +373,29 @@ class Activity_Counter : AppCompatActivity() {
     /*Internet
     --------------
      */
-    private fun fetchProductsPathInternet(position: Int){
-       // val alModelPath = repository.fetchProductSPath(
-       //     alCounter[position].c_productS
+    private fun fetchProductsPathInternet(position: Int) {
+        // val alModelPath = repository.fetchProductSPath(
+        //     alCounter[position].c_productS
         //)
 
 
-                    FancyToast.makeText(
-                        this@Activity_Counter,
-                        getString(R.string.Operacion_realizada_con_exito),
-                        FancyToast.LENGTH_LONG,
-                        FancyToast.SUCCESS,
-                        false
-                    ).show()
-                    //val path = alModelPath?.let { makePath(it, position) }
-                    //path?.let { showAlertDialogPath(it) }
-                    updateRecyclerAdapter()
+        FancyToast.makeText(
+            this@Activity_Counter ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
+        ).show()
+        //val path = alModelPath?.let { makePath(it, position) }
+        //path?.let { showAlertDialogPath(it) }
+        updateRecyclerAdapter()
 
     }
 
     /*Auxiliary
     * _________Auxiliary
     * */
-    private fun makePath(al_modelPath: ArrayList<ModelProductPath>,position: Int): String{
+    private fun makePath(al_modelPath: ArrayList<ModelProductPath> , position: Int): String {
         val shelfCode = al_modelPath[0].fk_c_shelfS
 
         val drawerCode = al_modelPath[0].fk_c_drawerS
