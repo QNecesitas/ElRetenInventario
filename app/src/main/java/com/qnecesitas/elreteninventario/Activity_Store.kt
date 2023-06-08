@@ -30,7 +30,7 @@ class Activity_Store : AppCompatActivity() {
         fragmentManager = supportFragmentManager
         showFragmentShelves()
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+        onBackPressedDispatcher.addCallback(this , object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 onBack()
             }
@@ -48,7 +48,7 @@ class Activity_Store : AppCompatActivity() {
             }
         })
         fragmentManager.beginTransaction()
-            .replace(binding.asFrame.id, fragment_shelves)
+            .replace(binding.asFrame.id , fragment_shelves)
             .commit()
     }
 
@@ -64,7 +64,7 @@ class Activity_Store : AppCompatActivity() {
 
         })
         fragmentManager.beginTransaction()
-            .replace(binding.asFrame.id, fragment_drawers)
+            .replace(binding.asFrame.id , fragment_drawers)
             .commit()
     }
 
@@ -76,14 +76,14 @@ class Activity_Store : AppCompatActivity() {
         fragment_sessions.setOpenSessionListener(object : Fragment_Sessions.OpenSession {
             override fun onSessionClicked(c_sessions: String) {
                 FragmentsInfo.LAST_CODE_SESSION_SENDED = c_sessions
-                val intent = Intent(this@Activity_Store, Activity_EditProduct::class.java)
-                intent.putExtra("C_session", c_sessions)
+                val intent = Intent(this@Activity_Store , Activity_EditProduct::class.java)
+                intent.putExtra("C_session" , c_sessions)
                 startActivity(intent)
             }
 
         })
         fragmentManager.beginTransaction()
-            .replace(binding.asFrame.id, fragment_sessions)
+            .replace(binding.asFrame.id , fragment_sessions)
             .commit()
     }
 

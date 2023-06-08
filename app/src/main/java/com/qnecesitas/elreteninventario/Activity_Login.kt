@@ -14,10 +14,12 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.lifecycleScope
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelPassword
 import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivityLoginBinding
+import kotlinx.coroutines.launch
 
 class Activity_Login : AppCompatActivity() {
     private var binding: ActivityLoginBinding? = null
@@ -41,7 +43,12 @@ class Activity_Login : AppCompatActivity() {
 
         repository = Repository(application as ElRetenApplication)
         al_password = ArrayList()
-        binding!!.ALTIETPassword.setOnKeyListener { view: View, i: Int, keyEvent: KeyEvent -> eventKeyboard(view, keyEvent) }
+        binding!!.ALTIETPassword.setOnKeyListener { view: View , i: Int , keyEvent: KeyEvent ->
+            eventKeyboard(
+                view ,
+                keyEvent
+            )
+        }
         binding!!.ALBTNStartSession.setOnClickListener { view: View? -> click_login() }
         alProductsDeficitS = ArrayList()
         alProductsDeficitLS = ArrayList()
@@ -49,17 +56,17 @@ class Activity_Login : AppCompatActivity() {
         binding!!.tvAboutUs.setOnClickListener { view: View? -> click_us() }
     }
 
-    private fun eventKeyboard(view: View, keyEvent: KeyEvent): Boolean {
+    private fun eventKeyboard(view: View , keyEvent: KeyEvent): Boolean {
         if (keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
             val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken , 0)
         }
         return false
     }
 
     private fun click_login() {
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(binding!!.ALTIETPassword.windowToken, 0)
+        inputMethodManager.hideSoftInputFromWindow(binding!!.ALTIETPassword.windowToken , 0)
         if (al_password.isEmpty()) {
             loadPasswordInternet()
         } else {
@@ -68,19 +75,21 @@ class Activity_Login : AppCompatActivity() {
     }
 
     private fun loadPasswordInternet() {
-        al_password = repository.fetchAccounts()
-        if (!al_password.isEmpty()) {
-            checkPassword()
+        lifecycleScope.launch {
+            al_password = repository.fetchAccounts()
+            if (!al_password.isEmpty()) {
+                checkPassword()
+            }
         }
     }
 
     private fun click_dev() {
-        val intent = Intent(this, Activity_AboutDev::class.java)
+        val intent = Intent(this , Activity_AboutDev::class.java)
         startActivity(intent)
     }
 
     private fun click_us() {
-        val intent = Intent(this, Activity_AboutUs::class.java)
+        val intent = Intent(this , Activity_AboutUs::class.java)
         startActivity(intent)
     }
 
@@ -100,7 +109,7 @@ class Activity_Login : AppCompatActivity() {
                     binding!!.ALTILPassword.error = null
                 } else {
                     binding!!.ALTILPassword.error = null
-                    val intent = Intent(this@Activity_Login, Activity_MenuSelesperson::class.java)
+                    val intent = Intent(this@Activity_Login , Activity_MenuSelesperson::class.java)
                     startActivity(intent)
                 }
             } else {
@@ -134,50 +143,70 @@ class Activity_Login : AppCompatActivity() {
         }
 
         //Finish activity
-        val intent = Intent(this@Activity_Login, Activity_MenuAdmin::class.java)
+        val intent = Intent(this@Activity_Login , Activity_MenuAdmin::class.java)
         startActivity(intent)
     }
 
     private fun displayNotificationS(amount: Int) {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            val channel =
+                NotificationChannel(CHANNEL_ID , CHANNEL_NAME , NotificationManager.IMPORTANCE_HIGH)
             channel.description = getString(R.string.channel_decr)
             channel.enableLights(true)
             channel.lightColor = Color.RED
             notificationManager.createNotificationChannel(channel)
         }
-        val intent = Intent(applicationContext, Activity_Deficit::class.java)
+        val intent = Intent(applicationContext , Activity_Deficit::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-                .setContentTitle(getString(R.string.Productos_en_deficit))
-                .setContentText(getString(R.string.deficit_almacen_admin, amount))
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setAutoCancel(true)
-                .addAction(android.R.drawable.ic_menu_view, getString(R.string.ver_deficit), pendingIntent)
-        notificationManager.notify(NOTIFICATION_ID1, builder.build())
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext ,
+            0 ,
+            intent ,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        val builder = NotificationCompat.Builder(applicationContext , CHANNEL_ID)
+            .setContentTitle(getString(R.string.Productos_en_deficit))
+            .setContentText(getString(R.string.deficit_almacen_admin , amount))
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setAutoCancel(true)
+            .addAction(
+                android.R.drawable.ic_menu_view ,
+                getString(R.string.ver_deficit) ,
+                pendingIntent
+            )
+        notificationManager.notify(NOTIFICATION_ID1 , builder.build())
     }
 
     private fun displayNotificationLS(amount: Int) {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            val channel =
+                NotificationChannel(CHANNEL_ID , CHANNEL_NAME , NotificationManager.IMPORTANCE_HIGH)
             channel.description = getString(R.string.channel_decr)
             channel.enableLights(true)
             channel.lightColor = Color.RED
             notificationManager.createNotificationChannel(channel)
         }
-        val intent = Intent(applicationContext, Activity_Deficit::class.java)
+        val intent = Intent(applicationContext , Activity_Deficit::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-                .setContentTitle(getString(R.string.Productos_en_deficit))
-                .setContentText(getString(R.string.deficit_almacen_salesperson, amount))
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setAutoCancel(true)
-                .addAction(android.R.drawable.ic_menu_view, getString(R.string.ver_deficit), pendingIntent)
-        notificationManager.notify(NOTIFICATION_ID2, builder.build())
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext ,
+            0 ,
+            intent ,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        val builder = NotificationCompat.Builder(applicationContext , CHANNEL_ID)
+            .setContentTitle(getString(R.string.Productos_en_deficit))
+            .setContentText(getString(R.string.deficit_almacen_salesperson , amount))
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setAutoCancel(true)
+            .addAction(
+                android.R.drawable.ic_menu_view ,
+                getString(R.string.ver_deficit) ,
+                pendingIntent
+            )
+        notificationManager.notify(NOTIFICATION_ID2 , builder.build())
     }
 
     override fun onBackPressed() {
@@ -191,14 +220,14 @@ class Activity_Login : AppCompatActivity() {
         builder.setTitle(R.string.salir)
         builder.setMessage(R.string.seguro_desea_salir)
         //set listeners for dialog buttons
-        builder.setPositiveButton(R.string.Si) { dialog: DialogInterface?, which: Int ->
+        builder.setPositiveButton(R.string.Si) { dialog: DialogInterface? , which: Int ->
             //finish the activity
             val intent = Intent(Intent.ACTION_MAIN)
             intent.addCategory(Intent.CATEGORY_HOME)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
-        builder.setNegativeButton(R.string.no) { dialog: DialogInterface, which: Int ->
+        builder.setNegativeButton(R.string.no) { dialog: DialogInterface , which: Int ->
             //dialog gone
             dialog.dismiss()
         }
@@ -213,7 +242,7 @@ class Activity_Login : AppCompatActivity() {
         builder.setTitle(R.string.intentos_fallidos)
         builder.setMessage(R.string.cerrar_password)
         //set listeners for dialog buttons
-        builder.setPositiveButton(R.string.Cerrar) { dialog: DialogInterface?, which: Int ->
+        builder.setPositiveButton(R.string.Cerrar) { dialog: DialogInterface? , which: Int ->
             //finish the activity
             val intent = Intent(Intent.ACTION_MAIN)
             intent.addCategory(Intent.CATEGORY_HOME)

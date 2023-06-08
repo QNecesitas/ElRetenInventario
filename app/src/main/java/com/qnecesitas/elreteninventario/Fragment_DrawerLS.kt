@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRDrawers
@@ -21,6 +22,7 @@ import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.FragmentDrawerLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddDrawerBinding
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,7 +44,7 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater , container: ViewGroup? ,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDrawerLsBinding.inflate(inflater)
@@ -60,7 +62,7 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
 
         //Recycler
         al_drawerLS = ArrayList()
-        adapterRDrawersLS = AdapterRDrawersLS(al_drawerLS, binding.root.context)
+        adapterRDrawersLS = AdapterRDrawersLS(al_drawerLS , binding.root.context)
         binding.fdRecycler.setHasFixedSize(true)
         binding.fdRecycler.layoutManager = LinearLayoutManager(binding.root.context)
         binding.fdRecycler.adapter = adapterRDrawersLS
@@ -75,10 +77,13 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
-        al_drawerLS = repository.fetchDrawersLS(c_shelfLS)
-        binding.fdRecycler.visibility = View.VISIBLE
-        binding.fdNotInfo.visibility = View.GONE
-        updateRecyclerAdapter()
+        lifecycleScope.launch {
+
+            al_drawerLS = repository.fetchDrawersLS(c_shelfLS)
+            binding.fdRecycler.visibility = View.VISIBLE
+            binding.fdNotInfo.visibility = View.GONE
+            updateRecyclerAdapter()
+        }
     }
 
     private fun updateRecyclerAdapter() {
@@ -93,7 +98,7 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
             binding.fdNotInfo.visibility = View.GONE
             binding.fdRecycler.visibility = View.VISIBLE
         }
-        adapterRDrawersLS = AdapterRDrawersLS(al_drawerLS, binding.root.context)
+        adapterRDrawersLS = AdapterRDrawersLS(al_drawerLS , binding.root.context)
 
         adapterRDrawersLS.setEditListener(object : AdapterRDrawersLS.RecyclerClickListener {
             override fun onClick(position: Int) {
@@ -151,16 +156,19 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
     }
 
     private fun addNewDrawerInternet(drawerCode: String) {
-        repository.addDrawerLs(c_shelfLS, drawerCode)
+        lifecycleScope.launch {
 
-        val model = ModelDrawerLS(drawerCode, c_shelfLS)
+            repository.addDrawerLs(c_shelfLS , drawerCode)
+        }
+
+        val model = ModelDrawerLS(drawerCode , c_shelfLS)
         al_drawerLS.add(model)
         updateRecyclerAdapter()
         FancyToast.makeText(
-            requireContext(),
-            getString(R.string.Operacion_realizada_con_exito),
-            FancyToast.LENGTH_LONG,
-            FancyToast.SUCCESS,
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
             false
         ).show()
     }
@@ -178,10 +186,10 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
 
     //Edit drawer
     private fun click_edit(position: Int) {
-        li_editDrawer(al_drawerLS[position].c_drawerLS, position)
+        li_editDrawer(al_drawerLS[position].c_drawerLS , position)
     }
 
-    private fun li_editDrawer(codeDrawerOld: String, position: Int) {
+    private fun li_editDrawer(codeDrawerOld: String , position: Int) {
         val inflater = LayoutInflater.from(binding.root.context)
         li_binding = LiAddDrawerBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
@@ -195,7 +203,7 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
             if (tiedContent.trim().isNotEmpty()) {
-                editDrawerInternet(codeDrawerOld, tiedContent, position)
+                editDrawerInternet(codeDrawerOld , tiedContent , position)
                 alertDialog.dismiss()
             } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
@@ -209,20 +217,23 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
     }
 
 
-    private fun editDrawerInternet(drawerCodeOld: String, drawerCodeNew: String, position: Int) {
-        repository.updateDrawerLS(
-            drawerCodeOld,
-            drawerCodeNew,
-            al_drawerLS[position].fk_c_shelfLS,
-            al_drawerLS[position].amount
-        )
+    private fun editDrawerInternet(drawerCodeOld: String , drawerCodeNew: String , position: Int) {
+        lifecycleScope.launch {
+
+            repository.updateDrawerLS(
+                drawerCodeOld ,
+                drawerCodeNew ,
+                al_drawerLS[position].fk_c_shelfLS ,
+                al_drawerLS[position].amount
+            )
+        }
         al_drawerLS[position].c_drawerLS = drawerCodeNew
         updateRecyclerAdapter()
         FancyToast.makeText(
-            requireContext(),
-            getString(R.string.Operacion_realizada_con_exito),
-            FancyToast.LENGTH_LONG,
-            FancyToast.SUCCESS,
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
             false
         ).show()
     }
@@ -247,13 +258,13 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
         //set listeners for dialog buttons
         builder.setPositiveButton(
             R.string.Si
-        ) { dialog, _ ->
+        ) { dialog , _ ->
             dialog.dismiss()
-            deleteDrawerInternet(al_drawerLS[position].c_drawerLS, position)
+            deleteDrawerInternet(al_drawerLS[position].c_drawerLS , position)
 
         }
-        builder.setNegativeButton(R.string.No,
-            DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
+        builder.setNegativeButton(R.string.No ,
+            DialogInterface.OnClickListener { dialog , _ -> dialog.dismiss() })
 
         //create the alert dialog and show it
         builder.create().show()
@@ -263,8 +274,8 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
         val builder = android.app.AlertDialog.Builder(requireContext())
         builder.setCancelable(true)
             .setTitle(getString(R.string.elemento_no_vaciado))
-            .setMessage(getString(R.string.debe_eliminar_todo, amount))
-            .setPositiveButton(R.string.Aceptar) { dialog, _ ->
+            .setMessage(getString(R.string.debe_eliminar_todo , amount))
+            .setPositiveButton(R.string.Aceptar) { dialog , _ ->
                 dialog.dismiss()
             }
 
@@ -272,15 +283,18 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
         builder.create().show()
     }
 
-    private fun deleteDrawerInternet(drawerCode: String, position: Int) {
-        repository.deleteDrawerLS(drawerCode, al_drawerLS.get(position).fk_c_shelfLS)
+    private fun deleteDrawerInternet(drawerCode: String , position: Int) {
+        lifecycleScope.launch {
+
+            repository.deleteDrawerLS(drawerCode , al_drawerLS.get(position).fk_c_shelfLS)
+        }
         al_drawerLS.removeAt(position)
         updateRecyclerAdapter()
         FancyToast.makeText(
-            requireContext(),
-            getString(R.string.Operacion_realizada_con_exito),
-            FancyToast.LENGTH_LONG,
-            FancyToast.SUCCESS,
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
             false
         ).show()
     }

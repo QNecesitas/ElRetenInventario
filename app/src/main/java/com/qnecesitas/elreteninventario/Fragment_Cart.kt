@@ -12,6 +12,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductAdd
 import com.qnecesitas.elreteninventario.data.ModelCart
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
@@ -28,7 +29,6 @@ import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 
-
 class Fragment_Cart : Fragment() {
 
     //Binding
@@ -39,9 +39,10 @@ class Fragment_Cart : Fragment() {
     //Recycler
     private lateinit var alCart: ArrayList<ModelCart>
     private lateinit var adapterCart: AdapterR_CounterProductAdd
+
     //ListenerReload
-    private var listenerReload : IReload? = null
-    private var listenerDelete : IDeleteProduct? = null
+    private var listenerReload: IReload? = null
+    private var listenerDelete: IDeleteProduct? = null
 
     //Internet
     private lateinit var repository: Repository
@@ -52,7 +53,7 @@ class Fragment_Cart : Fragment() {
     private var precioT: Double = 0.0
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater , container: ViewGroup? ,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCartBinding.inflate(inflater)
@@ -61,21 +62,21 @@ class Fragment_Cart : Fragment() {
         //Recycler
         binding.recycler.setHasFixedSize(true)
         alCart = ArrayList()
-        adapterCart = AdapterR_CounterProductAdd(alCart, requireContext())
+        adapterCart = AdapterR_CounterProductAdd(alCart , requireContext())
         binding.recycler.adapter = adapterCart
 
 
         //Internet
-       repository= Repository(requireActivity().application as ElRetenApplication)
+        repository = Repository(requireActivity().application as ElRetenApplication)
 
         //Listener
-        binding.btnDeleteProduct.setOnClickListener{
+        binding.btnDeleteProduct.setOnClickListener {
             alCart.clear()
             precioT = 0.0
             listenerReload?.onReload()
             updateRecyclerAdapter()
         }
-        binding.btnAcceptProduct.setOnClickListener{liSendOrder()}
+        binding.btnAcceptProduct.setOnClickListener { liSendOrder() }
 
         updateRecyclerAdapter()
 
@@ -86,10 +87,10 @@ class Fragment_Cart : Fragment() {
     /*Recycler operations
    * ---------------------------------
    * */
-    fun addProduct(modelEditProductS: ModelEditProductS, amount: Int) {
+    fun addProduct(modelEditProductS: ModelEditProductS , amount: Int) {
         alCart.add(
             ModelCart(
-                modelEditProductS.clone(),
+                modelEditProductS.clone() ,
                 amount
             )
         )
@@ -99,14 +100,17 @@ class Fragment_Cart : Fragment() {
 
 
     private fun deleteProduct(position: Int) {
-        listenerDelete?.onDeleteProduct(alCart[position].product.c_productS,alCart[position].amount)
+        listenerDelete?.onDeleteProduct(
+            alCart[position].product.c_productS ,
+            alCart[position].amount
+        )
         precioT -= alCart[position].product.salePrice * alCart[position].amount
         alCart.removeAt(position)
         updateRecyclerAdapter()
     }
 
     private fun updateRecyclerAdapter() {
-        if(alCart.isNotEmpty()){
+        if (alCart.isNotEmpty()) {
             alCart.sortBy { it.product.name }
         }
 
@@ -115,9 +119,9 @@ class Fragment_Cart : Fragment() {
         } else {
             alertNotElements(false)
         }
-        adapterCart = AdapterR_CounterProductAdd(alCart, binding.root.context)
+        adapterCart = AdapterR_CounterProductAdd(alCart , binding.root.context)
 
-        binding.tvPrecioT.text = getString(R.string.PrecioTotal, precioT)
+        binding.tvPrecioT.text = getString(R.string.PrecioTotal , precioT)
 
         adapterCart.setCancelListener(object : AdapterR_CounterProductAdd.RecyclerCancelListener {
             override fun onClick(position: Int) {
@@ -156,17 +160,19 @@ class Fragment_Cart : Fragment() {
             builder.setView(li_cartAccept_binding?.root)
             val alertDialog = builder.create()
 
-            val alType: ArrayList<String> =  arrayListOf("Transferencia", "Efectivo", "Efectivo-Transferencia")
-            val stringArrayAdapter = ArrayAdapter<String>(requireContext(), R.layout.list_item_spinner, alType)
+            val alType: ArrayList<String> =
+                arrayListOf("Transferencia" , "Efectivo" , "Efectivo-Transferencia")
+            val stringArrayAdapter =
+                ArrayAdapter<String>(requireContext() , R.layout.list_item_spinner , alType)
             li_cartAccept_binding?.tietSpinner?.setAdapter<ArrayAdapter<String>>(stringArrayAdapter)
 
 
             li_cartAccept_binding?.tietSpinner?.onItemClickListener =
-                OnItemClickListener { _, _, _, _ ->
-                    val selected= li_cartAccept_binding?.tietSpinner?.text.toString()
-                    if (selected == alType[0] || selected == alType[2]){
+                OnItemClickListener { _ , _ , _ , _ ->
+                    val selected = li_cartAccept_binding?.tietSpinner?.text.toString()
+                    if (selected == alType[0] || selected == alType[2]) {
                         li_cartAccept_binding?.tilPago?.visibility = View.VISIBLE
-                    }else{
+                    } else {
                         li_cartAccept_binding?.tilPago?.visibility = View.GONE
                     }
                 }
@@ -177,35 +183,35 @@ class Fragment_Cart : Fragment() {
             })
 
             li_cartAccept_binding?.btnAceptar?.setOnClickListener(View.OnClickListener {
-                if(checkInfo()){
+                if (checkInfo()) {
                     val name = li_cartAccept_binding?.tietNombClient?.text.toString()
                     val discount = li_cartAccept_binding?.tietDescuento?.text.toString().toDouble()
                     val calendar = Calendar.getInstance()
                     val day = calendar.get(Calendar.DAY_OF_MONTH)
-                    val month = calendar.get(Calendar.MONTH)+1
+                    val month = calendar.get(Calendar.MONTH) + 1
                     val year = calendar.get(Calendar.YEAR)
                     val type = li_cartAccept_binding?.tietSpinner?.text.toString()
                     val totalTransf = li_cartAccept_binding?.tietPago?.text.toString().toDouble()
 
 
-
                     //model
                     lastModelSale = ModelSale(
-                        1,
-                        name,
-                        makeProducts(),
-                        precioT,
-                        1.0,
-                        discount,
-                        day,
-                        month,
-                        year,
-                        type,
-                        totalTransf)
+                        1 ,
+                        name ,
+                        makeProducts() ,
+                        precioT ,
+                        1.0 ,
+                        discount ,
+                        day ,
+                        month ,
+                        year ,
+                        type ,
+                        totalTransf
+                    )
 
 
                     alertDialog.dismiss()
-                    startProcess(name, discount, type, totalTransf)
+                    startProcess(name , discount , type , totalTransf)
                 }
             })
 
@@ -218,16 +224,16 @@ class Fragment_Cart : Fragment() {
 
         } else {
             FancyToast.makeText(
-                requireContext(),
-                getString(R.string.no_elementos_carrito),
-                FancyToast.LENGTH_LONG,
-                FancyToast.INFO,
+                requireContext() ,
+                getString(R.string.no_elementos_carrito) ,
+                FancyToast.LENGTH_LONG ,
+                FancyToast.INFO ,
                 false
             ).show()
         }
     }
 
-    private fun liVoucher(){
+    private fun liVoucher() {
         val inflater = LayoutInflater.from(binding.root.context)
         li_voucher_binding = LiVoucherBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
@@ -236,15 +242,19 @@ class Fragment_Cart : Fragment() {
 
 
         li_voucher_binding?.tvNombreX?.text = lastModelSale?.name
-        li_voucher_binding?.tvFechaX?.text = getString(R.string.Fecha,lastModelSale?.day.toString(),
-         lastModelSale?.month.toString(),lastModelSale?.year.toString())
-        li_voucher_binding?.tvTotalPX?.text = getString(R.string.PrecioTotal,lastModelSale?.totalPrice?.toDouble())
-        li_voucher_binding?.tvDiscountX?.text = getString(R.string.descuento_f,lastModelSale?.discount?.toDouble())
+        li_voucher_binding?.tvFechaX?.text = getString(
+            R.string.Fecha , lastModelSale?.day.toString() ,
+            lastModelSale?.month.toString() , lastModelSale?.year.toString()
+        )
+        li_voucher_binding?.tvTotalPX?.text =
+            getString(R.string.PrecioTotal , lastModelSale?.totalPrice?.toDouble())
+        li_voucher_binding?.tvDiscountX?.text =
+            getString(R.string.descuento_f , lastModelSale?.discount?.toDouble())
         li_voucher_binding?.tvPagox?.text = lastModelSale?.type
-        li_voucher_binding?.tvProductX?.text = lastModelSale?.products?.replace("--n--", "\n")
-            ?.replace("--s--", "   ")
+        li_voucher_binding?.tvProductX?.text = lastModelSale?.products?.replace("--n--" , "\n")
+            ?.replace("--s--" , "   ")
 
-        li_voucher_binding?.ivClose?.setOnClickListener{
+        li_voucher_binding?.ivClose?.setOnClickListener {
             alertDialog.dismiss()
         }
 
@@ -256,29 +266,51 @@ class Fragment_Cart : Fragment() {
         alertDialog.show()
     }
 
-    private fun startProcess(name: String , discount: Double , type: String , totalTransf: Double){
+    private fun startProcess(name: String , discount: Double , type: String , totalTransf: Double) {
         alCart.forEach {
             updateProductInternet(it)
         }
-        addOrderInternet(name,discount, type, totalTransf)
+        addOrderInternet(name , discount , type , totalTransf)
 
     }
 
-    private fun updateProductInternet(model: ModelCart){
-        repository.alterAmountS(
-            model.product.c_productS,
-            model.product.amount - model.amount
-        )
+    private fun updateProductInternet(model: ModelCart) {
+        lifecycleScope.launch {
+
+            repository.alterAmountS(
+                model.product.c_productS ,
+                model.product.amount - model.amount
+            )
+        }
     }
 
-    private fun addOrderInternet(nomb: String, descuento: Double, type: String, totalTransf: Double){
+    private fun addOrderInternet(
+        nomb: String ,
+        descuento: Double ,
+        type: String ,
+        totalTransf: Double
+    ) {
 
         val calendar = Calendar.getInstance()
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         val month = calendar.get(Calendar.MONTH)
         val year = calendar.get(Calendar.YEAR)
+        lifecycleScope.launch {
 
-        repository.addOrder(nomb,makeProducts(),makeTotalPrice(), makeTotalInv(), descuento, type, totalTransf,day, month, year)
+
+            repository.addOrder(
+                nomb ,
+                makeProducts() ,
+                makeTotalPrice() ,
+                makeTotalInv() ,
+                descuento ,
+                type ,
+                totalTransf ,
+                day ,
+                month ,
+                year
+            )
+        }
 
         FancyToast.makeText(
             requireContext() ,
@@ -295,16 +327,14 @@ class Fragment_Cart : Fragment() {
     }
 
 
-
-
     /*Auxuliary
     * ---------------------------------
     * */
 
-    private fun makeProducts(): String{
+    private fun makeProducts(): String {
         var productsStr = ""
         var pos = 0
-        for(product in alCart){
+        for (product in alCart) {
             pos++
             productsStr += pos.toString() + product.product.name
             productsStr += "--n--"
@@ -320,17 +350,17 @@ class Fragment_Cart : Fragment() {
         return productsStr
     }
 
-    private fun makeTotalPrice(): Double{
+    private fun makeTotalPrice(): Double {
         var price = 0.0
-        for (it in alCart){
+        for (it in alCart) {
             price += it.product.salePrice * it.amount
         }
         return price
     }
 
-    private fun makeTotalInv(): Double{
-        var inv= 0.0
-        for (it in alCart){
+    private fun makeTotalInv(): Double {
+        var inv = 0.0
+        for (it in alCart) {
             inv += it.product.buyPrice
         }
         return inv
@@ -339,52 +369,53 @@ class Fragment_Cart : Fragment() {
     /*Listener
     *-------------------------
     */
-    interface IReload{
+    interface IReload {
         fun onReload()
     }
 
-    fun setOnReloadListener(listenerReload : IReload){
+    fun setOnReloadListener(listenerReload: IReload) {
         this.listenerReload = listenerReload
     }
 
-    interface IDeleteProduct{
-        fun onDeleteProduct(code: String, amount: Int)
+    interface IDeleteProduct {
+        fun onDeleteProduct(code: String , amount: Int)
     }
 
-    fun setListenerDelete(listenerDelete: IDeleteProduct){
+    fun setListenerDelete(listenerDelete: IDeleteProduct) {
         this.listenerDelete = listenerDelete
     }
 
-    private fun checkInfo(): Boolean{
-        var  amount = 0
+    private fun checkInfo(): Boolean {
+        var amount = 0
 
-        if(li_cartAccept_binding?.tietNombClient?.text?.trim()?.isNotEmpty() == true){
+        if (li_cartAccept_binding?.tietNombClient?.text?.trim()?.isNotEmpty() == true) {
             amount++
-        }else{
-            li_cartAccept_binding?.tilNombClient?.error = getString(R.string.este_campo_no_debe_vacio)
+        } else {
+            li_cartAccept_binding?.tilNombClient?.error =
+                getString(R.string.este_campo_no_debe_vacio)
         }
 
-        if (li_cartAccept_binding?.tietDescuento?.text?.trim()?.isNotEmpty() ==true){
+        if (li_cartAccept_binding?.tietDescuento?.text?.trim()?.isNotEmpty() == true) {
             amount++
-        }else{
-            li_cartAccept_binding?.tilDescuento?.error = getString(R.string.este_campo_no_debe_vacio)
+        } else {
+            li_cartAccept_binding?.tilDescuento?.error =
+                getString(R.string.este_campo_no_debe_vacio)
         }
 
-        if (li_cartAccept_binding?.tietPago?.text?.trim()?.isNotEmpty() ==true){
+        if (li_cartAccept_binding?.tietPago?.text?.trim()?.isNotEmpty() == true) {
             amount++
-        }else{
+        } else {
             li_cartAccept_binding?.tietPago?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
-        if (li_cartAccept_binding?.tietSpinner?.text?.trim()?.isNotEmpty() == true){
+        if (li_cartAccept_binding?.tietSpinner?.text?.trim()?.isNotEmpty() == true) {
             amount++
-        }else{
+        } else {
             li_cartAccept_binding?.tietSpinner?.error = getString(R.string.este_campo_no_debe_vacio)
         }
 
         return amount == 4
     }
-
 
 
 }

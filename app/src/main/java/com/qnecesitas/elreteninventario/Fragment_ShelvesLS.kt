@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRShelves
@@ -21,6 +22,7 @@ import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.FragmentShelvesLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddShelfBinding
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -43,7 +45,7 @@ class Fragment_ShelvesLS : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater , container: ViewGroup? ,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentShelvesLsBinding.inflate(inflater)
@@ -53,15 +55,15 @@ class Fragment_ShelvesLS : Fragment() {
         binding.fsAdd.setOnClickListener { click_add() }
 
         //Refresh
-        binding.refresh.setOnRefreshListener( object : SwipeRefreshLayout.OnRefreshListener{
+        binding.refresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
                 loadRecyclerInfo()
             }
-        } )
+        })
 
         //Recycler
         al_shelves = ArrayList()
-        adapterRShelves = AdapterRShelvesLS(al_shelves, binding.root.context)
+        adapterRShelves = AdapterRShelvesLS(al_shelves , binding.root.context)
         binding.fsRecycler.setHasFixedSize(true)
         binding.fsRecycler.layoutManager = LinearLayoutManager(binding.root.context)
         binding.fsRecycler.adapter = adapterRShelves
@@ -75,17 +77,20 @@ class Fragment_ShelvesLS : Fragment() {
     }
 
 
-
     private fun loadRecyclerInfo() {
-        al_shelves = repository.fetchShelvesLS()
-        updateRecyclerAdapter()
+        lifecycleScope.launch {
+
+            al_shelves = repository.fetchShelvesLS()
+            updateRecyclerAdapter()
+        }
     }
 
+
     private fun updateRecyclerAdapter() {
-        if(al_shelves.isNotEmpty()){
+        if (al_shelves.isNotEmpty()) {
             al_shelves.sortBy { it.c_shelfLS }
             binding.fsNotInfo.visibility = View.GONE
-        }else{
+        } else {
             binding.fsNotInfo.visibility = View.VISIBLE
         }
 
@@ -94,7 +99,7 @@ class Fragment_ShelvesLS : Fragment() {
         } else {
             binding.fsRecycler.visibility = View.VISIBLE
         }
-        adapterRShelves = AdapterRShelvesLS(al_shelves, binding.root.context)
+        adapterRShelves = AdapterRShelvesLS(al_shelves , binding.root.context)
         adapterRShelves.setEditListener(object : AdapterRShelvesLS.RecyclerClickListener {
             override fun onClick(position: Int) {
                 click_edit(position)
@@ -131,15 +136,14 @@ class Fragment_ShelvesLS : Fragment() {
 
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
-            if (tietContent.trim().isNotEmpty()){
-                if(!isDuplicated(tietContent)) {
-                    if(!tietContent.contains("_")) {
+            if (tietContent.trim().isNotEmpty()) {
+                if (!isDuplicated(tietContent)) {
+                    if (!tietContent.contains("_")) {
                         addNewShelfInternet(tietContent)
                         alertDialog.dismiss()
-                    }else li_binding.til.error = getString(R.string.No_permitido_simbol)
-                }else li_binding.til.error = getString(R.string.Ya_existe_el_estante)
-            }
-            else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+                    } else li_binding.til.error = getString(R.string.No_permitido_simbol)
+                } else li_binding.til.error = getString(R.string.Ya_existe_el_estante)
+            } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -151,22 +155,25 @@ class Fragment_ShelvesLS : Fragment() {
     }
 
     private fun addNewShelfInternet(shelfCode: String) {
+        lifecycleScope.launch {
+
             repository.addShelfLS(shelfCode)
-            val model = ModelShelfLS(shelfCode, 0)
-            al_shelves.add(model)
-            updateRecyclerAdapter()
-            FancyToast.makeText(
-                    requireContext(),
-                    getString(R.string.Operacion_realizada_con_exito),
-                    FancyToast.LENGTH_LONG,
-                    FancyToast.SUCCESS,
-                    false
-            ).show()
+        }
+        val model = ModelShelfLS(shelfCode , 0)
+        al_shelves.add(model)
+        updateRecyclerAdapter()
+        FancyToast.makeText(
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
+        ).show()
     }
 
-    private fun isDuplicated(name: String): Boolean{
-        for(shelf in al_shelves){
-            if(shelf.c_shelfLS == name){
+    private fun isDuplicated(name: String): Boolean {
+        for (shelf in al_shelves) {
+            if (shelf.c_shelfLS == name) {
                 return true
             }
         }
@@ -175,10 +182,10 @@ class Fragment_ShelvesLS : Fragment() {
 
     //Edit shelf
     private fun click_edit(position: Int) {
-        li_editShelf(al_shelves[position].c_shelfLS, position)
+        li_editShelf(al_shelves[position].c_shelfLS , position)
     }
 
-    private fun li_editShelf(codeShelfOld: String, position: Int) {
+    private fun li_editShelf(codeShelfOld: String , position: Int) {
         val inflater = LayoutInflater.from(binding.root.context)
         li_binding = LiAddShelfBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
@@ -189,11 +196,10 @@ class Fragment_ShelvesLS : Fragment() {
         li_binding.tiet.setText(codeShelfOld)
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
-            if (tiedContent.trim().isNotEmpty()){
-                editShelfInternet(codeShelfOld, tiedContent, position)
+            if (tiedContent.trim().isNotEmpty()) {
+                editShelfInternet(codeShelfOld , tiedContent , position)
                 alertDialog.dismiss()
-            }
-            else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+            } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -204,16 +210,19 @@ class Fragment_ShelvesLS : Fragment() {
         alertDialog.show()
     }
 
-    private fun editShelfInternet(shelfCodeOld: String, shelfCodeNew: String, position: Int) {
-        val call = repository.updateShelfLS( shelfCodeOld, shelfCodeNew, al_shelves[position].amount)
+    private fun editShelfInternet(shelfCodeOld: String , shelfCodeNew: String , position: Int) {
+        lifecycleScope.launch {
+
+            repository.updateShelfLS(shelfCodeOld , shelfCodeNew , al_shelves[position].amount)
+        }
         al_shelves[position].c_shelfLS = shelfCodeNew
         updateRecyclerAdapter()
         FancyToast.makeText(
-                requireContext(),
-                getString(R.string.Operacion_realizada_con_exito),
-                FancyToast.LENGTH_LONG,
-                FancyToast.SUCCESS,
-                false
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
         ).show()
     }
 
@@ -221,9 +230,9 @@ class Fragment_ShelvesLS : Fragment() {
     //Delete shelf
     private fun click_delete(position: Int) {
         val amount = al_shelves[position].amount
-        if(amount == 0) {
+        if (amount == 0) {
             showAlertDialogDeleteShelf(position)
-        }else{
+        } else {
             showAlertDialogNotEmpty(amount)
         }
     }
@@ -232,8 +241,8 @@ class Fragment_ShelvesLS : Fragment() {
         val builder = android.app.AlertDialog.Builder(requireContext())
         builder.setCancelable(true)
             .setTitle(getString(R.string.elemento_no_vaciado))
-            .setMessage(getString(R.string.debe_eliminar_todo,amount))
-            .setPositiveButton(R.string.Aceptar) { dialog, _ ->
+            .setMessage(getString(R.string.debe_eliminar_todo , amount))
+            .setPositiveButton(R.string.Aceptar) { dialog , _ ->
                 dialog.dismiss()
             }
 
@@ -250,27 +259,30 @@ class Fragment_ShelvesLS : Fragment() {
         //set listeners for dialog buttons
         builder.setPositiveButton(
             R.string.Si
-        ) { dialog, _ ->
-                dialog.dismiss()
-                deleteShelfInternet(al_shelves[position].c_shelfLS, position)
+        ) { dialog , _ ->
+            dialog.dismiss()
+            deleteShelfInternet(al_shelves[position].c_shelfLS , position)
         }
-        builder.setNegativeButton(R.string.No,
-            DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
+        builder.setNegativeButton(R.string.No ,
+            DialogInterface.OnClickListener { dialog , _ -> dialog.dismiss() })
 
         //create the alert dialog and show it
         builder.create().show()
     }
 
-    private fun deleteShelfInternet(shelfCode: String, position: Int) {
-        repository.deleteShelfLS(shelfCode)
+    private fun deleteShelfInternet(shelfCode: String , position: Int) {
+        lifecycleScope.launch {
+
+            repository.deleteShelfLS(shelfCode)
+        }
         al_shelves.removeAt(position)
         updateRecyclerAdapter()
         FancyToast.makeText(
-                requireContext(),
-                getString(R.string.Operacion_realizada_con_exito),
-                FancyToast.LENGTH_LONG,
-                FancyToast.SUCCESS,
-                false
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
         ).show()
     }
 

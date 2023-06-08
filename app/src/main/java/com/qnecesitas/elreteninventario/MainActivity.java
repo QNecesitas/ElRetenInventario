@@ -11,7 +11,7 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final long TIEMPO_DE_ESPERA=2000;
+    private final long TIEMPO_DE_ESPERA = 2000;
 
 
     @Override
@@ -19,21 +19,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        View escondedor=getWindow().getDecorView();
+        View escondedor = getWindow().getDecorView();
         escondedor.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
-                        |View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        |View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        |View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        |View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        |View.SYSTEM_UI_FLAG_FULLSCREEN);
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         //Handler
-        @SuppressLint("HandlerLeak") Handler handler=new Handler(){
+        @SuppressLint("HandlerLeak") Handler handler = new Handler() {
             @Override
-            public void handleMessage(Message message){
-                if(message.arg1==1){
-                    Intent intent=new Intent(MainActivity.this, Activity_Login.class);
+            public void handleMessage(Message message) {
+                if (message.arg1 == 1) {
+                    Intent intent = new Intent(MainActivity.this, Activity_Login.class);
                     startActivity(intent);
                 }
             }
@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Thread
-        Thread thread=new Thread(() ->{
-            try{
+        Thread thread = new Thread(() -> {
+            try {
                 Thread.sleep(TIEMPO_DE_ESPERA);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            Message message=Message.obtain();
-            message.arg1=1;
+            Message message = Message.obtain();
+            message.arg1 = 1;
             handler.sendMessage(message);
         });
         thread.start();

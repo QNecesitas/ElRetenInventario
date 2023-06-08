@@ -19,31 +19,31 @@ class Activity_MenuSelesperson : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
-        binding.toolbar.setNavigationOnClickListener {finish()}
+        binding.toolbar.setNavigationOnClickListener { finish() }
 
-        binding.cvProduct.setOnClickListener{toProduct()}
+        binding.cvProduct.setOnClickListener { toProduct() }
 
-        binding.cvCounter.setOnClickListener{toCounter()}
+        binding.cvCounter.setOnClickListener { toCounter() }
 
-        binding.cvStore.setOnClickListener{toLittleStore()}
+        binding.cvStore.setOnClickListener { toLittleStore() }
 
     }
 
 
-    fun toLittleStore(){
+    fun toLittleStore() {
         FragmentsInfo.STORE_ACCESS = FragmentsInfo.Companion.EAccess.Salesperson
-        val intent = Intent(this, Activity_LittleStore::class.java)
+        val intent = Intent(this , Activity_LittleStore::class.java)
         startActivity(intent)
     }
 
-    fun toCounter(){
-        val intent = Intent(this,Activity_Counter:: class.java )
+    fun toCounter() {
+        val intent = Intent(this , Activity_Counter::class.java)
         startActivity(intent)
     }
 
-    fun toProduct(){
+    fun toProduct() {
         FragmentsInfo.LAST_CODE_SESSION_LS_SENDED = "no"
-        val intent = Intent(this,Activity_EditProductLS:: class.java )
+        val intent = Intent(this , Activity_EditProductLS::class.java)
         startActivity(intent)
     }
 

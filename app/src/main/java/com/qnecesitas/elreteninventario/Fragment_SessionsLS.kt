@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRSessions
@@ -22,6 +23,7 @@ import com.qnecesitas.elreteninventario.databinding.FragmentSessionsLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddSessionBinding
 import com.qnecesitas.elreteninventario.network.RetrofitSessionsImplLS
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -60,7 +62,7 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
 
         //Recycler
         al_sessionLS = ArrayList()
-        adapterRSessions = AdapterRSessionsLS(al_sessionLS, binding.root.context)
+        adapterRSessions = AdapterRSessionsLS(al_sessionLS , binding.root.context)
         binding.fsRecyclerSession.setHasFixedSize(true)
         binding.fsRecyclerSession.layoutManager = LinearLayoutManager(binding.root.context)
         binding.fsRecyclerSession.adapter = adapterRSessions
@@ -76,7 +78,10 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
-        al_sessionLS = repository.fetchSessionsLS(c_drawerLS)
+        lifecycleScope.launch {
+
+            al_sessionLS = repository.fetchSessionsLS(c_drawerLS)
+        }
         binding.fsRecyclerSession.visibility = View.VISIBLE
         binding.fsNotInfoSession.visibility = View.GONE
         updateRecyclerAdapter()
@@ -151,7 +156,10 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
     }
 
     private fun addNewSessionInternet(sessionCode: String) {
-        repository.addSessionLS(sessionCode , c_drawerLS)
+        lifecycleScope.launch {
+
+            repository.addSessionLS(sessionCode , c_drawerLS)
+        }
         val model = ModelSessionLS(sessionCode , c_drawerLS)
         al_sessionLS.add(model)
         updateRecyclerAdapter()
@@ -212,12 +220,15 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
         sessionCodeNew: String ,
         position: Int
     ) {
-        repository.updateSessionLS(
-            sessionCodeOld ,
-            sessionCodeNew ,
-            al_sessionLS[position].fk_c_drawerLS ,
-            al_sessionLS[position].amount
-        )
+        lifecycleScope.launch {
+
+            repository.updateSessionLS(
+                sessionCodeOld ,
+                sessionCodeNew ,
+                al_sessionLS[position].fk_c_drawerLS ,
+                al_sessionLS[position].amount
+            )
+        }
         al_sessionLS[position].c_sessionLS = sessionCodeNew
         updateRecyclerAdapter()
         FancyToast.makeText(
@@ -262,10 +273,13 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
     }
 
     private fun deleteSessionInternet(sessionCode: String , position: Int) {
-        repository.deleteSessionLS(
-            sessionCode ,
-            al_sessionLS[position].fk_c_drawerLS
-        )
+        lifecycleScope.launch {
+
+            repository.deleteSessionLS(
+                sessionCode ,
+                al_sessionLS[position].fk_c_drawerLS
+            )
+        }
         al_sessionLS.removeAt(position)
         updateRecyclerAdapter()
         FancyToast.makeText(

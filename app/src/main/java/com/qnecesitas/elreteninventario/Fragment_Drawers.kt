@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRDrawers
@@ -20,13 +21,15 @@ import com.qnecesitas.elreteninventario.databinding.FragmentDrawersBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddDrawerBinding
 import com.qnecesitas.elreteninventario.network.RetrofitDrawersImplS
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Fragment_Drawers(var c_shelfS : String): Fragment() {
+class Fragment_Drawers(var c_shelfS: String) : Fragment() {
 
     private var openDrawer: OpenDrawerS? = null
+
     //Recycler
     private lateinit var binding: FragmentDrawersBinding
     private lateinit var al_drawers: MutableList<ModelDrawerS>
@@ -40,7 +43,7 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater , container: ViewGroup? ,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDrawersBinding.inflate(inflater)
@@ -50,15 +53,15 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         binding.fdAdd.setOnClickListener { click_add() }
 
         //Refresh
-        binding.refresh.setOnRefreshListener( object : SwipeRefreshLayout.OnRefreshListener{
+        binding.refresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
                 loadRecyclerInfo()
             }
-        } )
+        })
 
         //Recycler
         al_drawers = ArrayList()
-        adapterRDrawers = AdapterRDrawers(al_drawers, binding.root.context)
+        adapterRDrawers = AdapterRDrawers(al_drawers , binding.root.context)
         binding.fdRecycler.setHasFixedSize(true)
         binding.fdRecycler.layoutManager = LinearLayoutManager(binding.root.context)
         binding.fdRecycler.adapter = adapterRDrawers
@@ -73,17 +76,20 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
+        lifecycleScope.launch {
 
-        al_drawers = repository.fetchDrawersS(c_shelfS)
 
-        binding.fdRecycler.visibility = View.VISIBLE
-        binding.fdNotInfo.visibility = View.GONE
-        updateRecyclerAdapter()
+            al_drawers = repository.fetchDrawersS(c_shelfS)
+
+            binding.fdRecycler.visibility = View.VISIBLE
+            binding.fdNotInfo.visibility = View.GONE
+            updateRecyclerAdapter()
+        }
 
     }
 
     private fun updateRecyclerAdapter() {
-        if(al_drawers.isNotEmpty()){
+        if (al_drawers.isNotEmpty()) {
             al_drawers.sortBy { it.c_drawerS }
         }
 
@@ -101,12 +107,12 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
                 click_edit(position)
             }
         })
-        adapterRDrawers.setDeleteListener(object: AdapterRDrawers.RecyclerClickListener{
+        adapterRDrawers.setDeleteListener(object : AdapterRDrawers.RecyclerClickListener {
             override fun onClick(position: Int) {
                 click_delete(position)
             }
         })
-        adapterRDrawers.setTouchListener(object: AdapterRDrawers.RecyclerClickListener{
+        adapterRDrawers.setTouchListener(object : AdapterRDrawers.RecyclerClickListener {
             override fun onClick(position: Int) {
                 val c_drawer = al_drawers.get(position).c_drawerS
                 openDrawer?.onDrawerSClicked(c_drawer)
@@ -131,15 +137,14 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
-            if (tietContent.trim().isNotEmpty()){
-                if(!isDuplicated(tietContent)) {
-                    if(!tietContent.contains("_")) {
+            if (tietContent.trim().isNotEmpty()) {
+                if (!isDuplicated(tietContent)) {
+                    if (!tietContent.contains("_")) {
                         addNewDrawerInternet(tietContent)
                         alertDialog.dismiss()
-                    }else li_binding.til.error = getString(R.string.No_permitido_simbol)
-                }else li_binding.til.error = getString(R.string.Ya_existe_gaveta)
-            }
-            else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+                    } else li_binding.til.error = getString(R.string.No_permitido_simbol)
+                } else li_binding.til.error = getString(R.string.Ya_existe_gaveta)
+            } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -153,8 +158,11 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     }
 
     private fun addNewDrawerInternet(drawerCode: String) {
+        lifecycleScope.launch {
 
-        repository.addDrawerS(drawerCode , c_shelfS)
+
+            repository.addDrawerS(drawerCode , c_shelfS)
+        }
 
         val model = ModelDrawerS(drawerCode , c_shelfS)
         al_drawers.add(model)
@@ -169,11 +177,11 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
     }
 
-    private fun isDuplicated(name: String): Boolean{
-        for(shelf in al_drawers){
+    private fun isDuplicated(name: String): Boolean {
+        for (shelf in al_drawers) {
             val positionSymbol = shelf.c_drawerS.lastIndexOf("_")
-            val codePrepared = shelf.c_drawerS.substring(positionSymbol+1)
-            if(codePrepared == name){
+            val codePrepared = shelf.c_drawerS.substring(positionSymbol + 1)
+            if (codePrepared == name) {
                 return true
             }
         }
@@ -182,10 +190,10 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
 
     //Edit drawer
     private fun click_edit(position: Int) {
-        li_editDrawer(al_drawers[position].c_drawerS, position)
+        li_editDrawer(al_drawers[position].c_drawerS , position)
     }
 
-    private fun li_editDrawer(codeDrawerOld: String, position: Int) {
+    private fun li_editDrawer(codeDrawerOld: String , position: Int) {
         val inflater = LayoutInflater.from(binding.root.context)
         li_binding = LiAddDrawerBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
@@ -198,11 +206,10 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         li_binding.tiet.setText(newCode)
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
-            if (tiedContent.trim().isNotEmpty()){
-                editDrawerInternet(codeDrawerOld, tiedContent, position)
+            if (tiedContent.trim().isNotEmpty()) {
+                editDrawerInternet(codeDrawerOld , tiedContent , position)
                 alertDialog.dismiss()
-            }
-            else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
+            } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
 
@@ -214,13 +221,16 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     }
 
     private fun editDrawerInternet(drawerCodeOld: String , drawerCodeNew: String , position: Int) {
+        lifecycleScope.launch {
 
-        repository.updateDrawerS(
-            drawerCodeOld ,
-            drawerCodeNew ,
-            al_drawers[position].fk_c_shelfS ,
-            al_drawers[position].amount
-        )
+
+            repository.updateDrawerS(
+                drawerCodeOld ,
+                drawerCodeNew ,
+                al_drawers[position].fk_c_shelfS ,
+                al_drawers[position].amount
+            )
+        }
 
         al_drawers[position].c_drawerS = drawerCodeNew
         updateRecyclerAdapter()
@@ -238,9 +248,9 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     //Delete drawer
     private fun click_delete(position: Int) {
         val amount = al_drawers[position].amount
-        if(amount == 0) {
+        if (amount == 0) {
             showAlertDialogDeleteDrawer(position)
-        }else{
+        } else {
             showAlertDialogNotEmpty(amount)
         }
     }
@@ -249,8 +259,8 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         val builder = android.app.AlertDialog.Builder(requireContext())
         builder.setCancelable(true)
             .setTitle(getString(R.string.elemento_no_vaciado))
-            .setMessage(getString(R.string.debe_eliminar_todo,amount))
-            .setPositiveButton(R.string.Aceptar) { dialog, _ ->
+            .setMessage(getString(R.string.debe_eliminar_todo , amount))
+            .setPositiveButton(R.string.Aceptar) { dialog , _ ->
                 dialog.dismiss()
             }
 
@@ -267,20 +277,23 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
         //set listeners for dialog buttons
         builder.setPositiveButton(
             R.string.Si
-        ) { dialog, _ ->
-                dialog.dismiss()
-                deleteDrawerInternet(al_drawers[position].c_drawerS, position)
+        ) { dialog , _ ->
+            dialog.dismiss()
+            deleteDrawerInternet(al_drawers[position].c_drawerS , position)
         }
-        builder.setNegativeButton(R.string.No,
-            DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
+        builder.setNegativeButton(R.string.No ,
+            DialogInterface.OnClickListener { dialog , _ -> dialog.dismiss() })
 
         //create the alert dialog and show it
         builder.create().show()
     }
 
-    private fun deleteDrawerInternet(drawerCode: String, position: Int) {
+    private fun deleteDrawerInternet(drawerCode: String , position: Int) {
+        lifecycleScope.launch {
 
-        repository.deleteDrawerS(drawerCode , al_drawers.get(position).fk_c_shelfS)
+
+            repository.deleteDrawerS(drawerCode , al_drawers.get(position).fk_c_shelfS)
+        }
 
         al_drawers.removeAt(position)
         updateRecyclerAdapter()
@@ -295,12 +308,12 @@ class Fragment_Drawers(var c_shelfS : String): Fragment() {
     }
 
 
-    fun setOpenDrawerSListener(openDrawerS: Fragment_Drawers.OpenDrawerS){
+    fun setOpenDrawerSListener(openDrawerS: Fragment_Drawers.OpenDrawerS) {
         this.openDrawer = openDrawerS
     }
 
-    interface OpenDrawerS{
-        fun onDrawerSClicked(code : String)
+    interface OpenDrawerS {
+        fun onDrawerSClicked(code: String)
     }
 
 }

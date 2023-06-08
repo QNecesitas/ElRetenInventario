@@ -113,10 +113,10 @@ class Activity_Counter : AppCompatActivity() {
     * */
     private fun loadRecyclerInfo() {
 
-      lifecycleScope.launch {
-          alCounter = repository.fetchProductsSAll()
-          updateRecyclerAdapter()
-      }
+        lifecycleScope.launch {
+            alCounter = repository.fetchProductsSAll()
+            updateRecyclerAdapter()
+        }
     }
 
     private fun updateRecyclerAdapter() {
@@ -211,7 +211,6 @@ class Activity_Counter : AppCompatActivity() {
         //create the alert dialog and show it
         builder.create().show()
     }
-
 
 
     /*Listeners

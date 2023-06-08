@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qnecesitas.elreteninventario.adapters.AdapterRSessions
@@ -18,6 +19,7 @@ import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.FragmentSessionsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddSessionBinding
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.launch
 
 class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
@@ -35,7 +37,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
     private lateinit var li_binding: LiAddSessionBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater , container: ViewGroup? ,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSessionsBinding.inflate(inflater)
@@ -53,7 +55,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
         //Recycler
         al_sessions = ArrayList()
-        adapterRSessions = AdapterRSessions(al_sessions, binding.root.context)
+        adapterRSessions = AdapterRSessions(al_sessions , binding.root.context)
         binding.fsRecyclerSession.setHasFixedSize(true)
         binding.fsRecyclerSession.layoutManager = LinearLayoutManager(binding.root.context)
         binding.fsRecyclerSession.adapter = adapterRSessions
@@ -69,14 +71,17 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
     //Recycler information
     private fun loadRecyclerInfo() {
-        al_sessions = repository.fetchSessionsS(c_drawerS)
+        lifecycleScope.launch {
+
+            al_sessions = repository.fetchSessionsS(c_drawerS)
+        }
         binding.fsRecyclerSession.visibility = View.VISIBLE
         binding.fsNotInfoSession.visibility = View.GONE
         updateRecyclerAdapter()
     }
 
     private fun updateRecyclerAdapter() {
-        if(al_sessions.isNotEmpty()){
+        if (al_sessions.isNotEmpty()) {
             al_sessions.sortBy { it.c_sessionS }
         }
 
@@ -87,7 +92,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
             binding.fsNotInfoSession.visibility = View.GONE
             binding.fsRecyclerSession.visibility = View.VISIBLE
         }
-        adapterRSessions = AdapterRSessions(al_sessions, binding.root.context)
+        adapterRSessions = AdapterRSessions(al_sessions , binding.root.context)
 
         adapterRSessions.setEditListener(object : AdapterRSessions.RecyclerClickListener {
             override fun onClick(position: Int) {
@@ -125,12 +130,12 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         li_binding.btnAccept.setOnClickListener {
             tietContent = li_binding.tiet.text.toString()
             if (tietContent.trim().isNotEmpty()) {
-                if(!isDuplicated(tietContent)) {
-                    if(!tietContent.contains("_")) {
+                if (!isDuplicated(tietContent)) {
+                    if (!tietContent.contains("_")) {
                         addNewSessionInternet(tietContent)
                         alertDialog.dismiss()
-                    }else li_binding.til.error = getString(R.string.No_permitido_simbol)
-                }else li_binding.til.error = getString(R.string.Ya_existe_seccion)
+                    } else li_binding.til.error = getString(R.string.No_permitido_simbol)
+                } else li_binding.til.error = getString(R.string.Ya_existe_seccion)
             } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
         li_binding.btnCancel.setOnClickListener { alertDialog.dismiss() }
@@ -143,26 +148,30 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
     }
 
     private fun addNewSessionInternet(sessionCode: String) {
+        lifecycleScope.launch {
 
-        repository.addSessionS( sessionCode, c_drawerS)
 
-        val model = ModelSessionS(sessionCode, c_drawerS)
+            repository.addSessionS(sessionCode , c_drawerS)
+        }
+
+        val model = ModelSessionS(sessionCode , c_drawerS)
         al_sessions.add(model)
         updateRecyclerAdapter()
         FancyToast.makeText(
-                requireContext(),
-                getString(R.string.Operacion_realizada_con_exito),
-                FancyToast.LENGTH_LONG,
-                FancyToast.SUCCESS,
-                false).show()
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
+        ).show()
 
     }
 
-    private fun isDuplicated(name: String): Boolean{
-        for(shelf in al_sessions){
+    private fun isDuplicated(name: String): Boolean {
+        for (shelf in al_sessions) {
             val positionSymbol = shelf.c_sessionS.lastIndexOf("_")
-            val codePrepared = shelf.c_sessionS.substring(positionSymbol+1)
-            if(codePrepared == name){
+            val codePrepared = shelf.c_sessionS.substring(positionSymbol + 1)
+            if (codePrepared == name) {
                 return true
             }
         }
@@ -171,10 +180,10 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
 
     //Edit session
     private fun click_edit(position: Int) {
-        li_editSession(al_sessions[position].c_sessionS, position)
+        li_editSession(al_sessions[position].c_sessionS , position)
     }
 
-    private fun li_editSession(codeSessionOld: String, position: Int) {
+    private fun li_editSession(codeSessionOld: String , position: Int) {
         val inflater = LayoutInflater.from(binding.root.context)
         li_binding = LiAddSessionBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
@@ -188,7 +197,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         li_binding.btnAccept.setOnClickListener {
             tiedContent = li_binding.tiet.text.toString()
             if (tiedContent.trim().isNotEmpty()) {
-                editSessionInternet(codeSessionOld, tiedContent, position)
+                editSessionInternet(codeSessionOld , tiedContent , position)
                 alertDialog.dismiss()
             } else li_binding.til.error = getString(R.string.este_campo_no_debe_vacio)
         }
@@ -201,31 +210,38 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         alertDialog.show()
     }
 
-    private fun editSessionInternet(sessionCodeOld: String, sessionCodeNew: String, position: Int) {
-        repository.updateSessionS(
-                sessionCodeOld,
-                sessionCodeNew,
-                al_sessions[position].fk_c_drawerS,
+    private fun editSessionInternet(
+        sessionCodeOld: String ,
+        sessionCodeNew: String ,
+        position: Int
+    ) {
+        lifecycleScope.launch {
+
+            repository.updateSessionS(
+                sessionCodeOld ,
+                sessionCodeNew ,
+                al_sessions[position].fk_c_drawerS ,
                 al_sessions[position].amount
-        )
+            )
+        }
 
         al_sessions[position].c_sessionS = sessionCodeNew
         updateRecyclerAdapter()
         FancyToast.makeText(
-                requireContext(),
-                getString(R.string.Operacion_realizada_con_exito),
-                FancyToast.LENGTH_LONG,
-                FancyToast.SUCCESS,
-                false
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
         ).show()
     }
 
     //Delete session
     private fun click_delete(position: Int) {
         val amount = al_sessions[position].amount
-        if(amount == 0) {
+        if (amount == 0) {
             showAlertDialogDeleteSession(position)
-        }else{
+        } else {
             showAlertDialogNotEmpty(amount)
         }
     }
@@ -234,8 +250,8 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         val builder = android.app.AlertDialog.Builder(requireContext())
         builder.setCancelable(true)
             .setTitle(getString(R.string.elemento_no_vaciado))
-            .setMessage(getString(R.string.debe_eliminar_todo,amount))
-            .setPositiveButton(R.string.Aceptar) { dialog, _ ->
+            .setMessage(getString(R.string.debe_eliminar_todo , amount))
+            .setPositiveButton(R.string.Aceptar) { dialog , _ ->
                 dialog.dismiss()
             }
 
@@ -252,31 +268,34 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         //set listeners for dialog buttons
         builder.setPositiveButton(
             R.string.Si
-        ) { dialog, _ ->
-                dialog.dismiss()
-                deleteSessionInternet(al_sessions[position].c_sessionS, position)
+        ) { dialog , _ ->
+            dialog.dismiss()
+            deleteSessionInternet(al_sessions[position].c_sessionS , position)
         }
-        builder.setNegativeButton(R.string.No,
-            DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
+        builder.setNegativeButton(R.string.No ,
+            DialogInterface.OnClickListener { dialog , _ -> dialog.dismiss() })
 
         //create the alert dialog and show it
         builder.create().show()
     }
 
-    private fun deleteSessionInternet(sessionCode: String, position: Int) {
-        repository.deleteSessionS(
-                sessionCode,
+    private fun deleteSessionInternet(sessionCode: String , position: Int) {
+        lifecycleScope.launch {
+
+            repository.deleteSessionS(
+                sessionCode ,
                 al_sessions.get(position).fk_c_drawerS
-        )
+            )
+        }
 
         al_sessions.removeAt(position)
         updateRecyclerAdapter()
         FancyToast.makeText(
-                requireContext(),
-                getString(R.string.Operacion_realizada_con_exito),
-                FancyToast.LENGTH_LONG,
-                FancyToast.SUCCESS,
-                false
+            requireContext() ,
+            getString(R.string.Operacion_realizada_con_exito) ,
+            FancyToast.LENGTH_LONG ,
+            FancyToast.SUCCESS ,
+            false
         ).show()
     }
 
