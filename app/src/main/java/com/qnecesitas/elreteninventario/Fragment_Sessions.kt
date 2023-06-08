@@ -59,7 +59,7 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         binding.fsRecyclerSession.adapter = adapterRSessions
 
         //Retrofit
-        repository = Repository(requireActivity().application)
+        repository = Repository(requireActivity().application as ElRetenApplication)
 
 
         loadRecyclerInfo()

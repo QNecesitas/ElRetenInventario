@@ -62,7 +62,7 @@ class Statistics : AppCompatActivity() {
 
 
         //retrofit
-        repository = Repository(application)
+        repository = Repository(application as ElRetenApplication)
         alSalesAll = ArrayList()
         alRanking = ArrayList()
         alMonthSalesRanking = ArrayList()

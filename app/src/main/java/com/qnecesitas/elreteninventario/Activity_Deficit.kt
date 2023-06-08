@@ -51,7 +51,7 @@ class Activity_Deficit : AppCompatActivity() {
         adapterR_DeficitProduct = AdapterR_DeficitProduct(al_deficitProduct, applicationContext)
 
         //Refresh
-        repository = Repository(application)
+        repository = Repository(application as ElRetenApplication)
         binding.adRefresh.setOnRefreshListener { loadRecyclerInfo() }
 
 

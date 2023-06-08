@@ -43,7 +43,7 @@ class Activity_Settings : AppCompatActivity() {
 
         //Internet
         alPassword = ArrayList()
-        repository = Repository(Application())
+        repository = Repository(application as ElRetenApplication)
     }
 
     /*Listeners

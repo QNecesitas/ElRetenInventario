@@ -100,7 +100,7 @@ class Activity_EditProduct : AppCompatActivity() {
         binding.aepToolbar.setNavigationOnClickListener { finish() }
 
         //Init
-        repository = Repository(Application())
+        repository = Repository(application as ElRetenApplication)
         //Button Add
         if (FragmentsInfo.LAST_CODE_SESSION_SENDED == "no") {
             binding.aepFabAdd.visibility = View.GONE

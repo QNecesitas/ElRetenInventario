@@ -66,7 +66,7 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
         binding.fdRecycler.adapter = adapterRDrawersLS
 
         //Retrofit
-        repository = Repository(requireActivity().application)
+        repository = Repository(requireActivity().application as ElRetenApplication)
 
         //Internet
         loadRecyclerInfo()

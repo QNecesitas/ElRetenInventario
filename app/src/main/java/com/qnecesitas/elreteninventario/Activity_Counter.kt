@@ -13,6 +13,7 @@ import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -26,6 +27,8 @@ import com.qnecesitas.elreteninventario.databinding.LiAddCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiShowProductBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplLS
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -89,7 +92,7 @@ class Activity_Counter : AppCompatActivity() {
 
 
         //Internet
-        repository = Repository(Application())
+        repository = Repository(application as ElRetenApplication)
 
         binding.refresh.setOnRefreshListener {
             if (fragment_carrito.isEmpty()) {
@@ -110,12 +113,10 @@ class Activity_Counter : AppCompatActivity() {
     * */
     private fun loadRecyclerInfo() {
 
-
-        alCounter = repository.fetchProductsSAll()
-
-        alertNotInternet(false)
-        updateRecyclerAdapter()
-
+      lifecycleScope.launch {
+          alCounter = repository.fetchProductsSAll()
+          updateRecyclerAdapter()
+      }
     }
 
     private fun updateRecyclerAdapter() {
@@ -211,15 +212,7 @@ class Activity_Counter : AppCompatActivity() {
         builder.create().show()
     }
 
-    private fun alertNotInternet(open: Boolean) {
-        if (open) {
-            binding.rvProductsShow.visibility = View.GONE
-            binding.notInfo.visibility = View.GONE
-        } else {
-            binding.rvProductsShow.visibility = View.VISIBLE
-            binding.notInfo.visibility = View.GONE
-        }
-    }
+
 
     /*Listeners
     * ---------------------------------

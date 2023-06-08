@@ -67,7 +67,7 @@ class Fragment_ShelvesLS : Fragment() {
         binding.fsRecycler.adapter = adapterRShelves
 
         //Retrofit
-        repository = Repository(requireActivity().application)
+        repository = Repository(requireActivity().application as ElRetenApplication)
 
         //Internet
         loadRecyclerInfo()

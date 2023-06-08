@@ -170,7 +170,7 @@ class Activity_Sales : AppCompatActivity() {
 
 
         //Internet
-        repository = Repository(Application())
+        repository = Repository(application as ElRetenApplication)
 
 
         //Recycler

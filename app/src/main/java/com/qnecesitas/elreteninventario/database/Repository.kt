@@ -14,154 +14,154 @@ import com.qnecesitas.elreteninventario.data.ModelSessionS
 import com.qnecesitas.elreteninventario.data.ModelShelfLS
 import com.qnecesitas.elreteninventario.data.ModelShelfS
 
-class Repository(private val application: Application) {
-    val drawerLSDao = (application as ElRetenApplication).database.drawerLSDao()
-    val shelfSLSDao = (application as ElRetenApplication).database.shelfLSDao()
-    val drawerSDao = (application as ElRetenApplication).database.drawerSDao()
-    val shelfSSDao = (application as ElRetenApplication).database.shelfSDao()
-    val ordersDao = (application as ElRetenApplication).database.ordersDao()
-    val sessionSDao = (application as ElRetenApplication).database.sessionSDao()
-    val sessionLSDao = (application as ElRetenApplication).database.sessionLSDao()
-    val productSDao = (application as ElRetenApplication).database.productSDao()
-    val productLSDao = (application as ElRetenApplication).database.productLSDao()
-    val accountDao = (application as ElRetenApplication).database.accountDao()
+class Repository(application: ElRetenApplication) {
+    val drawerLSDao = application.database.drawerLSDao()
+    val shelfSLSDao = application.database.shelfLSDao()
+    val drawerSDao = application.database.drawerSDao()
+    val shelfSSDao = application.database.shelfSDao()
+    val ordersDao = application.database.ordersDao()
+    val sessionSDao = application.database.sessionSDao()
+    val sessionLSDao = application.database.sessionLSDao()
+    val productSDao = application.database.productSDao()
+    val productLSDao = application.database.productLSDao()
+    val accountDao = application.database.accountDao()
 
-    fun addDrawerLs(c_drawerLS: String, fk_c_shelfLS: String, ){
+    suspend fun addDrawerLs(c_drawerLS: String, fk_c_shelfLS: String, ){
          drawerLSDao.insertDrawerLS(c_drawerLS,fk_c_shelfLS)
          shelfSLSDao.updateShelfLS(fk_c_shelfLS)
     }
 
-    fun addDrawerS(c_drawerS: String, fk_c_shelfS: String){
+    suspend fun addDrawerS(c_drawerS: String, fk_c_shelfS: String){
         drawerSDao.insertDawerS(c_drawerS, fk_c_shelfS)
         shelfSSDao.updateShelfSmore(fk_c_shelfS)
     }
 
-    fun addOrder(name: String, products: String, totalPrice: Double, totalInv: Double, discount: Double, type: String, totalTransf: Double, day: Int, month: Int, year: Int ){
+    suspend fun addOrder(name: String, products: String, totalPrice: Double, totalInv: Double, discount: Double, type: String, totalTransf: Double, day: Int, month: Int, year: Int ){
         ordersDao.insertOrders(name,products,totalPrice,totalInv,discount,day,month,year,type,totalTransf)
     }
 
-    fun addProduct(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int, size: String, brand: String){
+    suspend fun addProduct(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int, size: String, brand: String){
         productSDao.insertProducts(c_productS,name,fk_c_sessionS,amount,buyPrice,salePrice,descr,1,deficit,size,brand)
         sessionSDao.updateSessionSmore(fk_c_sessionS)
     }
 
-    fun addProductLS(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int, size: String, brand: String){
+    suspend fun addProductLS(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int, size: String, brand: String){
         productLSDao.insertProductLS(c_productS,name,fk_c_sessionS,amount,buyPrice,salePrice,descr,deficit,1,size,brand)
         sessionLSDao.updateSessionLSmore(fk_c_sessionS)
     }
 
-    fun addSessionLS(c_sessionLS: String, fk_c_drawerLS: String){
+    suspend fun addSessionLS(c_sessionLS: String, fk_c_drawerLS: String){
         sessionLSDao.insertSessionLS(c_sessionLS,fk_c_drawerLS)
        drawerLSDao.updateDrawerLSmore(fk_c_drawerLS)
     }
 
-    fun addSessionS(c_sessionS: String, fk_c_drawerS: String){
+    suspend fun addSessionS(c_sessionS: String, fk_c_drawerS: String){
         sessionSDao.insertSessionS(c_sessionS,fk_c_drawerS)
         drawerSDao.updateDrawerSmore(fk_c_drawerS)
     }
 
-    fun addShelfLS(c_shelfLS: String){
+    suspend fun addShelfLS(c_shelfLS: String){
         shelfSLSDao.insertShelfLS(c_shelfLS)
     }
 
-    fun addShelfS(c_shelfS: String){
+    suspend fun addShelfS(c_shelfS: String){
         shelfSSDao.insertShelfS(c_shelfS)
     }
 
-    fun alterAmountLS(c_productLS: String, amount: Int){
+    suspend fun alterAmountLS(c_productLS: String, amount: Int){
         productLSDao.updateProductLSAmount(amount,c_productLS)
     }
 
-    fun alterAmountS(c_productS: String, amount: Int){
+    suspend fun alterAmountS(c_productS: String, amount: Int){
         productSDao.updateProductAmountS(amount,c_productS)
     }
 
-    fun deleteDrawerLS(c_drawerLS: String,fk_c_shelfLS: String){
+    suspend fun deleteDrawerLS(c_drawerLS: String,fk_c_shelfLS: String){
         drawerLSDao.deleteDrawerLS(c_drawerLS)
         shelfSLSDao.updateAmountShelfLS(fk_c_shelfLS)
     }
 
-    fun deleteDrawerS(c_drawerS: String,fk_c_shelfS: String){
+    suspend fun deleteDrawerS(c_drawerS: String,fk_c_shelfS: String){
         drawerSDao.deleteDrawerS(c_drawerS)
         shelfSSDao.updateShelfSless(fk_c_shelfS)
     }
 
-    fun deleteOrder(c_order: Int){
+    suspend fun deleteOrder(c_order: Int){
         ordersDao.deleteOrders(c_order)
     }
 
-    fun deleteProduct(c_productS: String,fk_c_sessionS: String){
+    suspend fun deleteProduct(c_productS: String,fk_c_sessionS: String){
         sessionSDao.updateSessionS(fk_c_sessionS)
         productSDao.deleteProductS(c_productS)
     }
 
-    fun deleteProductLS(c_productLS: String,fk_c_sessionS: String){
+    suspend fun deleteProductLS(c_productLS: String,fk_c_sessionS: String){
         productLSDao.deleteProductLS(c_productLS)
         sessionLSDao.updateSessionLSless(fk_c_sessionS)
     }
 
-    fun deleteSessionLS(c_sessionLS: String,fk_c_drawerLS: String){
+    suspend fun deleteSessionLS(c_sessionLS: String,fk_c_drawerLS: String){
         sessionLSDao.deleteSessionLS(c_sessionLS)
         drawerLSDao.updateDrawerLSless(fk_c_drawerLS)
     }
 
 
-    fun deleteSessionS(c_sessionS: String,fk_c_drawerS: String){
+    suspend fun deleteSessionS(c_sessionS: String,fk_c_drawerS: String){
         sessionSDao.deleteSessionS(c_sessionS)
         drawerSDao.updateDrawerSless(fk_c_drawerS)
     }
 
 
-    fun deleteShelfLS(c_shelfLS: String){
+    suspend fun deleteShelfLS(c_shelfLS: String){
         shelfSLSDao.deleteShelfLS(c_shelfLS)
     }
 
 
-    fun deleteShelfS(c_shelfS: String){
+    suspend fun deleteShelfS(c_shelfS: String){
         shelfSSDao.deleteShelfS(c_shelfS)
     }
 
-    fun fetchAccounts() : MutableList<ModelPassword>{
+    suspend fun fetchAccounts() : MutableList<ModelPassword>{
         return accountDao.selectAccount().toMutableList()
     }
 
-    fun fetchDrawersLS(fk_c_shelfLS: String) :MutableList<ModelDrawerLS>{
+    suspend fun fetchDrawersLS(fk_c_shelfLS: String) :MutableList<ModelDrawerLS>{
         return drawerLSDao.selectDrawerLS(fk_c_shelfLS).toMutableList()
     }
 
-    fun fetchDrawersS(fk_c_shelfS: String) : MutableList<ModelDrawerS>{
+    suspend fun fetchDrawersS(fk_c_shelfS: String) : MutableList<ModelDrawerS>{
         return drawerSDao.selectDrawerS(fk_c_shelfS).toMutableList()
     }
 
-    fun fetchOrdersAll() : MutableList<ModelSale>{
+    suspend fun fetchOrdersAll() : MutableList<ModelSale>{
         return ordersDao.selectOrderAll().toMutableList()
     }
 
-    fun fetchOrdersD(year:Int,month: Int,day: Int) : MutableList<ModelSale>{
+    suspend fun fetchOrdersD(year:Int,month: Int,day: Int) : MutableList<ModelSale>{
         return ordersDao.selectOrderD(day,month,year).toMutableList()
     }
 
-    fun fetchOrdersM(year: Int,month: Int) : MutableList<ModelSale>{
+    suspend fun fetchOrdersM(year: Int,month: Int) : MutableList<ModelSale>{
         return ordersDao.selectOrdersM(month,year).toMutableList()
     }
 
-    fun fetchOrdersY(year: Int) : MutableList<ModelSale>{
+    suspend fun fetchOrdersY(year: Int) : MutableList<ModelSale>{
         return ordersDao.selectOrderY(year).toMutableList()
     }
 
-    //fun fetchProductLSPath(c_productLS: String) : MutableList<ModelProductPath>{
+    //suspend fun fetchProductLSPath(c_productLS: String) : MutableList<ModelProductPath>{
     //    return productLSDao.selectProductLSPath(c_productLS)
     //}
 
-    //fun fetchProductSPath(c_productS: String): MutableList<ModelProductPath>{
+    //suspend fun fetchProductSPath(c_productS: String): MutableList<ModelProductPath>{
     //    return productSDao.selectProductLSPath(c_productS)
     //}
 
-    fun fetchProductsCounter() : MutableList<ModelEditProductS>{
+    suspend fun fetchProductsCounter() : MutableList<ModelEditProductS>{
         return productSDao.selectProdcutSCounter().toMutableList()
     }
 
-    //fun fetchProductsDeficit(button:String) : MutableList<ModelEditProductS>{
+    //suspend fun fetchProductsDeficit(button:String) : MutableList<ModelEditProductS>{
     //    if(button == "Almacén"){
     //        return productSDao.selectProductSDeficit()
      //   }else{
@@ -169,19 +169,19 @@ class Repository(private val application: Application) {
       //  }
     //}
 
-    fun fetchProductsLS(fk_c_sessionLS: String) : MutableList<ModelEditProductLS>{
+    suspend fun fetchProductsLS(fk_c_sessionLS: String) : MutableList<ModelEditProductLS>{
         return productLSDao.selectProductLS(fk_c_sessionLS).toMutableList()
     }
 
-    fun fetchProductsLSAll() : MutableList<ModelEditProductLS>{
+    suspend fun fetchProductsLSAll() : MutableList<ModelEditProductLS>{
         return productLSDao.selectProductLSAll().toMutableList()
     }
 
-    fun fetchProductsS(fk_c_sessionS:String) : MutableList<ModelEditProductS>{
+    suspend fun fetchProductsS(fk_c_sessionS:String) : MutableList<ModelEditProductS>{
         return productSDao.selectProductS(fk_c_sessionS).toMutableList()
     }
 
-    fun fetchProductsSAll() : MutableList<ModelEditProductS> {
+    suspend fun fetchProductsSAll() : MutableList<ModelEditProductS> {
         val result = productSDao.selectProductSAll().toMutableList()
         for (it in productLSDao.selectProductLSAll()){
             val newModel = ModelEditProductS(
@@ -203,23 +203,23 @@ class Repository(private val application: Application) {
         return result
     }
 
-    fun fetchSessionsLS(fk_c_drawerLS: String) : MutableList<ModelSessionLS>{
+    suspend fun fetchSessionsLS(fk_c_drawerLS: String) : MutableList<ModelSessionLS>{
         return sessionLSDao.selectSessionLS(fk_c_drawerLS).toMutableList()
     }
 
-    fun fetchSessionsS(fk_c_drawerS: String): MutableList<ModelSessionS>{
+    suspend fun fetchSessionsS(fk_c_drawerS: String): MutableList<ModelSessionS>{
         return sessionSDao.selectSessionS(fk_c_drawerS).toMutableList()
     }
 
-    fun fetchShelvesLS(): MutableList<ModelShelfLS>{
+    suspend fun fetchShelvesLS(): MutableList<ModelShelfLS>{
         return shelfSLSDao.selectShelfLS().toMutableList()
     }
 
-    fun fetchShelvesS() : MutableList<ModelShelfS>{
+    suspend fun fetchShelvesS() : MutableList<ModelShelfS>{
         return shelfSSDao.selectShelfS().toMutableList()
     }
 
-    fun transferProductLS_S(c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionS: String,deficit: Int,exists:Int,sendAll: Int,size: String,brand: String){
+    suspend fun transferProductLS_S(c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionS: String,deficit: Int,exists:Int,sendAll: Int,size: String,brand: String){
         if(exists == 1){
             productSDao.updateProductSTransMore(amount,c_productLS)
         }else{
@@ -234,7 +234,7 @@ class Repository(private val application: Application) {
         }
     }
 
-    fun transferProductS_LS(c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionLS: String,deficit: Int,exists: Int,sendAll: Int,size: String,brand: String){
+    suspend fun transferProductS_LS(c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionLS: String,deficit: Int,exists: Int,sendAll: Int,size: String,brand: String){
         if(exists == 1){
             productLSDao.updateProductSTrans(amount,c_productS)
         }else{
@@ -249,32 +249,32 @@ class Repository(private val application: Application) {
         }
     }
 
-    fun updateAccount(password:String,user:String){
+    suspend fun updateAccount(password:String,user:String){
         accountDao.updateAccount(password,user)
     }
 
-    fun updateDrawerLS(c_drawerLSOld: String,c_drawerLSNew:String,fk_c_shelfLS: String,amount: Int){
+    suspend fun updateDrawerLS(c_drawerLSOld: String,c_drawerLSNew:String,fk_c_shelfLS: String,amount: Int){
         drawerLSDao.insertDrawerLSUp(c_drawerLSNew,fk_c_shelfLS,amount)
         sessionLSDao.updateSessionLSUp(c_drawerLSNew,c_drawerLSOld)
         drawerLSDao.deleteDrawerLSUp(c_drawerLSOld)
     }
 
-    fun updateDrawerS(c_drawerSOld: String,c_drawerSNew: String,fk_c_shelfS: String,amount: Int){
+    suspend fun updateDrawerS(c_drawerSOld: String,c_drawerSNew: String,fk_c_shelfS: String,amount: Int){
         drawerSDao.insertDrawerSUp(c_drawerSNew,fk_c_shelfS,amount)
         sessionSDao.updateSessionSUp(c_drawerSNew,c_drawerSOld)
         drawerSDao.deleteDrawerSUp(c_drawerSOld)
     }
 
-    fun updateProduct(file: String,c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,statePhoto: Int,size: String,brand: String){
+    suspend fun updateProduct(file: String,c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,statePhoto: Int,size: String,brand: String){
         productSDao.updateProductS(name,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand,c_productS)
     }
 
-    fun updateProductLS(c_productLSOld: String,file: String,c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,size: String,brand: String){
+    suspend fun updateProductLS(c_productLSOld: String,file: String,c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,size: String,brand: String){
         productLSDao.updateProductLS(c_productLS,name,amount,buyPrice,salePrice,descr,1,deficit,size,brand,c_productLSOld)
 
     }
 
-    fun updateSessionLS(c_sessionLSOld: String,c_sessionLSNew: String,fk_c_drawerLS: String,amount: Int){
+    suspend fun updateSessionLS(c_sessionLSOld: String,c_sessionLSNew: String,fk_c_drawerLS: String,amount: Int){
         sessionLSDao.insertSessionLSAmount(c_sessionLSNew,fk_c_drawerLS,amount)
         productLSDao.updateProductLSforain(c_sessionLSNew,c_sessionLSOld)
         sessionLSDao.deleteSessionLS(c_sessionLSOld)
@@ -284,20 +284,20 @@ class Repository(private val application: Application) {
 
     }
 
-    fun updateSessionS(c_sessionSOld: String,c_sessionSNew: String,fk_c_drawerS: String,amount: Int){
+    suspend fun updateSessionS(c_sessionSOld: String,c_sessionSNew: String,fk_c_drawerS: String,amount: Int){
         sessionSDao.insertSessionSAmount(c_sessionSNew,fk_c_drawerS,amount)
         sessionSDao.updateProductSforain(c_sessionSNew,c_sessionSOld)
         sessionSDao.deleteSessionS(c_sessionSOld)
     }
 
-    fun updateShelfLS(c_shelfLSOld: String,c_shelfLSNew: String,amount: Int){
+    suspend fun updateShelfLS(c_shelfLSOld: String,c_shelfLSNew: String,amount: Int){
         shelfSLSDao.insertShelfLS(c_shelfLSNew)
         drawerLSDao.updateDrawerLSForain(c_shelfLSNew,c_shelfLSOld)
         shelfSLSDao.deleteShelfLSLower(c_shelfLSOld)
 
     }
 
-    fun updateShelfS(c_shelfSOld: String,c_shelfSNew: String,amount: Int){
+    suspend fun updateShelfS(c_shelfSOld: String,c_shelfSNew: String,amount: Int){
         shelfSSDao.insertShelfS(c_shelfSOld)
         drawerSDao.updateDrawerSforain(c_shelfSNew,c_shelfSOld)
         shelfSSDao.deleteShelfS(c_shelfSOld)

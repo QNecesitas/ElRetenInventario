@@ -66,7 +66,7 @@ class Fragment_Cart : Fragment() {
 
 
         //Internet
-       repository= Repository(Application())
+       repository= Repository(requireActivity().application as ElRetenApplication)
 
         //Listener
         binding.btnDeleteProduct.setOnClickListener{

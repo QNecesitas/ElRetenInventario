@@ -103,7 +103,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         binding.aepToolbar.setNavigationOnClickListener { finish() }
 
         //Init
-        repository = Repository(application)
+        repository = Repository(application as ElRetenApplication)
         //Button Add
 
         if (FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {

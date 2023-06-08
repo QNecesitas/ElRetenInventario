@@ -38,7 +38,8 @@ class Activity_Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
-        repository = Repository(application)
+
+        repository = Repository(application as ElRetenApplication)
         al_password = ArrayList()
         binding!!.ALTIETPassword.setOnKeyListener { view: View, i: Int, keyEvent: KeyEvent -> eventKeyboard(view, keyEvent) }
         binding!!.ALBTNStartSession.setOnClickListener { view: View? -> click_login() }
@@ -59,7 +60,7 @@ class Activity_Login : AppCompatActivity() {
     private fun click_login() {
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(binding!!.ALTIETPassword.windowToken, 0)
-        if (al_password!!.isEmpty()) {
+        if (al_password.isEmpty()) {
             loadPasswordInternet()
         } else {
             checkPassword()
@@ -88,9 +89,9 @@ class Activity_Login : AppCompatActivity() {
             val user = if (binding!!.ALRBAdministrator.isChecked) "Administrador" else "Dependiente"
             val bdPassword: String
             bdPassword = if (al_password!![0].user == user) {
-                al_password!![0].password
+                al_password[0].password
             } else {
-                al_password!![1].password
+                al_password[1].password
             }
             val inputPassword = binding!!.ALTIETPassword.text.toString()
             if (bdPassword == inputPassword) {
