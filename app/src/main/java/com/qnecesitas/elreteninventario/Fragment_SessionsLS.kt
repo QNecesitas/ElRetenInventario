@@ -160,7 +160,7 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
 
             repository.addSessionLS(sessionCode , c_drawerLS)
         }
-        val model = ModelSessionLS(sessionCode , c_drawerLS)
+        val model = ModelSessionLS(sessionCode , c_drawerLS, 0)
         al_sessionLS.add(model)
         updateRecyclerAdapter()
         FancyToast.makeText(

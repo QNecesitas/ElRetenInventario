@@ -9,10 +9,13 @@ import com.qnecesitas.elreteninventario.data.ModelPassword
 interface AccountDao {
 
     @Query("UPDATE Account SET password=:password WHERE user = :user")
-    fun updateAccount(password: String,user: String)
+    suspend fun updateAccount(password: String,user: String)
 
 
     @Query("SELECT * FROM `Account`")
-    fun selectAccount() : List<ModelPassword>
+    suspend fun selectAccount() : List<ModelPassword>
+
+    @Query("INSERT INTO Account VALUES (:password, :user)")
+    suspend fun insertDefaultAccount(user: String, password: String)
 
 }

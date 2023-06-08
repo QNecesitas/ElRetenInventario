@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -36,6 +37,11 @@ class Activity_Login : AppCompatActivity() {
     private val CHANNEL_NAME = "EL Retén"
     private val NOTIFICATION_ID1 = 123
     private val NOTIFICATION_ID2 = 234
+
+    //SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var shareEditor: SharedPreferences.Editor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -49,11 +55,22 @@ class Activity_Login : AppCompatActivity() {
                 keyEvent
             )
         }
-        binding!!.ALBTNStartSession.setOnClickListener { view: View? -> click_login() }
+        binding!!.ALBTNStartSession.setOnClickListener { click_login() }
+
         alProductsDeficitS = ArrayList()
         alProductsDeficitLS = ArrayList()
-        binding!!.tvAboutDev.setOnClickListener { view: View? -> click_dev() }
-        binding!!.tvAboutUs.setOnClickListener { view: View? -> click_us() }
+        binding!!.tvAboutDev.setOnClickListener { click_dev() }
+        binding!!.tvAboutUs.setOnClickListener { click_us() }
+
+
+        //SharedPreferences
+        sharedPreferences = getSharedPreferences("ElRetenInventario",0)
+        shareEditor = sharedPreferences.edit()
+        val isFirstTime = sharedPreferences.getBoolean("isFirstTime",true)
+        if(isFirstTime) {
+            setDefaultPasswords()
+        }
+
     }
 
     private fun eventKeyboard(view: View , keyEvent: KeyEvent): Boolean {
@@ -62,6 +79,15 @@ class Activity_Login : AppCompatActivity() {
             inputMethodManager.hideSoftInputFromWindow(view.windowToken , 0)
         }
         return false
+    }
+
+    private fun setDefaultPasswords(){
+        lifecycleScope.launch {
+            repository.insertAccount("Administrador","1234")
+            repository.insertAccount("Dependiente","4321")
+        }
+        shareEditor.putBoolean("isFirstTime", false)
+        shareEditor.apply()
     }
 
     private fun click_login() {

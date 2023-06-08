@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 @Entity("ShelfS")
 data class ModelShelfS(
     @PrimaryKey(autoGenerate = false) var c_shelfS: String,
-    @ColumnInfo(name = "amount") var amount: Int,
+    @ColumnInfo(name = "amount", defaultValue = "0") var amount: Int,
 )
 
