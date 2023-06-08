@@ -164,7 +164,7 @@ class Fragment_Drawers(var c_shelfS: String) : Fragment() {
             repository.addDrawerS(drawerCode , c_shelfS)
         }
 
-        val model = ModelDrawerS(drawerCode , c_shelfS)
+        val model = ModelDrawerS(drawerCode , c_shelfS, 0)
         al_drawers.add(model)
         updateRecyclerAdapter()
         FancyToast.makeText(

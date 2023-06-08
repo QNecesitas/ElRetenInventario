@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class ModelSessionLS (
     @PrimaryKey(autoGenerate = false) var c_sessionLS: String,
     @ColumnInfo(name = "fk_c_drawerLS") var fk_c_drawerLS: String,
-    @ColumnInfo(name = "amount") var amount: Int = 0
+    @ColumnInfo(name = "amount", defaultValue = "0") var amount: Int
 )

@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class ModelDrawerLS (
     @PrimaryKey(autoGenerate = false) var c_drawerLS: String,
     @ColumnInfo(name = "fk_c_shelfLS") var fk_c_shelfLS: String,
-    @ColumnInfo(name = "amount") var amount: Int = 0
+    @ColumnInfo(name = "amount", defaultValue = "0") var amount: Int
 )

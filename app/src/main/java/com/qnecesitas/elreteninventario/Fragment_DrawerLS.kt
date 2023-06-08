@@ -161,7 +161,7 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
             repository.addDrawerLs(c_shelfLS , drawerCode)
         }
 
-        val model = ModelDrawerLS(drawerCode , c_shelfLS)
+        val model = ModelDrawerLS(drawerCode , c_shelfLS,0 )
         al_drawerLS.add(model)
         updateRecyclerAdapter()
         FancyToast.makeText(

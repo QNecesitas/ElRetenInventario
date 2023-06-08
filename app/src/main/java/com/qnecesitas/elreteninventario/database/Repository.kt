@@ -253,6 +253,10 @@ class Repository(application: ElRetenApplication) {
         accountDao.updateAccount(password,user)
     }
 
+    suspend fun insertAccount(user: String, password: String){
+        accountDao.insertDefaultAccount(user, password)
+    }
+
     suspend fun updateDrawerLS(c_drawerLSOld: String,c_drawerLSNew:String,fk_c_shelfLS: String,amount: Int){
         drawerLSDao.insertDrawerLSUp(c_drawerLSNew,fk_c_shelfLS,amount)
         sessionLSDao.updateSessionLSUp(c_drawerLSNew,c_drawerLSOld)
