@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
@@ -29,6 +30,7 @@ import com.qnecesitas.elreteninventario.databinding.LiDateYmdBinding
 import com.qnecesitas.elreteninventario.databinding.LiRankingProductsBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplLS
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -140,8 +142,10 @@ class Statistics : AppCompatActivity() {
     ---------------------------
      */
     private fun loadSalesAllMonths(year: Int) {
-        alSalesAll = repository.fetchOrdersY(year)
-        updateChart()
+        lifecycleScope.launch {
+            alSalesAll = repository.fetchOrdersY(year)
+            updateChart()
+        }
 
     }
 
@@ -180,12 +184,12 @@ class Statistics : AppCompatActivity() {
 
     //Profits Day
     private fun callProfitDay(year: Int, month: Int, day: Int) {
+        lifecycleScope.launch {
+            val alFetched = repository.fetchOrdersD(year, month, day)
 
-        val alFetched = repository.fetchOrdersD(year, month, day)
-
-        binding.tvProfitDayResponse.text = composeProfit(alFetched)
-        binding.tvProfitDayResponse.visibility = View.VISIBLE
-
+            binding.tvProfitDayResponse.text = composeProfit(alFetched)
+            binding.tvProfitDayResponse.visibility = View.VISIBLE
+        }
 
     }
 
@@ -209,11 +213,12 @@ class Statistics : AppCompatActivity() {
 
     //Profits Month
     private fun callProfitMonth(year: Int, month: Int) {
-        val alFetched = repository.fetchOrdersM(year, month)
+        lifecycleScope.launch {
+            val alFetched = repository.fetchOrdersM(year, month)
 
-        binding.tvProfitMonthResponse.text = composeProfit(alFetched)
-        binding.tvProfitMonthResponse.visibility = View.VISIBLE
-
+            binding.tvProfitMonthResponse.text = composeProfit(alFetched)
+            binding.tvProfitMonthResponse.visibility = View.VISIBLE
+        }
     }
 
     fun showAlertDialogNoInternetProfitMonth(context: Context, year: Int, month: Int) {
@@ -235,9 +240,11 @@ class Statistics : AppCompatActivity() {
 
     //Profits Year
     private fun callProfitYear(year: Int) {
-        val alFetched = repository.fetchOrdersY(year)
-        binding.tvProfitYearResponse.text = composeProfit(alFetched)
-        binding.tvProfitYearResponse.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            val alFetched = repository.fetchOrdersY(year)
+            binding.tvProfitYearResponse.text = composeProfit(alFetched)
+            binding.tvProfitYearResponse.visibility = View.VISIBLE
+        }
     }
 
     fun showAlertDialogNoInternetProfitYear(context: Context, year: Int) {
@@ -269,10 +276,11 @@ class Statistics : AppCompatActivity() {
 
     //Sales Day
     private fun callSalesDay(year: Int, month: Int, day: Int) {
-        val alFetched = repository.fetchOrdersD(year, month, day)
-        binding.tvSalesDayResponse.text = alFetched.size.toString()
-        binding.tvSalesDayResponse.visibility = View.VISIBLE
-
+        lifecycleScope.launch {
+            val alFetched = repository.fetchOrdersD(year, month, day)
+            binding.tvSalesDayResponse.text = alFetched.size.toString()
+            binding.tvSalesDayResponse.visibility = View.VISIBLE
+        }
     }
 
     fun showAlertDialogNoInternetSalesDay(context: Context, year: Int, month: Int, day: Int) {
@@ -294,10 +302,12 @@ class Statistics : AppCompatActivity() {
 
     //Sales Month
     private fun callSalesMonth(year: Int, month: Int) {
-        val alFetched = repository.fetchOrdersM(year, month)
+        lifecycleScope.launch {
+            val alFetched = repository.fetchOrdersM(year, month)
 
-        binding.tvSalesMonthResponse.text = alFetched.size.toString()
-        binding.tvSalesMonthResponse.visibility = View.VISIBLE
+            binding.tvSalesMonthResponse.text = alFetched.size.toString()
+            binding.tvSalesMonthResponse.visibility = View.VISIBLE
+        }
 
     }
 
@@ -321,10 +331,11 @@ class Statistics : AppCompatActivity() {
     //Sales Year
     private fun callSalesYear(year: Int) {
 
-        val response = repository.fetchOrdersY(year)
-        binding.tvSalesYearResponse.text = response.size.toString()
-        binding.tvSalesYearResponse.visibility = View.VISIBLE
-
+        lifecycleScope.launch {
+            val response = repository.fetchOrdersY(year)
+            binding.tvSalesYearResponse.text = response.size.toString()
+            binding.tvSalesYearResponse.visibility = View.VISIBLE
+        }
     }
 
     fun showAlertDialogNoInternetSalesYear(context: Context, year: Int) {
@@ -508,11 +519,11 @@ class Statistics : AppCompatActivity() {
     }
 
     private fun loadRecyclerSalesMonth(year: Int, month: Int, week: Int) {
-
-        val response = repository.fetchOrdersM(year, month + 1)
-        alMonthSalesRanking = response
-        loadRecyclerAllProducts(week)
-
+        lifecycleScope.launch {
+            val response = repository.fetchOrdersM(year, month + 1)
+            alMonthSalesRanking = response
+            loadRecyclerAllProducts(week)
+        }
     }
 
     private fun loadRecyclerAllProducts(week: Int) {
