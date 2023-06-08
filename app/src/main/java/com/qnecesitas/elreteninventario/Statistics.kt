@@ -21,13 +21,13 @@ import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelCart
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelSale
+import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivityStatisticsBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYmBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYmdBinding
 import com.qnecesitas.elreteninventario.databinding.LiRankingProductsBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplLS
-import com.qnecesitas.elreteninventario.network.RetrofitSalesImpl
 import com.shashank.sony.fancytoastlib.FancyToast
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,16 +38,15 @@ class Statistics : AppCompatActivity() {
 
     private lateinit var binding: ActivityStatisticsBinding
 
-    private lateinit var alSalesAll: ArrayList<ModelSale>
+    private lateinit var alSalesAll: MutableList<ModelSale>
 
     //Ranking
-    private lateinit var alRanking: ArrayList<ModelCart>
-    private lateinit var alAllProducts: ArrayList<ModelEditProductS>
-    private lateinit var alMonthSalesRanking: ArrayList<ModelSale>
-    private lateinit var retrofitProductsImplS: RetrofitProductsImplLS
+    private lateinit var alRanking: MutableList<ModelCart>
+    private lateinit var alAllProducts: MutableList<ModelEditProductS>
+    private lateinit var alMonthSalesRanking: MutableList<ModelSale>
 
     //Internet
-    private lateinit var retrofitSalesImpl: RetrofitSalesImpl
+    private lateinit var repository: Repository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +62,7 @@ class Statistics : AppCompatActivity() {
 
 
         //retrofit
-        retrofitSalesImpl = RetrofitSalesImpl()
-        retrofitProductsImplS = RetrofitProductsImplLS()
+        repository = Repository(application)
         alSalesAll = ArrayList()
         alRanking = ArrayList()
         alMonthSalesRanking = ArrayList()
@@ -123,14 +121,14 @@ class Statistics : AppCompatActivity() {
         }
 
         //Ranking
-        binding.tvProductSell.setOnClickListener{
+        binding.tvProductSell.setOnClickListener {
             calculateRanking()
         }
 
         binding.refresh.setOnRefreshListener {
             loadSalesAllMonths(year)
         }
-        binding.aepRetryConnection.setOnClickListener{
+        binding.aepRetryConnection.setOnClickListener {
             loadSalesAllMonths(year)
         }
 
@@ -138,53 +136,26 @@ class Statistics : AppCompatActivity() {
     }
 
 
-
     /*Start code
     ---------------------------
      */
     private fun loadSalesAllMonths(year: Int) {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSalesImpl.fetchOrdersY(Constants.PHP_TOKEN, year)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        alSalesAll = response.body()!!
-                        alertNotInternet(false)
-                        updateChart()
-                    } else {
-                        alertNotInternet(true)
-                    }
-                }
+        alSalesAll = repository.fetchOrdersY(year)
+        updateChart()
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    alertNotInternet(true)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            showAlertDialogNoInternetProfitYear(this@Statistics, year)
-        }
     }
 
-    private fun updateChart(){
+    private fun updateChart() {
         prepareDataChart(alSalesAll)
     }
 
-    private fun prepareDataChart(list : ArrayList<ModelSale>)  {
+    private fun prepareDataChart(list: MutableList<ModelSale>) {
         val listOfEntries = mutableListOf<Entry>()
 
-        for(x in 1 .. 12){
+        for (x in 1..12) {
             val salesByMonth = ArrayList<ModelSale>()
-            for(model in list){
-                if (model.month == x){
+            for (model in list) {
+                if (model.month == x) {
                     salesByMonth.add(model)
                 }
             }
@@ -192,7 +163,7 @@ class Statistics : AppCompatActivity() {
         }
 
 
-        drawChart( listOfEntries )
+        drawChart(listOfEntries)
     }
 
 
@@ -207,44 +178,16 @@ class Statistics : AppCompatActivity() {
     }
 
 
-
-
     //Profits Day
     private fun callProfitDay(year: Int, month: Int, day: Int) {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSalesImpl.fetchOrdersD(Constants.PHP_TOKEN, year, month, day)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        binding.tvProfitDayResponse.text = composeProfit(response.body()!!)
-                        binding.tvProfitDayResponse.visibility = View.VISIBLE
-                    } else {
-                        showAlertDialogNoInternetProfitDay(this@Statistics, year, month, day)
-                    }
-                }
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    showAlertDialogNoInternetProfitDay(this@Statistics, year, month, day)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            showAlertDialogNoInternetProfitDay(this@Statistics, year, month, day)
-        }
+        val alFetched = repository.fetchOrdersD(year, month, day)
+
+        binding.tvProfitDayResponse.text = composeProfit(alFetched)
+        binding.tvProfitDayResponse.visibility = View.VISIBLE
+
+
     }
-
-
-
-
-
 
 
     fun showAlertDialogNoInternetProfitDay(context: Context, year: Int, month: Int, day: Int) {
@@ -255,7 +198,7 @@ class Statistics : AppCompatActivity() {
         builder.setMessage(R.string.Revise_su_conexion)
         //set listeners for dialog buttons
         builder.setPositiveButton(
-            R.string.Reintentar
+                R.string.Reintentar
         ) { dialog, _ ->
             dialog.dismiss()
             callProfitDay(year, month, day)
@@ -266,34 +209,11 @@ class Statistics : AppCompatActivity() {
 
     //Profits Month
     private fun callProfitMonth(year: Int, month: Int) {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSalesImpl.fetchOrdersM(Constants.PHP_TOKEN, year, month)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        binding.tvProfitMonthResponse.text = composeProfit(response.body()!!)
-                        binding.tvProfitMonthResponse.visibility = View.VISIBLE
-                    } else {
-                        showAlertDialogNoInternetProfitMonth(this@Statistics, year, month)
-                    }
-                }
+        val alFetched = repository.fetchOrdersM(year, month)
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    showAlertDialogNoInternetProfitMonth(this@Statistics, year, month)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            showAlertDialogNoInternetProfitMonth(this@Statistics, year, month)
-        }
+        binding.tvProfitMonthResponse.text = composeProfit(alFetched)
+        binding.tvProfitMonthResponse.visibility = View.VISIBLE
+
     }
 
     fun showAlertDialogNoInternetProfitMonth(context: Context, year: Int, month: Int) {
@@ -304,7 +224,7 @@ class Statistics : AppCompatActivity() {
         builder.setMessage(R.string.Revise_su_conexion)
         //set listeners for dialog buttons
         builder.setPositiveButton(
-            R.string.Reintentar
+                R.string.Reintentar
         ) { dialog, _ ->
             dialog.dismiss()
             callProfitMonth(year, month)
@@ -315,34 +235,9 @@ class Statistics : AppCompatActivity() {
 
     //Profits Year
     private fun callProfitYear(year: Int) {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSalesImpl.fetchOrdersY(Constants.PHP_TOKEN, year)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        binding.tvProfitYearResponse.text = composeProfit(response.body()!!)
-                        binding.tvProfitYearResponse.visibility = View.VISIBLE
-                    } else {
-                        showAlertDialogNoInternetProfitYear(this@Statistics, year)
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    showAlertDialogNoInternetProfitYear(this@Statistics, year)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            showAlertDialogNoInternetProfitYear(this@Statistics, year)
-        }
+        val alFetched = repository.fetchOrdersY(year)
+        binding.tvProfitYearResponse.text = composeProfit(alFetched)
+        binding.tvProfitYearResponse.visibility = View.VISIBLE
     }
 
     fun showAlertDialogNoInternetProfitYear(context: Context, year: Int) {
@@ -353,7 +248,7 @@ class Statistics : AppCompatActivity() {
         builder.setMessage(R.string.Revise_su_conexion)
         //set listeners for dialog buttons
         builder.setPositiveButton(
-            R.string.Reintentar
+                R.string.Reintentar
         ) { dialog, _ ->
             dialog.dismiss()
             callProfitYear(year)
@@ -362,7 +257,7 @@ class Statistics : AppCompatActivity() {
         builder.create().show()
     }
 
-    fun composeProfit(list: ArrayList<ModelSale>): String {
+    fun composeProfit(list: MutableList<ModelSale>): String {
         var totalPrice = 0.0
         var totalInv = 0.0
         list.forEach {
@@ -374,34 +269,10 @@ class Statistics : AppCompatActivity() {
 
     //Sales Day
     private fun callSalesDay(year: Int, month: Int, day: Int) {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSalesImpl.fetchOrdersD(Constants.PHP_TOKEN, year, month, day)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        binding.tvSalesDayResponse.text = response.body()!!.size.toString()
-                        binding.tvSalesDayResponse.visibility = View.VISIBLE
-                    } else {
-                        showAlertDialogNoInternetSalesDay(this@Statistics, year, month, day)
-                    }
-                }
+        val alFetched = repository.fetchOrdersD(year, month, day)
+        binding.tvSalesDayResponse.text = alFetched.size.toString()
+        binding.tvSalesDayResponse.visibility = View.VISIBLE
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    showAlertDialogNoInternetSalesDay(this@Statistics, year, month, day)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            showAlertDialogNoInternetSalesDay(this@Statistics, year, month, day)
-        }
     }
 
     fun showAlertDialogNoInternetSalesDay(context: Context, year: Int, month: Int, day: Int) {
@@ -412,7 +283,7 @@ class Statistics : AppCompatActivity() {
         builder.setMessage(R.string.Revise_su_conexion)
         //set listeners for dialog buttons
         builder.setPositiveButton(
-            R.string.Reintentar
+                R.string.Reintentar
         ) { dialog, _ ->
             dialog.dismiss()
             callSalesDay(year, month, day)
@@ -423,34 +294,11 @@ class Statistics : AppCompatActivity() {
 
     //Sales Month
     private fun callSalesMonth(year: Int, month: Int) {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSalesImpl.fetchOrdersM(Constants.PHP_TOKEN, year, month)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        binding.tvSalesMonthResponse.text = response.body()!!.size.toString()
-                        binding.tvSalesMonthResponse.visibility = View.VISIBLE
-                    } else {
-                        showAlertDialogNoInternetSalesMonth(this@Statistics, year, month)
-                    }
-                }
+        val alFetched = repository.fetchOrdersM(year, month)
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    showAlertDialogNoInternetSalesMonth(this@Statistics, year, month)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            showAlertDialogNoInternetSalesMonth(this@Statistics, year, month)
-        }
+        binding.tvSalesMonthResponse.text = alFetched.size.toString()
+        binding.tvSalesMonthResponse.visibility = View.VISIBLE
+
     }
 
     fun showAlertDialogNoInternetSalesMonth(context: Context, year: Int, month: Int) {
@@ -461,7 +309,7 @@ class Statistics : AppCompatActivity() {
         builder.setMessage(R.string.Revise_su_conexion)
         //set listeners for dialog buttons
         builder.setPositiveButton(
-            R.string.Reintentar
+                R.string.Reintentar
         ) { dialog, _ ->
             dialog.dismiss()
             callSalesMonth(year, month)
@@ -472,34 +320,11 @@ class Statistics : AppCompatActivity() {
 
     //Sales Year
     private fun callSalesYear(year: Int) {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSalesImpl.fetchOrdersY(Constants.PHP_TOKEN, year)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        binding.tvSalesYearResponse.text = response.body()!!.size.toString()
-                        binding.tvSalesYearResponse.visibility = View.VISIBLE
-                    } else {
-                        showAlertDialogNoInternetSalesYear(this@Statistics, year)
-                    }
-                }
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    showAlertDialogNoInternetSalesYear(this@Statistics, year)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            showAlertDialogNoInternetSalesYear(this@Statistics, year)
-        }
+        val response = repository.fetchOrdersY(year)
+        binding.tvSalesYearResponse.text = response.size.toString()
+        binding.tvSalesYearResponse.visibility = View.VISIBLE
+
     }
 
     fun showAlertDialogNoInternetSalesYear(context: Context, year: Int) {
@@ -510,7 +335,7 @@ class Statistics : AppCompatActivity() {
         builder.setMessage(R.string.Revise_su_conexion)
         //set listeners for dialog buttons
         builder.setPositiveButton(
-            R.string.Reintentar
+                R.string.Reintentar
         ) { dialog, _ ->
             dialog.dismiss()
             callSalesYear(year)
@@ -562,18 +387,18 @@ class Statistics : AppCompatActivity() {
         liBinding.ilNpMonth.maxValue = 11
         liBinding.ilNpMonth.minValue = 0
         val months = arrayOf(
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
-            "Diciembre"
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
         )
         liBinding.ilNpMonth.displayedValues = months
 
@@ -612,18 +437,18 @@ class Statistics : AppCompatActivity() {
         liBinding.ilNpDay.minValue = 1
         liBinding.ilNpDay.maxValue = 31
         val months = arrayOf(
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
-            "Diciembre"
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
         )
         liBinding.ilNpMonth.displayedValues = months
 
@@ -646,7 +471,7 @@ class Statistics : AppCompatActivity() {
         alertDialog.show()
     }
 
-   //update chart
+    //update chart
     private fun drawChart(entries: List<Entry>) {
 
         //create LineDataSet
@@ -683,73 +508,26 @@ class Statistics : AppCompatActivity() {
     }
 
     private fun loadRecyclerSalesMonth(year: Int, month: Int, week: Int) {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-            val call = retrofitSalesImpl.fetchOrdersM(Constants.PHP_TOKEN,year,month+1)
-            call.enqueue(object : Callback<ArrayList<ModelSale>> {
-                override fun onResponse(
-                    call: Call<ArrayList<ModelSale>>,
-                    response: Response<java.util.ArrayList<ModelSale>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        alertNotInternet(false)
-                        alMonthSalesRanking = response.body()!!
-                        loadRecyclerAllProducts(week)
-                    } else {
-                        alertNotInternet(true)
-                    }
-                }
 
-                override fun onFailure(
-                    call: Call<java.util.ArrayList<ModelSale>>,
-                    t: Throwable
-                ) {
-                    alertNotInternet(true)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            alertNotInternet(true)
-        }
+        val response = repository.fetchOrdersM(year, month + 1)
+        alMonthSalesRanking = response
+        loadRecyclerAllProducts(week)
+
     }
 
     private fun loadRecyclerAllProducts(week: Int) {
-        if (NetworkTools.isOnline(binding.root.context, false)) {
-            binding.refresh.isRefreshing = true
-
-            val call = retrofitProductsImplS.fetchProductsSAllLS(Constants.PHP_TOKEN)
-            call.enqueue(object : Callback<ArrayList<ModelEditProductS>> {
-                override fun onResponse(
-                        call: Call<ArrayList<ModelEditProductS>>,
-                        response: Response<java.util.ArrayList<ModelEditProductS>>
-                ) {
-                    binding.refresh.isRefreshing = false
-                    if (response.isSuccessful) {
-                        alertNotInternet(false)
-                        alAllProducts = response.body()!!
-                        createSalesWeekList(week)
-                    } else {
-                        alertNotInternet(true)
-                    }
-                }
-
-                override fun onFailure(
-                        call: Call<java.util.ArrayList<ModelEditProductS>>,
-                        t: Throwable
-                ) {
-                    alertNotInternet(true)
-                    binding.refresh.isRefreshing = false
-                }
-            })
-        } else {
-            alertNotInternet(true)
-        }
+        /*
+        val response = repository.fetchProductsLSAll()
+        alertNotInternet(false)
+        alAllProducts = response
+        createSalesWeekList(week)
+       TODO
+         */
     }
 
-    private fun createSalesWeekList(week: Int){
-        if(alMonthSalesRanking.isNotEmpty()) {
-            if(alAllProducts.isNotEmpty()) {
+    private fun createSalesWeekList(week: Int) {
+        if (alMonthSalesRanking.isNotEmpty()) {
+            if (alAllProducts.isNotEmpty()) {
                 alRanking.clear()
 
                 alMonthSalesRanking = alMonthSalesRanking.filter { it ->
@@ -763,12 +541,12 @@ class Statistics : AppCompatActivity() {
                     sellWeek == week
                 } as ArrayList<ModelSale>
 
-                for(modelProduct in alAllProducts){
+                for (modelProduct in alAllProducts) {
                     alRanking.add(
-                        ModelCart(
-                            modelProduct,
-                            numberSales(modelProduct)
-                        )
+                            ModelCart(
+                                    modelProduct,
+                                    numberSales(modelProduct)
+                            )
                     )
                 }
 
@@ -776,36 +554,36 @@ class Statistics : AppCompatActivity() {
                 alRanking = alRanking.filter { it.amount != 0 } as ArrayList<ModelCart>
 
 
-                if(alRanking.size < 10 ){
+                if (alRanking.size < 10) {
                     updateRecyclerRanking(alRanking)
-                }else{
+                } else {
                     updateRecyclerRanking(
-                        alRanking.subList(alRanking.size-10,alRanking.size)
+                            alRanking.subList(alRanking.size - 10, alRanking.size)
                     )
                 }
 
 
-            }else{
+            } else {
                 FancyToast.makeText(
+                        this,
+                        getString(R.string.No_hay_productos),
+                        FancyToast.LENGTH_LONG,
+                        FancyToast.ERROR,
+                        false
+                ).show()
+            }
+        } else {
+            FancyToast.makeText(
                     this,
-                    getString(R.string.No_hay_productos),
+                    getString(R.string.No_hay_ventas),
                     FancyToast.LENGTH_LONG,
                     FancyToast.ERROR,
                     false
-                ).show()
-            }
-        }else{
-            FancyToast.makeText(
-                this,
-                getString(R.string.No_hay_ventas),
-                FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
             ).show()
         }
     }
 
-    private fun numberSales(modelEditProductS: ModelEditProductS) : Int{
+    private fun numberSales(modelEditProductS: ModelEditProductS): Int {
         var cant = 0
         var cProdIndex: Int
         var subBeforeCode: String
@@ -813,42 +591,42 @@ class Statistics : AppCompatActivity() {
         var subAmount: String
         var startRealAmountIndex: Int
         var endRealAmountIndex: Int
-        for(modelSales in alMonthSalesRanking){
-           if (modelSales.products.contains(modelEditProductS.c_productS)){
-              try {
-                  cProdIndex = modelSales.products.indexOf(modelEditProductS.c_productS)
-                  subBeforeCode = modelSales.products.substring(0,cProdIndex)
-                  lastAmountIndex = subBeforeCode.lastIndexOf("Cantidad:")
-                  subAmount = subBeforeCode.substring(lastAmountIndex)
-                  startRealAmountIndex = subAmount.indexOf(":")+1
-                  endRealAmountIndex = subAmount.indexOf("-")
-                  cant += subAmount.substring(startRealAmountIndex,endRealAmountIndex).trim().toInt()
+        for (modelSales in alMonthSalesRanking) {
+            if (modelSales.products.contains(modelEditProductS.c_productS)) {
+                try {
+                    cProdIndex = modelSales.products.indexOf(modelEditProductS.c_productS)
+                    subBeforeCode = modelSales.products.substring(0, cProdIndex)
+                    lastAmountIndex = subBeforeCode.lastIndexOf("Cantidad:")
+                    subAmount = subBeforeCode.substring(lastAmountIndex)
+                    startRealAmountIndex = subAmount.indexOf(":") + 1
+                    endRealAmountIndex = subAmount.indexOf("-")
+                    cant += subAmount.substring(startRealAmountIndex, endRealAmountIndex).trim().toInt()
 
-              }catch (e: Exception){
-                  e.printStackTrace()
-                  Log.e("Result","Error")
-              }
-           }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.e("Result", "Error")
+                }
+            }
 
         }
         return cant
     }
 
-    private fun updateRecyclerRanking(arrayRanking: List<ModelCart>){
+    private fun updateRecyclerRanking(arrayRanking: List<ModelCart>) {
 
-        if (arrayRanking.isNotEmpty()){
+        if (arrayRanking.isNotEmpty()) {
 
             val list = mutableListOf<String>()
-            for(model in arrayRanking){
-                val cProduct = getString(R.string.Codigo_Info,model.product.c_productS)
-                val nameProduct =getString(R.string.nombre, model.product.name)
-                val cantProduct = getString(R.string.ventas_cant,model.amount)
+            for (model in arrayRanking) {
+                val cProduct = getString(R.string.Codigo_Info, model.product.c_productS)
+                val nameProduct = getString(R.string.nombre, model.product.name)
+                val cantProduct = getString(R.string.ventas_cant, model.amount)
                 val infoProduct = "$cProduct     $nameProduct\n$cantProduct"
                 list.add(infoProduct)
             }
 
             liImportantsProducts(list)
-        }else{
+        } else {
             binding.tvProductSell.text = getString(R.string.no_hay_valores)
         }
 
@@ -862,14 +640,14 @@ class Statistics : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Declare
-        val arrayAdapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,list)
+        val arrayAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list)
         liBinding.lvListRanking.adapter = arrayAdapter
         var originalHeight = liBinding.lvListRanking.height
 
         //Listeners
-       liBinding.ivClose.setOnClickListener(View.OnClickListener {
-           alertDialog.dismiss()
-       })
+        liBinding.ivClose.setOnClickListener(View.OnClickListener {
+            alertDialog.dismiss()
+        })
 
         //Finish
         alertDialog.setCancelable(false)

@@ -1,268 +1,225 @@
-package com.qnecesitas.elreteninventario;
+package com.qnecesitas.elreteninventario
 
-import android.graphics.Color;
-import android.os.Build;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.Color
+import android.os.Build
+import android.os.Bundle
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import com.qnecesitas.elreteninventario.data.ModelEditProductS
+import com.qnecesitas.elreteninventario.data.ModelPassword
+import com.qnecesitas.elreteninventario.database.Repository
+import com.qnecesitas.elreteninventario.databinding.ActivityLoginBinding
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-
-import com.google.android.material.snackbar.Snackbar;
-import com.qnecesitas.elreteninventario.auxiliary.Constants;
-import com.qnecesitas.elreteninventario.data.ModelEditProductS;
-import com.qnecesitas.elreteninventario.data.ModelPassword;
-import com.qnecesitas.elreteninventario.database.Repository;
-import com.qnecesitas.elreteninventario.databinding.ActivityLoginBinding;
-import com.qnecesitas.elreteninventario.network.RetrofitPasswords;
-import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS;
-
-import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class Activity_Login extends AppCompatActivity {
-
-    private ActivityLoginBinding binding;
-    private Repository repository;
-    private ArrayList<ModelPassword> al_password;
-    private int countBadPassword = 0;
+class Activity_Login : AppCompatActivity() {
+    private var binding: ActivityLoginBinding? = null
+    private lateinit var repository: Repository
+    private lateinit var al_password: MutableList<ModelPassword>
+    private var countBadPassword = 0
 
     //Deficit
-    private ArrayList<ModelEditProductS> alProductsDeficitS;
-    private ArrayList<ModelEditProductS> alProductsDeficitLS;
+    private var alProductsDeficitS: ArrayList<ModelEditProductS>? = null
+    private var alProductsDeficitLS: ArrayList<ModelEditProductS>? = null
 
     //Notification
-    private final String CHANNEL_ID = "ELReten";
-    private final String CHANNEL_NAME = "EL Retén";
-    private final int NOTIFICATION_ID1 = 123;
-    private final int NOTIFICATION_ID2 = 234;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        repository = new Repository(getApplication());
-        al_password = new ArrayList<>();
-
-        binding.ALTIETPassword.setOnKeyListener((view, i, keyEvent)
-                -> eventKeyboard(view, keyEvent));
-
-        binding.ALBTNStartSession.setOnClickListener(view
-                -> click_login());
-
-        alProductsDeficitS = new ArrayList<>();
-        alProductsDeficitLS = new ArrayList<>();
-
-        binding.tvAboutDev.setOnClickListener(view -> click_dev());
-
-        binding.tvAboutUs.setOnClickListener(view -> click_us());
+    private val CHANNEL_ID = "ELReten"
+    private val CHANNEL_NAME = "EL Retén"
+    private val NOTIFICATION_ID1 = 123
+    private val NOTIFICATION_ID2 = 234
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding!!.root)
+        repository = Repository(application)
+        al_password = ArrayList()
+        binding!!.ALTIETPassword.setOnKeyListener { view: View, i: Int, keyEvent: KeyEvent -> eventKeyboard(view, keyEvent) }
+        binding!!.ALBTNStartSession.setOnClickListener { view: View? -> click_login() }
+        alProductsDeficitS = ArrayList()
+        alProductsDeficitLS = ArrayList()
+        binding!!.tvAboutDev.setOnClickListener { view: View? -> click_dev() }
+        binding!!.tvAboutUs.setOnClickListener { view: View? -> click_us() }
     }
 
-    private boolean eventKeyboard(View view, KeyEvent keyEvent) {
-        if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    private fun eventKeyboard(view: View, keyEvent: KeyEvent): Boolean {
+        if (keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
+            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
-        return false;
+        return false
     }
 
-    private void click_login() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(binding.ALTIETPassword.getWindowToken(), 0);
-        if (al_password.isEmpty()) {
-            loadPasswordInternet();
+    private fun click_login() {
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(binding!!.ALTIETPassword.windowToken, 0)
+        if (al_password!!.isEmpty()) {
+            loadPasswordInternet()
         } else {
-            checkPassword();
+            checkPassword()
         }
     }
 
-
-    private void loadPasswordInternet() {
-        al_password = repository.fetchAccounts();
+    private fun loadPasswordInternet() {
+        al_password = repository.fetchAccounts()
         if (!al_password.isEmpty()) {
-            checkPassword();
+            checkPassword()
         }
     }
 
-
-    private void click_dev(){
-        Intent intent = new Intent(this, Activity_AboutDev.class);
-        startActivity(intent);
+    private fun click_dev() {
+        val intent = Intent(this, Activity_AboutDev::class.java)
+        startActivity(intent)
     }
 
-    private void click_us(){
-        Intent intent = new Intent(this, Activity_AboutUs.class);
-        startActivity(intent);
+    private fun click_us() {
+        val intent = Intent(this, Activity_AboutUs::class.java)
+        startActivity(intent)
     }
 
-    private void checkPassword() {
-        if (!binding.ALTIETPassword.getText().toString().isEmpty()) {
-
-            String user = binding.ALRBAdministrator.isChecked() ? "Administrador" : "Dependiente";
-            String bdPassword;
-
-            if (al_password.get(0).getUser().equals(user)) {
-                bdPassword = al_password.get(0).getPassword();
+    private fun checkPassword() {
+        if (!binding!!.ALTIETPassword.text.toString().isEmpty()) {
+            val user = if (binding!!.ALRBAdministrator.isChecked) "Administrador" else "Dependiente"
+            val bdPassword: String
+            bdPassword = if (al_password!![0].user == user) {
+                al_password!![0].password
             } else {
-                bdPassword = al_password.get(1).getPassword();
+                al_password!![1].password
             }
-
-            String inputPassword = binding.ALTIETPassword.getText().toString();
-
-            if (bdPassword.equals(inputPassword)) {
-                if(user.equals("Administrador")) {
-                    loadDeficitInternetS();
-                    binding.ALTILPassword.setError(null);
-                }else{
-                    binding.ALTILPassword.setError(null);
-                    Intent intent = new Intent(Activity_Login.this, Activity_MenuSelesperson.class);
-                    startActivity(intent);
+            val inputPassword = binding!!.ALTIETPassword.text.toString()
+            if (bdPassword == inputPassword) {
+                if (user == "Administrador") {
+                    loadDeficitInternetS()
+                    binding!!.ALTILPassword.error = null
+                } else {
+                    binding!!.ALTILPassword.error = null
+                    val intent = Intent(this@Activity_Login, Activity_MenuSelesperson::class.java)
+                    startActivity(intent)
                 }
             } else {
-                countBadPassword++;
-                binding.ALTILPassword.setError(getString(R.string.Contrasena_incorrecta));
-                if(countBadPassword == 5)showAlertDialogClosePassword();
+                countBadPassword++
+                binding!!.ALTILPassword.error = getString(R.string.Contrasena_incorrecta)
+                if (countBadPassword == 5) showAlertDialogClosePassword()
             }
-
-
         } else {
-            binding.ALTILPassword.setError(getString(R.string.este_campo_no_debe_vacio));
+            binding!!.ALTILPassword.error = getString(R.string.este_campo_no_debe_vacio)
         }
     }
 
-    private void loadDeficitInternetS(){
-        alProductsDeficitS = repository.fetchProductsDeficit( "Almacén");
-                        loadDeficitInternetLS();
+    private fun loadDeficitInternetS() {
+        //TODO
+        //alProductsDeficitS = repository.fetchProductsDeficit("Almacén")
+        loadDeficitInternetLS()
     }
 
-    private void loadDeficitInternetLS(){
-      alProductsDeficitLS = repository.fetchProductsDeficit( "Mostrador");
-                        notifyNews();
+    private fun loadDeficitInternetLS() {
+        // TODO
+        //alProductsDeficitLS = repository.fetchProductsDeficit("Mostrador")
+        notifyNews()
     }
 
-    private void notifyNews(){
-        int amountS = 0;
-        int amountLS = 0;
-
-        if(!alProductsDeficitS.isEmpty()){
-            displayNotificationS(alProductsDeficitS.size());
+    private fun notifyNews() {
+        if (!alProductsDeficitS!!.isEmpty()) {
+            displayNotificationS(alProductsDeficitS!!.size)
         }
-
-        if(!alProductsDeficitLS.isEmpty()){
-            displayNotificationLS(alProductsDeficitLS.size());
+        if (!alProductsDeficitLS!!.isEmpty()) {
+            displayNotificationLS(alProductsDeficitLS!!.size)
         }
 
         //Finish activity
-        Intent intent = new Intent(Activity_Login.this, Activity_MenuAdmin.class);
-        startActivity(intent);
+        val intent = Intent(this@Activity_Login, Activity_MenuAdmin::class.java)
+        startActivity(intent)
     }
 
-    private void displayNotificationS(int amount){
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel channel =new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription(getString(R.string.channel_decr));
-            channel.enableLights(true);
-            channel.setLightColor(Color.RED);
-            notificationManager.createNotificationChannel(channel);
+    private fun displayNotificationS(amount: Int) {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            channel.description = getString(R.string.channel_decr)
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            notificationManager.createNotificationChannel(channel)
         }
-
-        Intent intent = new Intent(getApplicationContext(), Activity_Deficit.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+        val intent = Intent(applicationContext, Activity_Deficit::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
                 .setContentTitle(getString(R.string.Productos_en_deficit))
-                .setContentText(getString(R.string.deficit_almacen_admin,amount))
+                .setContentText(getString(R.string.deficit_almacen_admin, amount))
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setAutoCancel(true)
-                .addAction(android.R.drawable.ic_menu_view,getString(R.string.ver_deficit), pendingIntent);
-
-        notificationManager.notify(NOTIFICATION_ID1, builder.build());
+                .addAction(android.R.drawable.ic_menu_view, getString(R.string.ver_deficit), pendingIntent)
+        notificationManager.notify(NOTIFICATION_ID1, builder.build())
     }
 
-    private void displayNotificationLS(int amount){
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel channel =new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription(getString(R.string.channel_decr));
-            channel.enableLights(true);
-            channel.setLightColor(Color.RED);
-            notificationManager.createNotificationChannel(channel);
+    private fun displayNotificationLS(amount: Int) {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            channel.description = getString(R.string.channel_decr)
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            notificationManager.createNotificationChannel(channel)
         }
-
-        Intent intent = new Intent(getApplicationContext(), Activity_Deficit.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+        val intent = Intent(applicationContext, Activity_Deficit::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
                 .setContentTitle(getString(R.string.Productos_en_deficit))
-                .setContentText(getString(R.string.deficit_almacen_salesperson,amount))
+                .setContentText(getString(R.string.deficit_almacen_salesperson, amount))
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setAutoCancel(true)
-                .addAction(android.R.drawable.ic_menu_view,getString(R.string.ver_deficit), pendingIntent);
-
-        notificationManager.notify(NOTIFICATION_ID2, builder.build());
+                .addAction(android.R.drawable.ic_menu_view, getString(R.string.ver_deficit), pendingIntent)
+        notificationManager.notify(NOTIFICATION_ID2, builder.build())
     }
 
-    @Override
-    public void onBackPressed() {
-        showAlertDialogExit();
+    override fun onBackPressed() {
+        showAlertDialogExit()
     }
 
-    private void showAlertDialogExit() {
+    private fun showAlertDialogExit() {
         //init alert dialog
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        builder.setTitle(R.string.salir);
-        builder.setMessage(R.string.seguro_desea_salir);
+        val builder = AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setTitle(R.string.salir)
+        builder.setMessage(R.string.seguro_desea_salir)
         //set listeners for dialog buttons
-        builder.setPositiveButton(R.string.Si, (dialog, which) -> {
+        builder.setPositiveButton(R.string.Si) { dialog: DialogInterface?, which: Int ->
             //finish the activity
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        });
-        builder.setNegativeButton(R.string.no, (dialog, which) -> {
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_HOME)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
+        builder.setNegativeButton(R.string.no) { dialog: DialogInterface, which: Int ->
             //dialog gone
-            dialog.dismiss();
-        });
+            dialog.dismiss()
+        }
         //create the alert dialog and show it
-        builder.create().show();
+        builder.create().show()
     }
-    private void showAlertDialogClosePassword() {
+
+    private fun showAlertDialogClosePassword() {
         //init alert dialog
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        builder.setTitle(R.string.intentos_fallidos);
-        builder.setMessage(R.string.cerrar_password);
+        val builder = AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setTitle(R.string.intentos_fallidos)
+        builder.setMessage(R.string.cerrar_password)
         //set listeners for dialog buttons
-        builder.setPositiveButton(R.string.Cerrar, (dialog, which) -> {
+        builder.setPositiveButton(R.string.Cerrar) { dialog: DialogInterface?, which: Int ->
             //finish the activity
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        });
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_HOME)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
         //create the alert dialog and show it
-        builder.create().show();
+        builder.create().show()
     }
-
-
 }
