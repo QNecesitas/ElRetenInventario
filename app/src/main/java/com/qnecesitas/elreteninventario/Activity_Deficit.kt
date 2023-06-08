@@ -92,9 +92,9 @@ class Activity_Deficit : AppCompatActivity() {
 
 
     private fun loadRecyclerInfo() {
-        al_deficitProduct = repository.fetchProductsDeficit(
+        /*al_deficitProduct = repository.fetchProductsDeficit(
                 selectButton
-        )
+        ) TODO  */
         binding.adRecycler.visibility = View.VISIBLE
         binding.adNotInfo.visibility = View.GONE
         updateRecyclerAdapter()

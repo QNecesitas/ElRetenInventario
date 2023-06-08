@@ -67,8 +67,7 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
 
         //Retrofit
         repository = Repository(requireActivity().application)
-
-            loadRecyclerInfo()
+        loadRecyclerInfo()
 
         loadRecyclerInfo()
         return binding.root
