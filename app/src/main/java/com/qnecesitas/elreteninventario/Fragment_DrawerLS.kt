@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -53,13 +54,6 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
         //Add Button
         binding.fdAdd.setOnClickListener { click_add() }
 
-        //Refresh
-        binding.refresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                loadRecyclerInfo()
-            }
-        })
-
         //Recycler
         al_drawerLS = ArrayList()
         adapterRDrawersLS = AdapterRDrawersLS(al_drawerLS , binding.root.context)
@@ -78,7 +72,6 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
     //Recycler information
     private fun loadRecyclerInfo() {
         lifecycleScope.launch {
-
             al_drawerLS = repository.fetchDrawersLS(c_shelfLS)
             binding.fdRecycler.visibility = View.VISIBLE
             binding.fdNotInfo.visibility = View.GONE
@@ -158,7 +151,7 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
     private fun addNewDrawerInternet(drawerCode: String) {
         lifecycleScope.launch {
 
-            repository.addDrawerLs(c_shelfLS , drawerCode)
+            repository.addDrawerLs (drawerCode, c_shelfLS)
         }
 
         val model = ModelDrawerLS(drawerCode , c_shelfLS,0 )

@@ -54,12 +54,6 @@ class Fragment_ShelvesLS : Fragment() {
         //Options
         binding.fsAdd.setOnClickListener { click_add() }
 
-        //Refresh
-        binding.refresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                loadRecyclerInfo()
-            }
-        })
 
         //Recycler
         al_shelves = ArrayList()
