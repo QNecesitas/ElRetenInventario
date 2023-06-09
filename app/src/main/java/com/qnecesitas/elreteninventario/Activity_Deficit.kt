@@ -52,7 +52,7 @@ class Activity_Deficit : AppCompatActivity() {
 
         //Refresh
         repository = Repository(application as ElRetenApplication)
-        binding.adRefresh.setOnRefreshListener { loadRecyclerInfo() }
+
 
 
         //Radio Group

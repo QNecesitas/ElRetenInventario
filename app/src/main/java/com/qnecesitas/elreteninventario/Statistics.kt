@@ -127,9 +127,7 @@ class Statistics : AppCompatActivity() {
             calculateRanking()
         }
 
-        binding.refresh.setOnRefreshListener {
-            loadSalesAllMonths(year)
-        }
+
         binding.aepRetryConnection.setOnClickListener {
             loadSalesAllMonths(year)
         }

@@ -7,10 +7,7 @@
     android:background="@color/gray_light"
     tools:context=".Activity_Settings">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -247,5 +244,5 @@
             </androidx.cardview.widget.CardView>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </androidx.appcompat.widget.LinearLayoutCompat>
