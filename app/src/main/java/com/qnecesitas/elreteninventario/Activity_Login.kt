@@ -29,8 +29,8 @@ class Activity_Login : AppCompatActivity() {
     private var countBadPassword = 0
 
     //Deficit
-    private var alProductsDeficitS: ArrayList<ModelEditProductS>? = null
-    private var alProductsDeficitLS: ArrayList<ModelEditProductS>? = null
+    private var alProductsDeficitS: MutableList<ModelEditProductS>? = null
+    private var alProductsDeficitLS: MutableList<ModelEditProductS>? = null
 
     //Notification
     private val CHANNEL_ID = "ELReten"
@@ -149,15 +149,17 @@ class Activity_Login : AppCompatActivity() {
     }
 
     private fun loadDeficitInternetS() {
-        //TODO
-        //alProductsDeficitS = repository.fetchProductsDeficit("Almacén")
-        loadDeficitInternetLS()
+        lifecycleScope.launch {
+            alProductsDeficitS = repository.fetchProductsDeficit("Almacén")
+            loadDeficitInternetLS()
+        }
     }
 
     private fun loadDeficitInternetLS() {
-        // TODO
-        //alProductsDeficitLS = repository.fetchProductsDeficit("Mostrador")
-        notifyNews()
+        lifecycleScope.launch {
+            alProductsDeficitLS = repository.fetchProductsDeficit("Mostrador")
+            notifyNews()
+        }
     }
 
     private fun notifyNews() {

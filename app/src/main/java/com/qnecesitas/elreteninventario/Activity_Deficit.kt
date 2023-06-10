@@ -5,12 +5,14 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.qnecesitas.elreteninventario.adapters.AdapterR_DeficitProduct
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivityDeficitBinding
 import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,14 +23,11 @@ class Activity_Deficit : AppCompatActivity() {
     private lateinit var binding: ActivityDeficitBinding
 
     //Array
-    private lateinit var al_deficitProduct: ArrayList<ModelEditProductS>
+    private lateinit var al_deficitProduct: MutableList<ModelEditProductS>
     private lateinit var adapterR_DeficitProduct: AdapterR_DeficitProduct
 
     //Internet
     private lateinit var repository: Repository
-
-    //Filter
-    private var filter = 10
 
     //RadioButton
     private var selectButton = "Almacén"
@@ -92,12 +91,12 @@ class Activity_Deficit : AppCompatActivity() {
 
 
     private fun loadRecyclerInfo() {
-        /*al_deficitProduct = repository.fetchProductsDeficit(
-                selectButton
-        ) TODO  */
-        binding.adRecycler.visibility = View.VISIBLE
-        binding.adNotInfo.visibility = View.GONE
-        updateRecyclerAdapter()
+        lifecycleScope.launch {
+            al_deficitProduct = repository.fetchProductsDeficit(selectButton)
+            binding.adRecycler.visibility = View.VISIBLE
+            binding.adNotInfo.visibility = View.GONE
+            updateRecyclerAdapter()
+        }
     }
 
     private fun updateRecyclerAdapter() {

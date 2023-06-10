@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.qnecesitas.elreteninventario.data.ModelEditProductLS
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
+import com.qnecesitas.elreteninventario.data.ModelProductPath
+import com.qnecesitas.elreteninventario.data.ModelProductPathLS
 
 @Dao
 interface ProductLSDao {
@@ -32,12 +34,12 @@ interface ProductLSDao {
     suspend fun selectProductLS(fk_c_sessionLS: String) : List<ModelEditProductLS>
 
 
-    //@Query("SELECT * FROM ProductLS WHERE amount <= deficit")
-    //suspend fun selectProductLSDeficit() : List<ModelEditProductS>
+    @Query("SELECT * FROM ProductLS WHERE amount <= deficit")
+    suspend fun selectProductLSDeficit() : List<ModelEditProductLS>
 
 
-    //@Query("SELECT ShelfLS.c_shelfLS, DrawerLS.c_drawerLS FROM ProductLS JOIN SessionLS ON ProductLS.fk_c_sessionLS = SessionLS.c_sessionLS JOIN DrawerLS ON SessionLS.fk_c_drawerLS = DrawerLS.c_drawerLS JOIN ShelfLS ON DrawerLS.fk_c_shelfLS = ShelfLS.c_shelfLS WHERE ProductLS.c_productLS = :c_productLS")
-    //suspend fun selectProductLSPath(c_productLS: String) : List<ModelEditProductLS>
+    @Query("SELECT ShelfLS.c_shelfLS, DrawerLS.c_drawerLS FROM ProductLS JOIN SessionLS ON ProductLS.fk_c_sessionLS = SessionLS.c_sessionLS JOIN DrawerLS ON SessionLS.fk_c_drawerLS = DrawerLS.c_drawerLS JOIN ShelfLS ON DrawerLS.fk_c_shelfLS = ShelfLS.c_shelfLS WHERE ProductLS.c_productLS = :c_productLS")
+    suspend fun selectProductLSPath(c_productLS: String) : List<ModelProductPathLS>
 
 
     @Query("UPDATE ProductLS SET amount = :amount WHERE c_productLS = :c_productLS")
@@ -53,7 +55,10 @@ interface ProductLSDao {
     @Query("UPDATE ProductLS SET fk_c_sessionLS=:c_sessionLSNew WHERE fk_c_sessionLS=:c_sessionLSOld")
     suspend fun updateProductLSforain(c_sessionLSNew:String,c_sessionLSOld:String)
 
-    @Query("UPDATE ProductLS SET c_productLS=:c_productLS ,name=:name,amount=:amount, buyPrice=:buyPrice, salePrice=:salePrice,descr=:descr, statePhoto=:statePhoto, deficit = :deficit, size=:size,brand=:brand WHERE c_productLS=:c_productLSOld")
-    suspend fun updateProductLS(c_productLS:String,name:String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,deficit: Int,size: String,brand: String,c_productLSOld:String)
+    @Query("UPDATE ProductLS SET name=:name,amount=:amount, buyPrice=:buyPrice, salePrice=:salePrice,descr=:descr, statePhoto=:statePhoto, deficit = :deficit, size=:size,brand=:brand WHERE c_productLS=:c_productLS")
+    suspend fun updateProductLS(c_productLS:String,name:String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,deficit: Int,size: String,brand: String)
+
+    @Query("SELECT * FROM ProductLS WHERE c_productLS = :c_productLS")
+    suspend fun selectDuplicatedProducts(c_productLS: String): List<ModelEditProductLS>
 
 }

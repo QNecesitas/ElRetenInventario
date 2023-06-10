@@ -42,8 +42,8 @@ interface ProductSDao {
     suspend fun selectProdcutSCounter() : List<ModelEditProductS>
 
 
-   // @Query("SELECT ShelfS.c_shelfS, DrawerS.c_drawerS FROM ProductS JOIN SessionS ON ProductS.fk_c_sessionS = SessionS.c_sessionS JOIN DrawerS ON SessionS.fk_c_drawerS = DrawerS.c_drawerS JOIN ShelfS ON DrawerS.fk_c_shelfS = ShelfS.c_shelfS WHERE ProductS.c_productS = :c_productS")
-   // suspend fun selectProductLSPath(c_productS: String): List<ModelProductPath>
+   @Query("SELECT ShelfS.c_shelfS, DrawerS.c_drawerS FROM ProductS JOIN SessionS ON ProductS.fk_c_sessionS = SessionS.c_sessionS JOIN DrawerS ON SessionS.fk_c_drawerS = DrawerS.c_drawerS JOIN ShelfS ON DrawerS.fk_c_shelfS = ShelfS.c_shelfS WHERE ProductS.c_productS = :c_productS")
+   suspend fun selectProductLSPath(c_productS: String): List<ModelProductPath>
 
 
     @Query("UPDATE ProductS SET amount = :amount WHERE c_productS = :c_productS")
@@ -58,6 +58,8 @@ interface ProductSDao {
     @Query("UPDATE ProductS SET  name=:name,amount=:amount, buyPrice=:buyPrice, salePrice=:salePrice,descr=:descr, statePhoto=:statePhoto, deficit = :deficit, size=:size,brand=:brand WHERE c_productS=:c_productS")
     suspend fun updateProductS(name:String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,deficit: Int,size: String,brand: String,c_productS: String)
 
+    @Query("SELECT * FROM ProductS WHERE c_productS = :c_productS")
+    suspend fun selectDuplicatedProducts(c_productS: String): List<ModelEditProductS>
 
 
 }

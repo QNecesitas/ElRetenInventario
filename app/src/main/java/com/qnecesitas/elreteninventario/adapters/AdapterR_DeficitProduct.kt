@@ -1,17 +1,20 @@
 package com.qnecesitas.elreteninventario.adapters
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.databinding.RecyclerDeficitBinding
+import java.io.File
 
 class AdapterR_DeficitProduct(
-        private val al_deficitProdut: ArrayList<ModelEditProductS>,
+        private val al_deficitProdut: MutableList<ModelEditProductS>,
         private val context: Context
 )  : RecyclerView.Adapter<AdapterR_DeficitProduct.DeficitProductViewHolder>(){
 
@@ -26,11 +29,15 @@ class AdapterR_DeficitProduct(
                 model: ModelEditProductS,
                 context: Context,
         ) {
+            val cw = ContextWrapper(context)
+            val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
             Glide.with(context)
-                .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
-                .error(R.drawable.widgets)
-                .centerCrop()
-                .into(binding.rdIvIcon)
+                    .load(File(directory, "${model.c_productS}.jpg"))
+                    .error(R.drawable.widgets)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .centerCrop()
+                    .into(binding.rdIvIcon)
 
             val nombre = model.name
             val size = context.getString(R.string.Size_Info, model.size)

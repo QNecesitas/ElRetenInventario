@@ -2,12 +2,14 @@ package com.qnecesitas.elreteninventario.database
 
 import android.app.Application
 import com.qnecesitas.elreteninventario.ElRetenApplication
+import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelDrawerLS
 import com.qnecesitas.elreteninventario.data.ModelDrawerS
 import com.qnecesitas.elreteninventario.data.ModelEditProductLS
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelPassword
 import com.qnecesitas.elreteninventario.data.ModelProductPath
+import com.qnecesitas.elreteninventario.data.ModelProductPathLS
 import com.qnecesitas.elreteninventario.data.ModelSale
 import com.qnecesitas.elreteninventario.data.ModelSessionLS
 import com.qnecesitas.elreteninventario.data.ModelSessionS
@@ -40,8 +42,8 @@ class Repository(application: ElRetenApplication) {
         ordersDao.insertOrders(name,products,totalPrice,totalInv,discount,day,month,year,type,totalTransf)
     }
 
-    suspend fun addProduct(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, deficit: Int, size: String, brand: String){
-        productSDao.insertProducts(c_productS,name,fk_c_sessionS,amount,buyPrice,salePrice,descr,1,deficit,size,brand)
+    suspend fun addProduct(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, deficit: Int, size: String, brand: String, statePhoto: Int){
+        productSDao.insertProducts(c_productS,name,fk_c_sessionS,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand)
         sessionSDao.updateSessionSmore(fk_c_sessionS)
     }
 
@@ -149,25 +151,42 @@ class Repository(application: ElRetenApplication) {
         return ordersDao.selectOrderY(year).toMutableList()
     }
 
-    //suspend fun fetchProductLSPath(c_productLS: String) : MutableList<ModelProductPath>{
-    //    return productLSDao.selectProductLSPath(c_productLS)
-    //}
+    suspend fun fetchProductLSPath(c_productLS: String) : MutableList<ModelProductPathLS>{
+        return productLSDao.selectProductLSPath(c_productLS).toMutableList()
+    }
 
-    //suspend fun fetchProductSPath(c_productS: String): MutableList<ModelProductPath>{
-    //    return productSDao.selectProductLSPath(c_productS)
-    //}
+    suspend fun fetchProductSPath(c_productS: String): MutableList<ModelProductPath>{
+        return productSDao.selectProductLSPath(c_productS).toMutableList()
+    }
 
     suspend fun fetchProductsCounter() : MutableList<ModelEditProductS>{
         return productSDao.selectProdcutSCounter().toMutableList()
     }
 
-    //suspend fun fetchProductsDeficit(button:String) : MutableList<ModelEditProductS>{
-    //    if(button == "Almacén"){
-    //        return productSDao.selectProductSDeficit()
-     //   }else{
-     //       return productLSDao.selectProductLSDeficit()
-      //  }
-    //}
+    suspend fun fetchProductsDeficit(button:String) : MutableList<ModelEditProductS>{
+        if(button == "Almacén"){
+            return productSDao.selectProductSDeficit().toMutableList()
+        }else{
+            val modelImp = productLSDao.selectProductLSDeficit()
+            val modelExp = mutableListOf<ModelEditProductS>()
+            for (product in modelImp){
+                modelExp.add(ModelEditProductS(
+                        product.c_productLS,
+                        product.name,
+                        product.fk_c_sessionLS,
+                        product.amount,
+                        product.buyPrice,
+                        product.salePrice,
+                        product.descr,
+                        product.statePhoto,
+                        product.deficit,
+                        product.size,
+                        product.brand
+                ))
+            }
+            return modelExp
+        }
+    }
 
     suspend fun fetchProductsLS(fk_c_sessionLS: String) : MutableList<ModelEditProductLS>{
         return productLSDao.selectProductLS(fk_c_sessionLS).toMutableList()
@@ -183,11 +202,11 @@ class Repository(application: ElRetenApplication) {
 
     suspend fun fetchProductsSAll() : MutableList<ModelEditProductS> {
         val result = productSDao.selectProductSAll().toMutableList()
-        for (it in productLSDao.selectProductLSAll()){
+        for (it in productLSDao.selectProductLSAll()) {
             val newModel = ModelEditProductS(
                 it.c_productLS,
                 it.name,
-                it.fk_c_sessionLS,
+                Constants.KEY_SALESPERSON_PRODUCT+it.fk_c_sessionLS,
                 it.amount,
                 it.buyPrice,
                 it.salePrice,
@@ -199,7 +218,6 @@ class Repository(application: ElRetenApplication) {
             )
             result.add( newModel)
         }
-
         return result
     }
 
@@ -269,13 +287,12 @@ class Repository(application: ElRetenApplication) {
         drawerSDao.deleteDrawerSUp(c_drawerSOld)
     }
 
-    suspend fun updateProduct(c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,statePhoto: Int,size: String,brand: String){
+    suspend fun updateProduct(c_productS: String,name: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,statePhoto: Int,size: String,brand: String){
         productSDao.updateProductS(name,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand,c_productS)
     }
 
-    suspend fun updateProductLS(c_productLSOld: String,c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,size: String,brand: String){
-        productLSDao.updateProductLS(c_productLS,name,amount,buyPrice,salePrice,descr,1,deficit,size,brand,c_productLSOld)
-
+    suspend fun updateProductLS(c_productLS: String,name: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,size: String,brand: String, statePhoto: Int){
+        productLSDao.updateProductLS(c_productLS,name,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand)
     }
 
     suspend fun updateSessionLS(c_sessionLSOld: String,c_sessionLSNew: String,fk_c_drawerLS: String,amount: Int){
@@ -307,7 +324,12 @@ class Repository(application: ElRetenApplication) {
         shelfSSDao.deleteShelfS(c_shelfSOld)
     }
 
+    suspend fun isDuplicatedS(c_productS: String): Boolean{
+        return productSDao.selectDuplicatedProducts(c_productS).isNotEmpty()
+    }
 
-
+    suspend fun isDuplicatedLS(c_productLS: String): Boolean{
+        return productLSDao.selectDuplicatedProducts(c_productLS).isNotEmpty()
+    }
 
 }

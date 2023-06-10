@@ -1,6 +1,7 @@
 package com.qnecesitas.elreteninventario.adapters
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +13,11 @@ import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.databinding.RecyclerEditProductBinding
+import java.io.File
 import java.util.Locale
 
 class AdapterR_EditProduct(
-        private val al_editProdut: MutableList<ModelEditProductS>,
+        private val alEditProduct: MutableList<ModelEditProductS>,
         private val context: Context,
         private val isContracted: Boolean,
         private val isAllInto: Boolean
@@ -32,7 +34,7 @@ class AdapterR_EditProduct(
     }
 
     init {
-        al_filter.addAll(al_editProdut)
+        al_filter.addAll(alEditProduct)
         customFilter = CustomFilter(this)
     }
 
@@ -99,22 +101,26 @@ class AdapterR_EditProduct(
                     binding.REPIVImageProduct.setImageResource(R.drawable.widgets)
                 }else{
                     binding.REPIVImageProduct.setImageBitmap(null)
+                    val cw = ContextWrapper(context)
+                    val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
                     Glide.with(context)
-                        .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)
-                        .into(binding.REPIVImageProduct)
+                            .load(File(directory, "${model.c_productS}.jpg"))
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(binding.REPIVImageProduct)
                 }
             }else{
                 binding.REPIVImageProduct.setImageBitmap(null)
                 if(model.statePhoto==1){
+                    val cw = ContextWrapper(context)
+                    val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
                     Glide.with(context)
-                        .load(Constants.PHP_IMAGES + "P_" + model.c_productS + ".jpg")
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)
-                        .into(binding.REPIVImageProduct)
+                            .load(File(directory, "${model.c_productS}.jpg"))
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(binding.REPIVImageProduct)
                 }
             }
 
@@ -157,11 +163,11 @@ class AdapterR_EditProduct(
             al_filter.clear()
             val filterResults = FilterResults()
             if (charSequence.length == 0) {
-                al_filter.addAll(al_editProdut)
+                al_filter.addAll(alEditProduct)
             } else {
                 val filterPattern =
                     charSequence.toString().lowercase(Locale.getDefault()).trim { it <= ' ' }
-                for (product in al_editProdut) {
+                for (product in alEditProduct) {
                     if (product.name.lowercase(Locale.ROOT).trim().contains(filterPattern)) {
                         al_filter.add(product)
                     }else if(product.c_productS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
@@ -185,7 +191,7 @@ class AdapterR_EditProduct(
 
     //Real position
     private fun getRealPosition(irealPosition: Int): Int{
-        for((index, model) in al_editProdut.withIndex()){
+        for((index, model) in alEditProduct.withIndex()){
             if(model == al_filter[irealPosition]){
                 return index
             }

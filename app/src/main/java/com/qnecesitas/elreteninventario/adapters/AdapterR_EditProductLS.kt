@@ -1,6 +1,7 @@
 package com.qnecesitas.elreteninventario.adapters
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +12,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelEditProductLS
-import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.databinding.RecyclerEditProductBinding
+import java.io.File
 import java.util.Locale
 
 class AdapterR_EditProductLS(
-    private val al_editProdut: MutableList<ModelEditProductLS>,
-    private val context: Context,
-    private val isContracted: Boolean,
-    private val isAllInto: Boolean
+        private val alEditProduct: MutableList<ModelEditProductLS>,
+        private val context: Context,
+        private val isContracted: Boolean,
+        private val isAllInto: Boolean
 ) :
     RecyclerView.Adapter<AdapterR_EditProductLS.EditProductViewHolder>() {
 
@@ -33,7 +34,7 @@ class AdapterR_EditProductLS(
     }
 
     init {
-        al_filter.addAll(al_editProdut)
+        al_filter.addAll(alEditProduct)
         customFilter = CustomFilter(this)
     }
 
@@ -92,6 +93,8 @@ class AdapterR_EditProductLS(
                 binding.ivLocation.visibility = View.GONE
             }
 
+            val cw = ContextWrapper(context)
+            val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
             if(model.brand.trim().isEmpty()){
                 binding.tvMarcaBig.visibility = View.GONE
                 binding.ivDecoration.visibility = View.GONE
@@ -101,17 +104,17 @@ class AdapterR_EditProductLS(
                 }else{
                     binding.REPIVImageProduct.setImageBitmap(null)
                     Glide.with(context)
-                        .load(Constants.PHP_IMAGES + "P_" + model.c_productLS + ".jpg")
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)
-                        .into(binding.REPIVImageProduct)
+                            .load(File(directory, "${model.c_productLS}.jpg"))
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(binding.REPIVImageProduct)
                 }
             }else{
                 binding.REPIVImageProduct.setImageBitmap(null)
                 if(model.statePhoto==1){
                     Glide.with(context)
-                        .load(Constants.PHP_IMAGES + "P_" + model.c_productLS + ".jpg")
+                        .load(File(directory, "${model.c_productLS}.jpg"))
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true)
@@ -158,11 +161,11 @@ class AdapterR_EditProductLS(
             al_filter.clear()
             val filterResults = FilterResults()
             if (charSequence.length == 0) {
-                al_filter.addAll(al_editProdut)
+                al_filter.addAll(alEditProduct)
             } else {
                 val filterPattern =
                     charSequence.toString().lowercase(Locale.getDefault()).trim { it <= ' ' }
-                for (product in al_editProdut) {
+                for (product in alEditProduct) {
                     if (product.name.lowercase(Locale.ROOT).trim().contains(filterPattern)) {
                         al_filter.add(product)
                     }else if(product.c_productLS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
@@ -186,7 +189,7 @@ class AdapterR_EditProductLS(
 
     //Real position
     private fun getRealPosition(irealPosition: Int): Int{
-        for((index, model) in al_editProdut.withIndex()){
+        for((index, model) in alEditProduct.withIndex()){
             if(model == al_filter[irealPosition]){
                 return index
             }

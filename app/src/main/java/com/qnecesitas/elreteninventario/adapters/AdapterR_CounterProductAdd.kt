@@ -1,6 +1,7 @@
 package com.qnecesitas.elreteninventario.adapters
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelCart
 import com.qnecesitas.elreteninventario.databinding.RecyclerCounterProductShowBinding
+import java.io.File
 
 class AdapterR_CounterProductAdd(
     val al_CPShow: ArrayList<ModelCart>,
@@ -52,7 +54,8 @@ class AdapterR_CounterProductAdd(
             binding.tvMarcaBig.text = model.product.brand
 
 
-
+            val cw = ContextWrapper(context)
+            val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
             if(model.product.brand.trim().isEmpty()){
                 binding.tvMarcaBig.visibility = View.GONE
                 binding.ivDecoration.visibility = View.GONE
@@ -62,7 +65,7 @@ class AdapterR_CounterProductAdd(
                 }else{
                     binding.IVImageProduct.setImageBitmap(null)
                     Glide.with(context)
-                        .load(Constants.PHP_IMAGES + "P_" + model.product.c_productS + ".jpg")
+                        .load(File(directory, "${model.product.c_productS}.jpg"))
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true)
@@ -72,7 +75,7 @@ class AdapterR_CounterProductAdd(
                 binding.IVImageProduct.setImageBitmap(null)
                 if(model.product.statePhoto==1){
                     Glide.with(context)
-                        .load(Constants.PHP_IMAGES + "P_" + model.product.c_productS + ".jpg")
+                        .load(File(directory, "${model.product.c_productS}.jpg"))
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true)

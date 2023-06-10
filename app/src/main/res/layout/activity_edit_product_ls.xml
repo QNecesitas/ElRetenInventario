@@ -33,26 +33,26 @@
                     android:id="@+id/aep_search"
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="12dp"
                     android:iconifiedByDefault="false"
                     android:queryBackground="@drawable/almostredonded_price_white"
                     android:queryHint="@string/Buscar_producto"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/aep_iv_contract"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginEnd="12dp"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/aep_iv_contract"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    app:tint="@color/white"
+                    android:layout_marginEnd="12dp"
                     android:src="@drawable/baseline_format_list_bulleted_24"
-                    app:layout_constraintStart_toEndOf="@id/aep_search"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/aep_search"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginEnd="12dp"/>
+                    app:tint="@color/white" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -60,98 +60,91 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!--cl_main_content-->
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/aep_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="0sp"
-        app:layout_constraintBottom_toTopOf="@id/aep_cl_transfer"
-        app:layout_constraintStart_toStartOf="parent"
+    <FrameLayout
+        android:id="@+id/frame_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/aep_appBar">
 
-        <FrameLayout
+        <!--Recycler-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/aep_recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:spanCount="2" />
 
-            <!--Recycler-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/aep_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:spanCount="2" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/aep_fab_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginEnd="20sp"
+            android:layout_marginBottom="40sp"
+            android:contentDescription="@string/a_adir_producto"
+            android:src="@drawable/add"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="RtlHardcoded" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:visibility="gone"
-                android:id="@+id/aep_fab_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:contentDescription="@string/a_adir_producto"
-                android:layout_marginEnd="20sp"
-                android:layout_marginBottom="40sp"
-                android:src="@drawable/add"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="RtlHardcoded" />
+        <!-- CL Not info -->
+        <LinearLayout
+            android:id="@+id/aep_not_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:ignore="UseCompoundDrawables">
 
-            <!-- CL Not info -->
-            <LinearLayout
-                android:id="@+id/aep_not_info"
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/baseline_move_to_inbox_24"
+                app:tint="@color/gray_icon_h" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone"
-                tools:ignore="UseCompoundDrawables">
+                android:text="@string/No_hay_productos"
+                android:textColor="@color/gray_icon_h"
+                android:textSize="@dimen/textSize_h"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-                <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/baseline_move_to_inbox_24"
-                    app:tint="@color/gray_icon_h" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/No_hay_productos"
-                    android:textColor="@color/gray_icon_h"
-                    android:textSize="@dimen/textSize_h"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-            </LinearLayout>
+        </LinearLayout>
 
 
-        </FrameLayout>
+    </FrameLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <!--cl_transfer-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/aep_cl_transfer"
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/aep_refresh"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frame_content">
 
         <View
             android:id="@+id/cl_separator"
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/dark_gray"
             app:layout_constraintBottom_toTopOf="@id/cl_transfer_AppBar"
-            android:background="@color/dark_gray"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!--Toolbar-->
         <com.google.android.material.appbar.AppBarLayout
@@ -161,6 +154,7 @@
             android:fitsSystemWindows="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_separator">
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/cl_transfer_toolbar"
                 android:layout_width="match_parent"
@@ -176,13 +170,13 @@
         <!--Frame container fragments-->
         <FrameLayout
             android:id="@+id/cl_transfer_frame"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_transfer_AppBar"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0sp"
             android:layout_height="0sp"
-            android:scaleType="centerInside"/>
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_transfer_AppBar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

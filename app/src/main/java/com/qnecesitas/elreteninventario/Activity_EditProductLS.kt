@@ -1,9 +1,10 @@
 package com.qnecesitas.elreteninventario
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,7 +35,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.adapters.AdapterR_EditProductLS
-import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.auxiliary.IDCreater
 import com.qnecesitas.elreteninventario.auxiliary.ImageTools
@@ -45,6 +48,8 @@ import com.qnecesitas.elreteninventario.databinding.LiInfoProductBinding
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
 import kotlinx.coroutines.launch
+import java.io.File
+import java.net.URI
 
 class Activity_EditProductLS : AppCompatActivity() {
 
@@ -73,6 +78,9 @@ class Activity_EditProductLS : AppCompatActivity() {
     private var lastTransferAllFill = 0
     private var lastFilterStr = ""
     private var lastPositionRecycler = 0
+
+    //Edit photo
+    private var processPhotoInCourse = false;
 
     //Results launchers
     private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
@@ -109,8 +117,6 @@ class Activity_EditProductLS : AppCompatActivity() {
             }
 
 
-        //Refresh
-        binding.aepRefresh.setOnRefreshListener { loadRecyclerInfo() }
 
         //RecyclerView
         binding.aepRecycler.setHasFixedSize(true)
@@ -152,14 +158,19 @@ class Activity_EditProductLS : AppCompatActivity() {
         loadRecyclerInfo()
     }
 
-    /**Initial thread**/
+
+
+
+    /*Fetch products
+    *--------------
+     */
     private fun loadRecyclerInfo() {
         lifecycleScope.launch {
             al_editProduct =
-                if (FragmentsInfo.LAST_CODE_SESSION_LS_SENDED == "no") repository.fetchProductsLSAll()
-                else repository.fetchProductsLS(
-                    FragmentsInfo.LAST_CODE_SESSION_LS_SENDED
-                )
+                    if (FragmentsInfo.LAST_CODE_SESSION_LS_SENDED == "no") repository.fetchProductsLSAll()
+                    else repository.fetchProductsLS(
+                            FragmentsInfo.LAST_CODE_SESSION_LS_SENDED
+                    )
             loadRecyclerAllS()
         }
 
@@ -192,10 +203,10 @@ class Activity_EditProductLS : AppCompatActivity() {
 
 
         adapterR_editProducts =
-            AdapterR_EditProductLS(al_editProduct , binding.root.context , isContracted , false)
+                AdapterR_EditProductLS(al_editProduct , binding.root.context , isContracted , false)
 
         adapterR_editProducts.setRecyclerOnClickListener(object :
-            AdapterR_EditProductLS.RecyclerClickListener {
+                AdapterR_EditProductLS.RecyclerClickListener {
             override fun onClick(position: Int) {
                 li_infoProduct(position)
             }
@@ -203,8 +214,8 @@ class Activity_EditProductLS : AppCompatActivity() {
         binding.aepRecycler.adapter = adapterR_editProducts
         if (isContracted) {
             binding.aepRecycler.layoutManager = LinearLayoutManager(
-                this ,
-                LinearLayoutManager.VERTICAL , false
+                    this ,
+                    LinearLayoutManager.VERTICAL , false
             )
         } else {
             val displayMetrics = DisplayMetrics()
@@ -226,7 +237,349 @@ class Activity_EditProductLS : AppCompatActivity() {
     }
 
 
-    /** Alerts in the background**/
+
+
+    /*Add products
+   *--------------
+    */
+    private fun liAddProduct() {
+        val inflater = LayoutInflater.from(binding.root.context)
+        li_add_binding = LiAddProductBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(binding.root.context)
+        builder.setView(li_add_binding?.root)
+        val alertDialog = builder.create()
+
+        //Variables
+        uriImageCut = null
+        var cProduct = IDCreater.generate()
+        var name: String
+        var amount: Int
+        var buyPrice: Double
+        var salePrice: Double
+        var descr: String
+        var statePhoto: Int
+        var deficit: Int
+        var size: String
+        var brand: String
+
+        li_add_binding?.tietCode?.setText(cProduct)
+
+        //Listener
+        li_add_binding?.image?.setOnClickListener {
+            val popupMenu = PopupMenu(applicationContext , li_add_binding?.image)
+            popupMenu.menuInflater.inflate(R.menu.menu_image_add , popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                if (menuItem.itemId == R.id.menu_image_add) {
+                    choiceGalleryImage()
+                } else if (menuItem.itemId == R.id.menu_image_del) {
+                    li_add_binding?.image?.setImageDrawable(null)
+                    uriImageCut = null
+                }
+                false
+            }
+            popupMenu.show()
+        }
+        li_add_binding?.btnCancel?.setOnClickListener { alertDialog.dismiss() }
+        li_add_binding?.btnAccept?.setOnClickListener {
+            if (checkInfoDataAdd()) {
+                //Declarations
+                cProduct = li_add_binding?.tietCode?.text.toString()
+                name = li_add_binding?.tietName?.text.toString()
+                amount = li_add_binding?.tietCant?.text.toString().toInt()
+                buyPrice = li_add_binding?.tietPriceBuy?.text.toString().toDouble()
+                salePrice = li_add_binding?.tietPriceSale?.text.toString().toDouble()
+                descr = li_add_binding?.tietDesc?.text.toString()
+                statePhoto = if (uriImageCut == null) 0 else 1
+                deficit = li_add_binding?.tietDeficit?.text.toString().toInt()
+                size = li_add_binding?.tietSize?.text.toString()
+                brand = li_add_binding?.tietBrand?.text.toString()
+
+                alertDialog.dismiss()
+                lifecycleScope.launch {
+                    if (!repository.isDuplicatedS(cProduct)) {
+                        addProductDB(
+                                ModelEditProductLS(
+                                        cProduct, name, FragmentsInfo.LAST_CODE_SESSION_LS_SENDED, amount, buyPrice, salePrice, descr, statePhoto, deficit, size, brand
+                                )
+                        )
+                    }else{
+                        showAlertDialogDuplicated()
+                    }
+                }
+            }
+        }
+
+        //Finish
+        alertDialog.setCancelable(false)
+        alertDialog.window!!.setGravity(Gravity.CENTER)
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+    }
+
+    private fun addProductDB(productLS: ModelEditProductLS) {
+        lifecycleScope.launch {
+            repository.addProductLS(
+                    productLS.c_productLS,
+                    productLS.name,
+                    FragmentsInfo.LAST_CODE_SESSION_LS_SENDED,
+                    productLS.amount,
+                    productLS.buyPrice,
+                    productLS.salePrice,
+                    productLS.descr,
+                    productLS.deficit,
+                    productLS.size,
+                    productLS.brand
+            )
+        }
+
+        al_editProduct.add(productLS)
+        updateRecyclerAdapter()
+        if(productLS.statePhoto == 1) {
+            val bitmap = li_add_binding?.image?.drawable?.toBitmap()
+            bitmap?.let { ImageTools.saveImageToInternalStorage(this, it, productLS.c_productLS) }
+        }
+        FancyToast.makeText(
+                applicationContext ,
+                getString(R.string.Operacion_realizada_con_exito) ,
+                FancyToast.LENGTH_LONG ,
+                FancyToast.SUCCESS ,
+                false
+        ).show()
+    }
+
+
+
+
+    /*
+    *----------Choice Image
+     */
+    private fun choiceGalleryImage() {
+        val galleryIntent =
+                Intent(Intent.ACTION_PICK , MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        galleryLauncher.launch(galleryIntent)
+    }
+
+    private fun imageReceived(result: ActivityResult) {
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val contentUri = data?.data
+            val file = ImageTools.createTempImageFile(
+                    this@Activity_EditProductLS ,
+                    ImageTools.getHoraActual("yyMMddHHmmss")
+            )
+            if (contentUri != null) {
+                cutImage(contentUri , Uri.fromFile(file))
+            } else {
+                Toast.makeText(
+                        this@Activity_EditProductLS ,
+                        R.string.error_obtener_imagen ,
+                        Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            Toast.makeText(
+                    this@Activity_EditProductLS ,
+                    R.string.error_obtener_imagen ,
+                    Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun cutImage(uri1: Uri, uri2: Uri) {
+        try {
+            UCrop.of(uri1 , uri2)
+                    .withAspectRatio(3f , 3f)
+                    .withMaxResultSize(
+                            ImageTools.ANCHO_DE_FOTO_A_SUBIR ,
+                            ImageTools.ALTO_DE_FOTO_A_SUBIR
+                    )
+                    .start(this)
+        } catch (e: Exception) {
+            Toast.makeText(
+                    this@Activity_EditProductLS ,
+                    getString(R.string.error) ,
+                    Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun imageCropped(data: Intent?) {
+        if (data != null) {
+            this.uriImageCut = UCrop.getOutput(data)
+            li_add_binding?.image?.setImageURI(this.uriImageCut)
+        }
+    }
+
+
+
+
+    /*
+    *--------------Edit Product
+     */
+    private fun liEditProduct(position: Int) {
+        val inflater = LayoutInflater.from(binding.root.context)
+        li_add_binding = LiAddProductBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(binding.root.context)
+        builder.setView(li_add_binding?.root)
+        val alertDialog = builder.create()
+
+        //Init
+        val name = al_editProduct[position].name
+        val code = al_editProduct[position].c_productLS
+        val amount = al_editProduct[position].amount
+        val buyPrice = al_editProduct[position].buyPrice
+        val salePrice = al_editProduct[position].salePrice
+        val descr = al_editProduct[position].descr
+        val codeImage = al_editProduct[position].c_productLS
+        val deficit = al_editProduct[position].deficit
+        val size = al_editProduct[position].size
+        val brand = al_editProduct[position].brand
+        var statePhoto = al_editProduct[position].statePhoto
+        var uriToDelete: Uri? = null
+        uriImageCut = null
+
+        //Fill out
+        if(statePhoto==1) {
+            val cw = ContextWrapper(this)
+            val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
+            uriImageCut = File(directory, "${code}.jpg").toUri()
+            uriToDelete = File(directory, "${code}.jpg").toUri()
+        }
+        li_add_binding?.tietName?.setText(name)
+        li_add_binding?.tietCode?.setText(code)
+        li_add_binding?.tietCant?.setText(amount.toString())
+        li_add_binding?.tietPriceBuy?.setText(buyPrice.toString())
+        li_add_binding?.tietPriceSale?.setText(salePrice.toString())
+        li_add_binding?.tietDesc?.setText(descr)
+        li_add_binding?.tietSize?.setText(size)
+        li_add_binding?.tietBrand?.setText(brand)
+        li_add_binding?.image?.let {
+            if(statePhoto == 1) {
+                val cw = ContextWrapper(this)
+                val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
+                it.setImageURI(File(directory, "${codeImage}.jpg").toUri())
+            }
+            if(processPhotoInCourse){
+                processPhotoInCourse = false
+                it.setImageURI(uriImageCut)
+            }
+        }
+        li_add_binding?.tietCode?.isEnabled = false
+        li_add_binding?.tietDeficit?.setText(deficit.toString())
+
+
+        //Listener
+        li_add_binding?.image?.setOnClickListener {
+            val popupMenu = PopupMenu(applicationContext , li_add_binding?.image)
+            popupMenu.menuInflater.inflate(R.menu.menu_image_add , popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                if (menuItem.itemId == R.id.menu_image_add) {
+                    choiceGalleryImage()
+                } else if (menuItem.itemId == R.id.menu_image_del) {
+                    li_add_binding?.image?.setImageDrawable(null)
+                    uriImageCut = null
+                }
+                false
+            }
+            popupMenu.show()
+        }
+        li_add_binding?.btnCancel?.setOnClickListener(View.OnClickListener {
+            alertDialog.dismiss()
+            uriImageCut = null
+        })
+        li_add_binding?.btnAccept?.setOnClickListener(View.OnClickListener {
+            if (checkInfoDataAdd()) {
+                alertDialog.dismiss()
+                statePhoto = if(uriImageCut == null) 0 else 1
+                if(uriImageCut == null) File(URI(uriToDelete.toString())).delete()
+                updateProductDB(
+                        ModelEditProductLS(
+                                al_editProduct[position].c_productLS,
+                                al_editProduct[position].fk_c_sessionLS,
+                                li_add_binding?.tietName?.text.toString(),
+                                li_add_binding?.tietCant?.text.toString().toInt(),
+                                li_add_binding?.tietPriceBuy?.text.toString().toDouble(),
+                                li_add_binding?.tietPriceSale?.text.toString().toDouble(),
+                                li_add_binding?.tietDesc?.text.toString(),
+                                statePhoto,
+                                li_add_binding?.tietDeficit?.text.toString().toInt(),
+                                li_add_binding?.tietSize?.text.toString(),
+                                li_add_binding?.tietBrand?.text.toString()
+                        ), position
+                )
+            }
+        })
+
+        //Finished
+        alertDialog.setCancelable(false)
+        alertDialog.window!!.setGravity(Gravity.CENTER)
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+    }
+
+    private fun updateProductDB(productLS: ModelEditProductLS, position: Int) {
+        lifecycleScope.launch {
+            repository.updateProductLS(
+                    productLS.c_productLS ,
+                    productLS.name ,
+                    productLS.amount ,
+                    productLS.buyPrice ,
+                    productLS.salePrice ,
+                    productLS.descr ,
+                    productLS.deficit ,
+                    productLS.size ,
+                    productLS.brand,
+                    productLS.statePhoto
+            )
+        }
+
+        al_editProduct[position] = productLS
+        if(productLS.statePhoto == 1) {
+            val bitmap = li_add_binding?.image?.drawable?.toBitmap()
+            bitmap?.let { ImageTools.saveImageToInternalStorage(this, it, productLS.c_productLS) }
+        }
+        updateRecyclerAdapter()
+        FancyToast.makeText(
+                this,
+                getString(R.string.Operacion_realizada_con_exito) ,
+                FancyToast.LENGTH_LONG ,
+                FancyToast.SUCCESS ,
+                false
+        ).show()
+    }
+
+
+
+    /*
+    *--------------Delete Product
+     */
+    private fun deleteProductDB(position: Int) {
+        lifecycleScope.launch {
+            repository.deleteProductLS(
+                    al_editProduct[position].c_productLS ,
+                    al_editProduct[position].fk_c_sessionLS
+            )
+            val cw = ContextWrapper(this@Activity_EditProductLS)
+            val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
+            File(directory, "${al_editProduct[position].c_productLS}.jpg").delete()
+            al_editProduct.removeAt(position)
+            updateRecyclerAdapter()
+        }
+        FancyToast.makeText(
+                this@Activity_EditProductLS ,
+                getString(R.string.Operacion_realizada_con_exito) ,
+                FancyToast.LENGTH_LONG ,
+                FancyToast.SUCCESS ,
+                false
+        ).show()
+    }
+
+
+
+
+    /*
+    *----------Alerts
+     */
     private fun alertNotElements(open: Boolean) {
         if (open) {
             binding.aepNotInfo.visibility = View.VISIBLE
@@ -246,7 +599,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         //set listeners for dialog buttons
         builder.setPositiveButton(R.string.Si) { dialog , _ ->
             dialog.dismiss()
-            deleteProductInternet(position)
+            deleteProductDB(position)
         }
         builder.setNegativeButton(R.string.No) { dialog , _ ->
             dialog.dismiss()
@@ -270,6 +623,23 @@ class Activity_EditProductLS : AppCompatActivity() {
         //create the alert dialog and show it
         builder.create().show()
     }
+
+    private fun showAlertDialogDuplicated() {
+        //init alert dialog
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setCancelable(true)
+        builder.setTitle(R.string.Elemento_repetido)
+        builder.setMessage(R.string.Elemento_repetido_desc)
+        //set listeners for dialog buttons
+        builder.setPositiveButton(R.string.Aceptar) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        //create the alert dialog and show it
+        builder.create().show()
+    }
+
+
 
 
     /** Inflated layouts Edit, Add and Info**/
@@ -301,11 +671,15 @@ class Activity_EditProductLS : AppCompatActivity() {
         li_info_binding?.infoSize?.text = size
         li_info_binding?.infoBrand?.text = brand
         li_info_binding?.image?.let {
-            Glide.with(applicationContext)
-                .load(Constants.PHP_IMAGES + "P_" + codeImage + ".jpg")
-                .error(R.drawable.widgets)
-                .centerCrop()
-                .into(it)
+            val cw = ContextWrapper(this)
+            val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
+            Glide.with(this)
+                    .load(File(directory, "${al_editProduct[position].c_productLS}.jpg"))
+                    .error(R.drawable.widgets)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .centerCrop()
+                    .into(it)
         }
 
         li_info_binding?.infoPriceB?.visibility = View.GONE
@@ -334,7 +708,7 @@ class Activity_EditProductLS : AppCompatActivity() {
 
                     R.id.option_editar -> {
                         if (FragmentsInfo.STORE_ACCESS == FragmentsInfo.Companion.EAccess.Admin) {
-                            li_editProduct(position)
+                            liEditProduct(position)
                         } else {
                             FancyToast.makeText(
                                 applicationContext ,
@@ -381,171 +755,10 @@ class Activity_EditProductLS : AppCompatActivity() {
             popupMenu.show()
         }
 
-        //Finalizado
+        //Finished
         builder.setCancelable(true)
         alertDialog.window?.setGravity(Gravity.CENTER)
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.show()
-    }
-
-    private fun li_editProduct(position: Int) {
-        val inflater = LayoutInflater.from(binding.root.context)
-        li_add_binding = LiAddProductBinding.inflate(inflater)
-        val builder = AlertDialog.Builder(binding.root.context)
-        builder.setView(li_add_binding?.root)
-        val alertDialog = builder.create()
-
-        //Init
-        val name = al_editProduct[position].name
-        val code = al_editProduct[position].c_productLS
-        val amount = al_editProduct[position].amount
-        val buyPrice = al_editProduct[position].buyPrice
-        val salePrice = al_editProduct[position].salePrice
-        val descr = al_editProduct[position].descr
-        val codeImage = al_editProduct[position].c_productLS
-        val deficit = al_editProduct[position].deficit
-        val size = al_editProduct[position].size
-        val brand = al_editProduct[position].brand
-
-        //Fill out
-        li_add_binding?.tietName?.setText(name)
-        li_add_binding?.tietCode?.setText(code)
-        li_add_binding?.tietCant?.setText(amount.toString())
-        li_add_binding?.tietPriceBuy?.setText(buyPrice.toString())
-        li_add_binding?.tietPriceSale?.setText(salePrice.toString())
-        li_add_binding?.tietDesc?.setText(descr)
-        li_add_binding?.tietSize?.setText(size)
-        li_add_binding?.tietBrand?.setText(brand)
-        li_add_binding?.image?.let {
-            Glide.with(applicationContext)
-                .load(Constants.PHP_IMAGES + "P_" + codeImage + ".jpg")
-                .error(R.drawable.widgets)
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(it)
-        }
-        li_add_binding?.tietCode?.isEnabled = false
-        li_add_binding?.tietDeficit?.setText(deficit.toString())
-
-
-        //Listener
-        li_add_binding?.image?.setOnClickListener {
-            val popupMenu = PopupMenu(applicationContext , li_add_binding?.image)
-            popupMenu.menuInflater.inflate(R.menu.menu_image_add , popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener { menuItem ->
-                if (menuItem.itemId == R.id.menu_image_add) {
-                    escogerimagenGaleria()
-                } else if (menuItem.itemId == R.id.menu_image_del) {
-                    li_add_binding?.image?.setImageDrawable(null)
-                    uriImageCut = null
-                }
-                false
-            }
-            popupMenu.show()
-        }
-        li_add_binding?.btnCancel?.setOnClickListener(View.OnClickListener {
-            alertDialog.dismiss()
-            uriImageCut = null
-        })
-        li_add_binding?.btnAccept?.setOnClickListener(View.OnClickListener {
-            if (checkInfoDataAdd()) {
-                alertDialog.dismiss()
-                updateProductInternet(
-                    al_editProduct[position].c_productLS ,
-                    li_add_binding?.tietCode?.text.toString() ,
-                    li_add_binding?.tietName?.text.toString() ,
-                    li_add_binding?.tietCant?.text.toString().toInt() ,
-                    li_add_binding?.tietPriceBuy?.text.toString().toDouble() ,
-                    li_add_binding?.tietPriceSale?.text.toString().toDouble() ,
-                    li_add_binding?.tietDesc?.text.toString() ,
-                    al_editProduct[position].statePhoto ,
-                    position ,
-                    li_add_binding?.tietDeficit?.text.toString().toInt() ,
-                    li_add_binding?.tietSize?.text.toString() ,
-                    li_add_binding?.tietBrand?.text.toString()
-                )
-            }
-        })
-
-        //Finalizado
-        alertDialog.setCancelable(false)
-        alertDialog.window!!.setGravity(Gravity.CENTER)
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.show()
-    }
-
-    private fun li_addProduct() {
-        val inflater = LayoutInflater.from(binding.root.context)
-        li_add_binding = LiAddProductBinding.inflate(inflater)
-        val builder = AlertDialog.Builder(binding.root.context)
-        builder.setView(li_add_binding?.root)
-        val alertDialog = builder.create()
-
-        //Variables
-        var c_Product = IDCreater.generate()
-        var n_Product: String
-        var amount: Int
-        var buyPrice: Double
-        var salePrice: Double
-        var descr: String
-        var statePhoto: Int
-        var deficit: Int
-        var size: String
-        var brand: String
-
-        li_add_binding?.tietCode?.setText(c_Product)
-
-        //Listener
-        li_add_binding?.image?.setOnClickListener {
-            val popupMenu = PopupMenu(applicationContext , li_add_binding?.image)
-            popupMenu.menuInflater.inflate(R.menu.menu_image_add , popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener { menuItem ->
-                if (menuItem.itemId == R.id.menu_image_add) {
-                    escogerimagenGaleria()
-                } else if (menuItem.itemId == R.id.menu_image_del) {
-                    li_add_binding?.image?.setImageDrawable(null)
-                    uriImageCut = null
-                }
-                false
-            }
-            popupMenu.show()
-        }
-        li_add_binding?.btnCancel?.setOnClickListener { alertDialog.dismiss() }
-        li_add_binding?.btnAccept?.setOnClickListener {
-            if (checkInfoDataAdd()) {
-                //Declaraciones
-                c_Product = li_add_binding?.tietCode?.text.toString()
-                n_Product = li_add_binding?.tietName?.text.toString()
-                amount = li_add_binding?.tietCant?.text.toString().toInt()
-                buyPrice = li_add_binding?.tietPriceBuy?.text.toString().toDouble()
-                salePrice = li_add_binding?.tietPriceSale?.text.toString().toDouble()
-                descr = li_add_binding?.tietDesc?.text.toString()
-                statePhoto = if (li_add_binding?.image == null) 0 else 1
-                deficit = li_add_binding?.tietDeficit?.text.toString().toInt()
-                size = li_add_binding?.tietSize?.text.toString()
-                brand = li_add_binding?.tietBrand?.text.toString()
-
-                alertDialog.dismiss()
-                addProductInternet(
-                        c_Product,
-                        n_Product,
-                        amount,
-                        buyPrice,
-                        salePrice,
-                        descr,
-                        statePhoto,
-                        deficit,
-                        size,
-                        brand
-                )
-            }
-        }
-
-        //Finalizado
-        alertDialog.setCancelable(false)
-        alertDialog.window!!.setGravity(Gravity.CENTER)
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         alertDialog.show()
     }
 
@@ -609,7 +822,7 @@ class Activity_EditProductLS : AppCompatActivity() {
             alertDialog.dismiss()
         }
 
-        //Finalizado
+        //Finished
         alertDialog.setCancelable(false)
         alertDialog.window!!.setGravity(Gravity.CENTER)
         alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -682,7 +895,7 @@ class Activity_EditProductLS : AppCompatActivity() {
             alertDialog.dismiss()
         }
 
-        //Finalizado
+        //Finished
         alertDialog.setCancelable(false)
         alertDialog.window!!.setGravity(Gravity.CENTER)
         alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -712,132 +925,11 @@ class Activity_EditProductLS : AppCompatActivity() {
 
     /**Activity Events**/
     private fun click_add() {
-        li_addProduct()
+        liAddProduct()
     }
 
 
     /**Upload info to Internet**/
-    private fun addProductInternet(
-        c_Product: String ,
-        n_Product: String ,
-        amount: Int ,
-        buyPrice: Double ,
-        salePrice: Double ,
-        descr: String ,
-        statePhoto: Int ,
-        deficit: Int ,
-        size: String ,
-        brand: String
-    ) {
-        lifecycleScope.launch {
-            repository.addProductLS(
-                c_Product ,
-                n_Product ,
-                FragmentsInfo.LAST_CODE_SESSION_LS_SENDED ,
-                amount ,
-                buyPrice ,
-                salePrice ,
-                descr ,
-                deficit ,
-                size ,
-                brand
-            )
-        }
-
-        val model = ModelEditProductLS(
-            c_Product ,
-            n_Product ,
-            FragmentsInfo.LAST_CODE_SESSION_LS_SENDED ,
-            amount ,
-            buyPrice ,
-            salePrice ,
-            descr ,
-            statePhoto ,
-            deficit ,
-            size ,
-            brand
-        )
-        al_editProduct.add(model)
-        updateRecyclerAdapter()
-        FancyToast.makeText(
-            applicationContext ,
-            getString(R.string.Operacion_realizada_con_exito) ,
-            FancyToast.LENGTH_LONG ,
-            FancyToast.SUCCESS ,
-            false
-        ).show()
-    }
-
-    private fun updateProductInternet(
-        c_ProductOld: String ,
-        c_Product: String ,
-        name: String ,
-        amount: Int ,
-        buyPrice: Double ,
-        salePrice: Double ,
-        descr: String ,
-        statePhoto: Int ,
-        position: Int ,
-        deficit: Int ,
-        size: String ,
-        brand: String
-    ) {
-        lifecycleScope.launch {
-            repository.updateProductLS(
-                c_ProductOld ,
-                c_Product ,
-                name ,
-                al_editProduct[position].fk_c_sessionLS ,
-                amount ,
-                buyPrice ,
-                salePrice ,
-                descr ,
-                deficit ,
-                size ,
-                brand
-            )
-        }
-        val model = ModelEditProductLS(
-            c_Product ,
-            name ,
-            FragmentsInfo.LAST_CODE_SESSION_LS_SENDED ,
-            amount ,
-            buyPrice ,
-            salePrice ,
-            descr ,
-            statePhoto ,
-            deficit ,
-            size ,
-            brand
-        )
-        al_editProduct[position] = model
-        updateRecyclerAdapter()
-        FancyToast.makeText(
-            this@Activity_EditProductLS ,
-            getString(R.string.Operacion_realizada_con_exito) ,
-            FancyToast.LENGTH_LONG ,
-            FancyToast.SUCCESS ,
-            false
-        ).show()
-    }
-
-    private fun deleteProductInternet(position: Int) {
-        lifecycleScope.launch {
-            repository.deleteProductLS(
-                al_editProduct[position].c_productLS ,
-                al_editProduct[position].fk_c_sessionLS
-            )
-        }
-        FancyToast.makeText(
-            this@Activity_EditProductLS ,
-            getString(R.string.Operacion_realizada_con_exito) ,
-            FancyToast.LENGTH_LONG ,
-            FancyToast.SUCCESS ,
-            false
-        ).show()
-        al_editProduct.removeAt(position)
-        updateRecyclerAdapter()
-    }
 
     private fun transferProductInternet(position: Int , codeSession: String) {
         lifecycleScope.launch {
@@ -857,6 +949,7 @@ class Activity_EditProductLS : AppCompatActivity() {
                 al_editProduct[position].size ,
                 al_editProduct[position].brand
             )
+            loadRecyclerInfo()
         }
         FancyToast.makeText(
             this@Activity_EditProductLS ,
@@ -865,7 +958,6 @@ class Activity_EditProductLS : AppCompatActivity() {
             FancyToast.SUCCESS ,
             false
         ).show()
-        loadRecyclerInfo()
     }
 
     private fun uploadAmountChangesInternet(amount: Int , position: Int) {
@@ -905,6 +997,8 @@ class Activity_EditProductLS : AppCompatActivity() {
     }
 
 
+
+
     /**Auxiliary Methods**/
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int , resultCode: Int , data: Intent?) {
@@ -919,7 +1013,7 @@ class Activity_EditProductLS : AppCompatActivity() {
 
 
             if (data != null) {
-                imageRecorted(data)
+                imageCropped(data)
             } else {
                 Toast.makeText(
                     this@Activity_EditProductLS ,
@@ -988,67 +1082,11 @@ class Activity_EditProductLS : AppCompatActivity() {
         return amountTrue == 6
     }
 
-    private fun escogerimagenGaleria() {
-            val galleryIntent =
-                Intent(Intent.ACTION_PICK , MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            galleryLauncher.launch(galleryIntent)
-    }
-
-    private fun imageReceived(result: ActivityResult) {
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            val contentUri = data?.data
-            val file = ImageTools.createTempImageFile(
-                this@Activity_EditProductLS ,
-                ImageTools.getHoraActual("yyMMddHHmmss")
-            )
-            if (contentUri != null) {
-                recortarImagen(contentUri , Uri.fromFile(file))
-            } else {
-                Toast.makeText(
-                    this@Activity_EditProductLS ,
-                    R.string.error_obtener_imagen ,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        } else {
-            Toast.makeText(
-                this@Activity_EditProductLS ,
-                R.string.error_obtener_imagen ,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    private fun recortarImagen(uri1: Uri , uri2: Uri) {
-        try {
-            UCrop.of(uri1 , uri2)
-                .withAspectRatio(3f , 3f)
-                .withMaxResultSize(
-                    ImageTools.ANCHO_DE_FOTO_A_SUBIR ,
-                    ImageTools.ALTO_DE_FOTO_A_SUBIR
-                )
-                .start(this)
-        } catch (e: Exception) {
-            Toast.makeText(
-                this@Activity_EditProductLS ,
-                getString(R.string.error) ,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    private fun imageRecorted(data: Intent?) {
-        if (data != null) {
-            this.uriImageCut = UCrop.getOutput(data)
-            li_add_binding?.image?.setImageURI(this.uriImageCut)
-        }
-    }
 
     private fun makePath(al_modelPath: ArrayList<ModelProductPath> , position: Int): String {
-        val shelfCode = al_modelPath[0].fk_c_shelfS
+        val shelfCode = al_modelPath[0].c_shelfS
 
-        val drawerCode = al_modelPath[0].fk_c_drawerS
+        val drawerCode = al_modelPath[0].c_drawerS
         val guionDrawerPosition = drawerCode.lastIndexOf("_")
         val newDrawerCode = drawerCode.substring(guionDrawerPosition + 1)
 

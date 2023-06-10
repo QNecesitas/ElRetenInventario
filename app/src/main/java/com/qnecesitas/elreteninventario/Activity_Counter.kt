@@ -384,9 +384,9 @@ class Activity_Counter : AppCompatActivity() {
     * _________Auxiliary
     * */
     private fun makePath(al_modelPath: ArrayList<ModelProductPath> , position: Int): String {
-        val shelfCode = al_modelPath[0].fk_c_shelfS
+        val shelfCode = al_modelPath[0].c_shelfS
 
-        val drawerCode = al_modelPath[0].fk_c_drawerS
+        val drawerCode = al_modelPath[0].c_drawerS
         val guionDrawerPosition = drawerCode.lastIndexOf("_")
         val newDrawerCode = drawerCode.substring(guionDrawerPosition + 1)
 
