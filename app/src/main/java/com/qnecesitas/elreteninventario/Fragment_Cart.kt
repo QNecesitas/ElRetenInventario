@@ -65,7 +65,6 @@ class Fragment_Cart : Fragment() {
         adapterCart = AdapterR_CounterProductAdd(alCart , requireContext())
         binding.recycler.adapter = adapterCart
 
-
         //Internet
         repository = Repository(requireActivity().application as ElRetenApplication)
 
