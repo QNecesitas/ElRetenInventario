@@ -73,11 +73,11 @@ class Fragment_Shelves : Fragment() {
     //Recycler information
     private fun loadRecyclerInfo() {
         lifecycleScope.launch {
-
             al_shelves = repository.fetchShelvesS()
+
+            binding.fsRecycler.visibility = View.VISIBLE
+            updateRecyclerAdapter()
         }
-        binding.fsRecycler.visibility = View.VISIBLE
-        updateRecyclerAdapter()
 
     }
 
@@ -188,6 +188,7 @@ class Fragment_Shelves : Fragment() {
         builder.setView(li_binding.root)
         val alertDialog = builder.create()
         var tiedContent: String;
+
 
         li_binding.tiet.setText(codeShelfOld)
         li_binding.btnAccept.setOnClickListener {
