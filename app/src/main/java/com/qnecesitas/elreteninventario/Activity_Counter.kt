@@ -94,13 +94,7 @@ class Activity_Counter : AppCompatActivity() {
         //Internet
         repository = Repository(application as ElRetenApplication)
 
-        binding.refresh.setOnRefreshListener {
-            if (fragment_carrito.isEmpty()) {
-                loadRecyclerInfo()
-            } else {
-                binding.refresh.isRefreshing = false
-            }
-        }
+
 
         //Start
         loadRecyclerInfo()
@@ -115,6 +109,8 @@ class Activity_Counter : AppCompatActivity() {
 
         lifecycleScope.launch {
             alCounter = repository.fetchProductsSAll()
+            binding.rvProductsShow.visibility = View.VISIBLE
+            binding.notInfo.visibility = View.GONE
             updateRecyclerAdapter()
         }
     }

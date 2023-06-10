@@ -37,7 +37,7 @@ class Activity_Settings : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
 
         //Refresh
-        binding.refresh.setOnRefreshListener { loadPasswordInternet {} }
+
 
         binding.btnAdminAccept.setOnClickListener { clickAcceptAdmin() }
 

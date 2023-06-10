@@ -114,9 +114,7 @@ class Activity_EditProduct : AppCompatActivity() {
 
 
         //Refresh
-        binding.aepRefresh.setOnRefreshListener {
-            loadRecyclerInfo()
-        }
+
 
         //RecyclerView
         binding.aepRecycler.setHasFixedSize(true)

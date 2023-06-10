@@ -79,17 +79,14 @@
     </androidx.cardview.widget.CardView>
 
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/ad_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="0sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ad_cv_cant">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ad_cv_cant">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ad_Recycler"
@@ -137,6 +134,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

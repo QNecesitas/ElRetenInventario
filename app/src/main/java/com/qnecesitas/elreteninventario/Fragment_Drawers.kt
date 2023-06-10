@@ -53,11 +53,7 @@ class Fragment_Drawers(var c_shelfS: String) : Fragment() {
         binding.fdAdd.setOnClickListener { click_add() }
 
         //Refresh
-        binding.refresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                loadRecyclerInfo()
-            }
-        })
+
 
         //Recycler
         al_drawers = ArrayList()

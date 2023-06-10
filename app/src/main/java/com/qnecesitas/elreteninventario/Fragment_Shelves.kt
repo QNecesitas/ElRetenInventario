@@ -53,7 +53,7 @@ class Fragment_Shelves : Fragment() {
         binding.fsAdd.setOnClickListener { click_add() }
 
         //Refresh
-        binding.refresh.setOnRefreshListener { loadRecyclerInfo() }
+
 
         //Recycler
         al_shelves = ArrayList()

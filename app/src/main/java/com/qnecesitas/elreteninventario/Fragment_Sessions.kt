@@ -46,12 +46,8 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         //Add Button
         binding.fsAddSession.setOnClickListener { click_add() }
 
-        //Refresh
-        binding.refresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                loadRecyclerInfo()
-            }
-        })
+
+
 
         //Recycler
         al_sessions = ArrayList()

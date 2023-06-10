@@ -150,14 +150,7 @@ class Activity_Sales : AppCompatActivity() {
 
 
         //Refresh
-        binding.refresh.setOnRefreshListener {
-            when (dateSelected) {
-                "Todo" -> loadRecyclerInfoAll()
-                "Año" -> loadRecyclerInfoYear()
-                "Mes" -> loadRecyclerInfoMonth()
-                "Día" -> loadRecyclerInfoDay()
-            }
-        }
+
 
 
         //Recycler

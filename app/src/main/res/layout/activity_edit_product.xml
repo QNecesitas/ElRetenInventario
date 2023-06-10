@@ -61,17 +61,14 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!--cl_main_content-->
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/aep_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="0sp"
-        app:layout_constraintBottom_toTopOf="@id/aep_cl_transfer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/aep_appBar">
 
         <FrameLayout
+            android:id="@+id/fl_container"
+            app:layout_constraintBottom_toTopOf="@id/aep_cl_transfer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/aep_appBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0sp">
 
             <!--Recycler-->
             <androidx.recyclerview.widget.RecyclerView
@@ -132,8 +129,6 @@
 
         </FrameLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
     <!--cl_transfer-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/aep_cl_transfer"
@@ -141,7 +136,7 @@
         android:layout_height="0sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/aep_refresh"
+        app:layout_constraintTop_toBottomOf="@id/fl_container"
         app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone">
 
