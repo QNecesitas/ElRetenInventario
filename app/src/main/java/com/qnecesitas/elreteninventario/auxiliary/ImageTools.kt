@@ -25,7 +25,7 @@ companion object {
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
 
-    fun getHoraActual(SumaDeFormatos: String?): String? {
+    fun getHoraActual(SumaDeFormatos: String): String {
         return SimpleDateFormat(
             SumaDeFormatos,
             Locale.getDefault()
@@ -33,13 +33,13 @@ companion object {
     }
 
     @Throws(IOException::class)
-    fun createTempImageFile(context: Context, nombre: String?): File? {
+    fun createTempImageFile(context: Context, nombre: String): File {
         val storageDir = context.externalCacheDir
         return File.createTempFile(nombre, ".png", storageDir)
     }
 
     @Throws(IOException::class)
-    fun obtenerTempImageFile(context: Context, nombre: String?): File? {
+    fun obtenerTempImageFile(context: Context, nombre: String): File {
         val storageDir = context.externalCacheDir
         return File(storageDir, nombre)
     }

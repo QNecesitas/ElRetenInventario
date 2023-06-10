@@ -40,13 +40,13 @@ class Repository(application: ElRetenApplication) {
         ordersDao.insertOrders(name,products,totalPrice,totalInv,discount,day,month,year,type,totalTransf)
     }
 
-    suspend fun addProduct(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int, size: String, brand: String){
+    suspend fun addProduct(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, deficit: Int, size: String, brand: String){
         productSDao.insertProducts(c_productS,name,fk_c_sessionS,amount,buyPrice,salePrice,descr,1,deficit,size,brand)
         sessionSDao.updateSessionSmore(fk_c_sessionS)
     }
 
-    suspend fun addProductLS(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, file: String, deficit: Int, size: String, brand: String){
-        productLSDao.insertProductLS(c_productS,name,fk_c_sessionS,amount,buyPrice,salePrice,descr,deficit,1,size,brand)
+    suspend fun addProductLS(c_productS: String, name: String, fk_c_sessionS: String, amount: Int, buyPrice: Double, salePrice: Double, descr: String, deficit: Int, size: String, brand: String){
+        productLSDao.insertProductLS(c_productS,name,fk_c_sessionS,amount,buyPrice,salePrice,descr,deficit,deficit,size,brand)
         sessionLSDao.updateSessionLSmore(fk_c_sessionS)
     }
 
@@ -269,11 +269,11 @@ class Repository(application: ElRetenApplication) {
         drawerSDao.deleteDrawerSUp(c_drawerSOld)
     }
 
-    suspend fun updateProduct(file: String,c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,statePhoto: Int,size: String,brand: String){
+    suspend fun updateProduct(c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,statePhoto: Int,size: String,brand: String){
         productSDao.updateProductS(name,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand,c_productS)
     }
 
-    suspend fun updateProductLS(c_productLSOld: String,file: String,c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,size: String,brand: String){
+    suspend fun updateProductLS(c_productLSOld: String,c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,deficit: Int,size: String,brand: String){
         productLSDao.updateProductLS(c_productLS,name,amount,buyPrice,salePrice,descr,1,deficit,size,brand,c_productLSOld)
 
     }

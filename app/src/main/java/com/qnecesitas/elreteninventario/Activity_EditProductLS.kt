@@ -12,7 +12,6 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -29,32 +28,23 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.qnecesitas.elreteninventario.adapters.AdapterR_EditProduct
 import com.qnecesitas.elreteninventario.adapters.AdapterR_EditProductLS
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.auxiliary.IDCreater
 import com.qnecesitas.elreteninventario.auxiliary.ImageTools
-import com.qnecesitas.elreteninventario.auxiliary.Permissions
 import com.qnecesitas.elreteninventario.data.ModelEditProductLS
-import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
 import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivityEditProductLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddProductBinding
 import com.qnecesitas.elreteninventario.databinding.LiAlterAmountBinding
 import com.qnecesitas.elreteninventario.databinding.LiInfoProductBinding
-import com.qnecesitas.elreteninventario.network.RetrofitProductsImplLS
-import com.qnecesitas.elreteninventario.network.RetrofitProductsImplS
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class Activity_EditProductLS : AppCompatActivity() {
 
@@ -75,11 +65,9 @@ class Activity_EditProductLS : AppCompatActivity() {
     private lateinit var adapterR_editProducts: AdapterR_EditProductLS
     private var isContracted = false
 
-    //Internet
+    //Database
     private lateinit var repository: Repository
-    private val PERMISO_GALERIA = 3
-    private var imageFile = "no"
-    private var uriLLegadaRecortada: Uri? = null
+    private var uriImageCut: Uri? = null
     private var lastTranferAmount = 0
     private var lastTransferExist = 0
     private var lastTransferAllFill = 0
@@ -87,7 +75,7 @@ class Activity_EditProductLS : AppCompatActivity() {
     private var lastPositionRecycler = 0
 
     //Results launchers
-    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
 
     //CL Transfer
     lateinit var fragmentManager: FragmentManager
@@ -115,18 +103,14 @@ class Activity_EditProductLS : AppCompatActivity() {
 
 
         //Results launchers
-        resultLauncher =
+        galleryLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 imageReceived(result)
             }
 
 
         //Refresh
-        binding.aepRefresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                loadRecyclerInfo()
-            }
-        })
+        binding.aepRefresh.setOnRefreshListener { loadRecyclerInfo() }
 
         //RecyclerView
         binding.aepRecycler.setHasFixedSize(true)
@@ -250,16 +234,6 @@ class Activity_EditProductLS : AppCompatActivity() {
         } else {
             binding.aepNotInfo.visibility = View.GONE
             binding.aepRecycler.visibility = View.VISIBLE
-        }
-    }
-
-    private fun alertNotInternet(open: Boolean) {
-        if (open) {
-            binding.aepRecycler.visibility = View.GONE
-            binding.aepNotInfo.visibility = View.GONE
-        } else {
-            binding.aepRecycler.visibility = View.VISIBLE
-            binding.aepNotInfo.visibility = View.GONE
         }
     }
 
@@ -422,7 +396,6 @@ class Activity_EditProductLS : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Init
-        imageFile = "no"
         val name = al_editProduct[position].name
         val code = al_editProduct[position].c_productLS
         val amount = al_editProduct[position].amount
@@ -465,7 +438,7 @@ class Activity_EditProductLS : AppCompatActivity() {
                     escogerimagenGaleria()
                 } else if (menuItem.itemId == R.id.menu_image_del) {
                     li_add_binding?.image?.setImageDrawable(null)
-                    imageFile = "delete"
+                    uriImageCut = null
                 }
                 false
             }
@@ -473,7 +446,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         }
         li_add_binding?.btnCancel?.setOnClickListener(View.OnClickListener {
             alertDialog.dismiss()
-            imageFile = "no"
+            uriImageCut = null
         })
         li_add_binding?.btnAccept?.setOnClickListener(View.OnClickListener {
             if (checkInfoDataAdd()) {
@@ -510,7 +483,6 @@ class Activity_EditProductLS : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Variables
-        imageFile = "no"
         var c_Product = IDCreater.generate()
         var n_Product: String
         var amount: Int
@@ -533,14 +505,14 @@ class Activity_EditProductLS : AppCompatActivity() {
                     escogerimagenGaleria()
                 } else if (menuItem.itemId == R.id.menu_image_del) {
                     li_add_binding?.image?.setImageDrawable(null)
-                    imageFile = "no"
+                    uriImageCut = null
                 }
                 false
             }
             popupMenu.show()
         }
-        li_add_binding?.btnCancel?.setOnClickListener(View.OnClickListener { alertDialog.dismiss() })
-        li_add_binding?.btnAccept?.setOnClickListener(View.OnClickListener {
+        li_add_binding?.btnCancel?.setOnClickListener { alertDialog.dismiss() }
+        li_add_binding?.btnAccept?.setOnClickListener {
             if (checkInfoDataAdd()) {
                 //Declaraciones
                 c_Product = li_add_binding?.tietCode?.text.toString()
@@ -556,19 +528,19 @@ class Activity_EditProductLS : AppCompatActivity() {
 
                 alertDialog.dismiss()
                 addProductInternet(
-                    c_Product ,
-                    n_Product ,
-                    amount ,
-                    buyPrice ,
-                    salePrice ,
-                    descr ,
-                    statePhoto ,
-                    deficit ,
-                    size ,
-                    brand
+                        c_Product,
+                        n_Product,
+                        amount,
+                        buyPrice,
+                        salePrice,
+                        descr,
+                        statePhoto,
+                        deficit,
+                        size,
+                        brand
                 )
             }
-        })
+        }
 
         //Finalizado
         alertDialog.setCancelable(false)
@@ -588,19 +560,19 @@ class Activity_EditProductLS : AppCompatActivity() {
         var currentAmount: Int = al_editProduct.get(position).amount
         li_alter_amount_binding.et.setText(currentAmount.toString())
 
-        li_alter_amount_binding.ivBtnMore.setOnClickListener(View.OnClickListener {
+        li_alter_amount_binding.ivBtnMore.setOnClickListener {
             if (currentAmount != 99999) {
                 currentAmount++
                 li_alter_amount_binding.et.setText(currentAmount.toString())
             }
-        })
+        }
 
-        li_alter_amount_binding.ivBtnLess.setOnClickListener(View.OnClickListener {
+        li_alter_amount_binding.ivBtnLess.setOnClickListener {
             if (currentAmount != 1) {
                 currentAmount--
                 li_alter_amount_binding.et.setText(currentAmount.toString())
             }
-        })
+        }
 
         li_alter_amount_binding.et.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(charSequence: CharSequence , i: Int , i1: Int , i2: Int) {
@@ -766,7 +738,6 @@ class Activity_EditProductLS : AppCompatActivity() {
                 buyPrice ,
                 salePrice ,
                 descr ,
-                imageFile ,
                 deficit ,
                 size ,
                 brand
@@ -814,7 +785,6 @@ class Activity_EditProductLS : AppCompatActivity() {
         lifecycleScope.launch {
             repository.updateProductLS(
                 c_ProductOld ,
-                imageFile ,
                 c_Product ,
                 name ,
                 al_editProduct[position].fk_c_sessionLS ,
@@ -1019,13 +989,9 @@ class Activity_EditProductLS : AppCompatActivity() {
     }
 
     private fun escogerimagenGaleria() {
-        if (Permissions.siHayPermisoDeAlmacenamiento(this@Activity_EditProductLS)) {
             val galleryIntent =
                 Intent(Intent.ACTION_PICK , MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            resultLauncher.launch(galleryIntent)
-        } else {
-            Permissions.pedirPermisoDeAlmacenamiento(this@Activity_EditProductLS , PERMISO_GALERIA)
-        }
+            galleryLauncher.launch(galleryIntent)
     }
 
     private fun imageReceived(result: ActivityResult) {
@@ -1074,11 +1040,8 @@ class Activity_EditProductLS : AppCompatActivity() {
 
     private fun imageRecorted(data: Intent?) {
         if (data != null) {
-            uriLLegadaRecortada = UCrop.getOutput(data)
-            li_add_binding?.image?.setImageURI(uriLLegadaRecortada)
-            val bitmap = (li_add_binding?.image?.drawable as BitmapDrawable).bitmap
-            imageFile = ImageTools.convertImageString(bitmap).toString()
-            li_add_binding!!.image.setImageBitmap(bitmap)
+            this.uriImageCut = UCrop.getOutput(data)
+            li_add_binding?.image?.setImageURI(this.uriImageCut)
         }
     }
 

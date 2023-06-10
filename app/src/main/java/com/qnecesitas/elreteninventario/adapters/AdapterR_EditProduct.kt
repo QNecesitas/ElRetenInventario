@@ -15,7 +15,7 @@ import com.qnecesitas.elreteninventario.databinding.RecyclerEditProductBinding
 import java.util.Locale
 
 class AdapterR_EditProduct(
-        private val al_editProdut: ArrayList<ModelEditProductS>,
+        private val al_editProdut: MutableList<ModelEditProductS>,
         private val context: Context,
         private val isContracted: Boolean,
         private val isAllInto: Boolean
