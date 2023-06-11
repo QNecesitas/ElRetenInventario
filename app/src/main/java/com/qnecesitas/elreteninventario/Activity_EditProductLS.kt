@@ -35,11 +35,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.adapters.AdapterR_EditProductLS
+import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.auxiliary.FragmentsInfo
 import com.qnecesitas.elreteninventario.auxiliary.IDCreater
 import com.qnecesitas.elreteninventario.auxiliary.ImageTools
 import com.qnecesitas.elreteninventario.data.ModelEditProductLS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
+import com.qnecesitas.elreteninventario.data.ModelProductPathLS
 import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivityEditProductLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddProductBinding
@@ -829,79 +831,6 @@ class Activity_EditProductLS : AppCompatActivity() {
         alertDialog.show()
     }
 
-    private fun li_amountTransf(position: Int) {
-        val inflater = LayoutInflater.from(binding.root.context)
-        li_alter_amount_binding = LiAlterAmountBinding.inflate(inflater)
-        val builder = AlertDialog.Builder(binding.root.context)
-        builder.setView(li_alter_amount_binding.root)
-        val alertDialog = builder.create()
-
-        //Filling and listeners
-        var currentAmount: Int = al_editProduct.get(position).amount
-        li_alter_amount_binding.et.setText(currentAmount.toString())
-
-        li_alter_amount_binding.ivBtnMore.setOnClickListener(View.OnClickListener {
-            if (currentAmount != al_editProduct.get(position).amount) {
-                currentAmount++
-                li_alter_amount_binding.et.setText(currentAmount.toString())
-            }
-        })
-
-        li_alter_amount_binding.ivBtnLess.setOnClickListener(View.OnClickListener {
-            if (currentAmount != 1) {
-                currentAmount--
-                li_alter_amount_binding.et.setText(currentAmount.toString())
-            }
-        })
-
-        li_alter_amount_binding.et.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(charSequence: CharSequence , i: Int , i1: Int , i2: Int) {
-                if (li_alter_amount_binding.et.getText().toString() == "0") {
-                    currentAmount = 1
-                    li_alter_amount_binding.et.setText(currentAmount.toString())
-                } else if (li_alter_amount_binding.et.getText().toString() == "") {
-                    currentAmount = 1
-                } else if (li_alter_amount_binding.et.getText().toString()
-                        .toInt() > al_editProduct.get(position).amount
-                ) {
-                    li_alter_amount_binding.et.setText(al_editProduct.get(position).amount.toString())
-                } else {
-                    currentAmount = li_alter_amount_binding.et.getText().toString().toInt()
-                }
-            }
-
-            override fun afterTextChanged(editable: Editable) {}
-            override fun beforeTextChanged(
-                charSequence: CharSequence ,
-                i: Int ,
-                i1: Int ,
-                i2: Int
-            ) {
-            }
-        })
-
-        li_alter_amount_binding.btnAccept.setOnClickListener {
-            alertDialog.dismiss()
-            if (li_alter_amount_binding.et.text.toString().trim().isNotEmpty()) {
-                lastTranferAmount = li_alter_amount_binding.et.text.toString().toInt()
-                checkIfExistIfAllSended(position);
-                showClTransfer(position)
-            } else {
-                li_alter_amount_binding.et.error = getString(R.string.este_campo_no_debe_vacio)
-            }
-        }
-
-        li_alter_amount_binding.btnCancel.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        //Finished
-        alertDialog.setCancelable(false)
-        alertDialog.window!!.setGravity(Gravity.CENTER)
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.show()
-    }
-
     private fun checkIfExistIfAllSended(position: Int) {
         lastTransferAllFill = 0
         lastTransferExist = 0
@@ -929,36 +858,9 @@ class Activity_EditProductLS : AppCompatActivity() {
     }
 
 
-    /**Upload info to Internet**/
 
-    private fun transferProductInternet(position: Int , codeSession: String) {
-        lifecycleScope.launch {
-            repository.transferProductLS_S(
-                al_editProduct[position].c_productLS ,
-                al_editProduct[position].name ,
-                al_editProduct[position].fk_c_sessionLS ,
-                lastTranferAmount ,
-                al_editProduct[position].buyPrice ,
-                al_editProduct[position].salePrice ,
-                al_editProduct[position].descr ,
-                al_editProduct[position].statePhoto ,
-                codeSession ,
-                al_editProduct[position].deficit ,
-                lastTransferExist ,
-                lastTransferAllFill ,
-                al_editProduct[position].size ,
-                al_editProduct[position].brand
-            )
-            loadRecyclerInfo()
-        }
-        FancyToast.makeText(
-            this@Activity_EditProductLS ,
-            getString(R.string.Operacion_realizada_con_exito) ,
-            FancyToast.LENGTH_LONG ,
-            FancyToast.SUCCESS ,
-            false
-        ).show()
-    }
+
+
 
     private fun uploadAmountChangesInternet(amount: Int , position: Int) {
         lifecycleScope.launch {
@@ -987,13 +889,17 @@ class Activity_EditProductLS : AppCompatActivity() {
             FancyToast.SUCCESS ,
             false
         ).show()
-        /*
-                val alModelPath = repository.fetchProductLSPath(
+
+
+        lifecycleScope.launch {
+            val alModelPath = repository.fetchProductLSPath(
                     al_editProduct[position].c_productLS
-                )
-                val path = alModelPath?.let { makePath(it, position) }
-                path?.let { showAlertDialogPath(it) }*/
-        updateRecyclerAdapter()
+            )
+            val path = makePath(alModelPath, position)
+            showAlertDialogPath(path)
+            updateRecyclerAdapter()
+        }
+
     }
 
 
@@ -1083,10 +989,10 @@ class Activity_EditProductLS : AppCompatActivity() {
     }
 
 
-    private fun makePath(al_modelPath: ArrayList<ModelProductPath> , position: Int): String {
-        val shelfCode = al_modelPath[0].c_shelfS
+    private fun makePath(al_modelPath: MutableList<ModelProductPathLS> , position: Int): String {
+        val shelfCode = al_modelPath[0].c_shelfLS
 
-        val drawerCode = al_modelPath[0].c_drawerS
+        val drawerCode = al_modelPath[0].c_drawerLS
         val guionDrawerPosition = drawerCode.lastIndexOf("_")
         val newDrawerCode = drawerCode.substring(guionDrawerPosition + 1)
 
@@ -1101,86 +1007,195 @@ class Activity_EditProductLS : AppCompatActivity() {
 
     }
 
-    /**Transfer System**/
-    private fun showClTransfer(position: Int) {
+
+
+
+    /*
+    ------------Transfer
+     */
+    private fun li_amountTransf(position: Int) {
+        val inflater = LayoutInflater.from(binding.root.context)
+        li_alter_amount_binding = LiAlterAmountBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(binding.root.context)
+        builder.setView(li_alter_amount_binding.root)
+        val alertDialog = builder.create()
+
+        //Filling and listeners
+        var currentAmount: Int = al_editProduct[position].amount
+        li_alter_amount_binding.et.setText(currentAmount.toString())
+
+        li_alter_amount_binding.ivBtnMore.setOnClickListener {
+            if (currentAmount != al_editProduct.get(position).amount) {
+                currentAmount++
+                li_alter_amount_binding.et.setText(currentAmount.toString())
+            }
+        }
+
+        li_alter_amount_binding.ivBtnLess.setOnClickListener {
+            if (currentAmount != 1) {
+                currentAmount--
+                li_alter_amount_binding.et.setText(currentAmount.toString())
+            }
+        }
+
+        li_alter_amount_binding.et.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                if (li_alter_amount_binding.et.text.toString() == "0") {
+                    currentAmount = 1
+                    li_alter_amount_binding.et.setText(currentAmount.toString())
+                } else if (li_alter_amount_binding.et.getText().toString() == "") {
+                    currentAmount = 1
+                } else if (li_alter_amount_binding.et.getText().toString()
+                                .toInt() > al_editProduct.get(position).amount
+                ) {
+                    li_alter_amount_binding.et.setText(al_editProduct.get(position).amount.toString())
+                } else {
+                    currentAmount = li_alter_amount_binding.et.getText().toString().toInt()
+                }
+            }
+
+            override fun afterTextChanged(editable: Editable) {}
+            override fun beforeTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+            ) {
+            }
+        })
+
+        li_alter_amount_binding.btnAccept.setOnClickListener {
+            alertDialog.dismiss()
+            if (li_alter_amount_binding.et.text.toString().trim().isNotEmpty()) {
+                val selectedAmount = li_alter_amount_binding.et.text.toString().toInt()
+                checkIfExistIfAllSended(position, selectedAmount)
+            } else {
+                li_alter_amount_binding.et.error = getString(R.string.este_campo_no_debe_vacio)
+            }
+        }
+
+        li_alter_amount_binding.btnCancel.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        //Finished
+        alertDialog.setCancelable(false)
+        alertDialog.window!!.setGravity(Gravity.CENTER)
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+    }
+
+    private fun checkIfExistIfAllSended(position: Int, selectedAmount: Int) {
+        var transferAllSend = false
+        var transferExist = false
+
+        lifecycleScope.launch {
+            transferExist = repository.isDuplicatedS(al_editProduct[position].c_productLS)
+
+            transferAllSend = al_editProduct[position].amount == selectedAmount
+
+            showClTransfer(position, transferExist, transferAllSend, selectedAmount)
+
+        }
+    }
+
+    private fun showClTransfer(position: Int, transferExist: Boolean, transferAllSend: Boolean, selectedAmount: Int) {
         binding.aepClTransfer.visibility = View.VISIBLE
         //Toolbar
         setSupportActionBar(binding.clTransferToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
-        binding.clTransferToolbar.setNavigationOnClickListener { onBack(position) }
+        binding.clTransferToolbar.setNavigationOnClickListener { finish() }
 
         //Fragments
         fragmentManager = supportFragmentManager
-        showFragmentShelvesS(position)
+        showFragmentShelvesLS(position, transferExist, transferAllSend, selectedAmount)
 
-        onBackPressedDispatcher.addCallback(this , object : OnBackPressedCallback(true) {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                onBack(position)
+                finish()
             }
         })
     }
 
-    private fun showFragmentShelvesS(position: Int) {
+    private fun showFragmentShelvesLS(position: Int, transferExist: Boolean, transferAllSend: Boolean, selectedAmount: Int) {
         binding.clTransferToolbar.setTitle(R.string.Seleccione_Estante)
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SHELVES
         val fragment_shelvesS = Fragment_Shelves()
         fragment_shelvesS.setOpenShelfSListener(object : Fragment_Shelves.OpenShelfS {
             override fun onShelfSClicked(c_shelfS: String) {
-                showFragmentDrawersS(c_shelfS , position)
+                showFragmentDrawersLS(c_shelfS, position, transferExist, transferAllSend, selectedAmount)
             }
         })
         fragmentManager.beginTransaction()
-            .replace(binding.clTransferFrame.id , fragment_shelvesS)
-            .commit()
+                .replace(binding.clTransferFrame.id, fragment_shelvesS)
+                .commit()
     }
 
-    private fun showFragmentDrawersS(c_shelfS: String , position: Int) {
+    private fun showFragmentDrawersLS(c_shelfS: String, position: Int, transferExist: Boolean, transferAllSend: Boolean, selectedAmount: Int) {
         binding.clTransferToolbar.setTitle(R.string.Seleccione_Gaveta)
         FragmentsInfo.LAST_CODE_SHELVES_SENDED = c_shelfS
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_DRAWERS
-        val fragment_drawersS = Fragment_Drawers(c_shelfS)
-        fragment_drawersS.setOpenDrawerSListener(object : Fragment_Drawers.OpenDrawerS {
+        val fragment_drawers = Fragment_Drawers(c_shelfS)
+        fragment_drawers.setOpenDrawerSListener(object : Fragment_Drawers.OpenDrawerS {
             override fun onDrawerSClicked(code: String) {
-                showFragmentSessionsS(code , position)
+                showFragmentSessionsLS(code, position, transferExist, transferAllSend, selectedAmount)
             }
         })
         fragmentManager.beginTransaction()
-            .replace(binding.clTransferFrame.id , fragment_drawersS)
-            .commit()
+                .replace(binding.clTransferFrame.id, fragment_drawers)
+                .commit()
     }
 
-    private fun showFragmentSessionsS(c_drawerS: String , position: Int) {
+    private fun showFragmentSessionsLS(c_drawerS: String, position: Int, transferExist: Boolean, transferAllSend: Boolean, selectedAmount: Int) {
         binding.clTransferToolbar.setTitle(R.string.Secciones)
         FragmentsInfo.LAST_CODE_DRAWER_SENDED = c_drawerS
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SESSION
-        val fragment_sessionsS = Fragment_Sessions(c_drawerS)
-        fragment_sessionsS.setOpenSessionListener(object : Fragment_Sessions.OpenSession {
+        val fragment_sessions = Fragment_Sessions(c_drawerS)
+        fragment_sessions.setOpenSessionListener(object : Fragment_Sessions.OpenSession {
             override fun onSessionClicked(c_sessions: String) {
                 binding.aepClTransfer.visibility = View.GONE
-                transferProductInternet(position , c_sessions)
+                transferProductBD(position, c_sessions, transferExist, transferAllSend, selectedAmount)
             }
         })
         fragmentManager.beginTransaction()
-            .replace(binding.clTransferFrame.id , fragment_sessionsS)
-            .commit()
+                .replace(binding.clTransferFrame.id, fragment_sessions)
+                .commit()
     }
 
-    private fun onBack(position: Int) {
-        when (FragmentsInfo.LAST_FRAGMENT_TOUCHED) {
-            FragmentsInfo.Companion.EFragments.FR_SHELVES -> finish()
-            FragmentsInfo.Companion.EFragments.FR_DRAWERS -> showFragmentShelvesS(position)
-            FragmentsInfo.Companion.EFragments.FR_SESSION -> showFragmentDrawersS(
-                FragmentsInfo.LAST_CODE_SHELVES_LS_SENDED ,
-                position
+    private fun transferProductBD(position: Int, codeSession: String, transferExist: Boolean, transferAllSend: Boolean, selectedAmount: Int)   {
+        lifecycleScope.launch {
+
+            repository.transferProductLS_S(
+                    al_editProduct[position].c_productLS,
+                    al_editProduct[position].name,
+                    al_editProduct[position].fk_c_sessionLS,
+                    selectedAmount,
+                    al_editProduct[position].buyPrice,
+                    al_editProduct[position].salePrice,
+                    al_editProduct[position].descr,
+                    al_editProduct[position].statePhoto,
+                    codeSession,
+                    al_editProduct[position].deficit,
+                    transferExist,
+                    transferAllSend,
+                    al_editProduct[position].size,
+                    al_editProduct[position].brand
             )
 
-            FragmentsInfo.Companion.EFragments.AC_PRODUCTS -> showFragmentSessionsS(
-                FragmentsInfo.LAST_CODE_DRAWER_LS_SENDED ,
-                position
-            )
+            loadRecyclerInfo()
         }
+
+        FancyToast.makeText(
+                this@Activity_EditProductLS,
+                getString(R.string.Operacion_realizada_con_exito),
+                FancyToast.LENGTH_LONG,
+                FancyToast.SUCCESS,
+                false
+        ).show()
+
     }
+
 
 
 }

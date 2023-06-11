@@ -43,9 +43,6 @@
             </androidx.cardview.widget.CardView>
 
 
-
-
-
             <!--tiet and til nombre cliente-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_nombClient"
@@ -68,32 +65,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--Type Cash-->
-            <com.google.android.material.textfield.TextInputLayout
-                app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/til_spinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/CustomBorderTIl"
-                android:textColorHint="@color/white"
-                app:counterTextColor="@color/white"
-                app:layout_constraintTop_toBottomOf="@id/til_descuento"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_margin="16dp"
-                android:layout_marginTop="8dp"
-                app:endIconTint="@color/white">
-
-                <AutoCompleteTextView
-                    android:textColor="@color/white"
-                    android:id="@+id/tiet_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/tipo_de_pago"
-                    android:inputType="none"
-                    android:minWidth="150sp"
-                    android:textColorHint="@color/white" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
             <!--tiet and til descuento-->
             <com.google.android.material.textfield.TextInputLayout
@@ -116,6 +87,60 @@
                     android:layout_height="match_parent"
                     android:hint="@string/descuento"
                     android:maxLength="50" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!--tiet and til pago-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_pago"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:layout_marginTop="8dp"
+                android:textColorHint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/til_descuento">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiet_pago_accept"
+                    android:inputType="numberDecimal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/Cant_pago"
+                    android:maxLength="50"
+                    android:text="@string/_0"
+                    android:textColor="@color/white"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!--Type Cash-->
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/til_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/CustomBorderTIl"
+                android:textColorHint="@color/white"
+                app:counterTextColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/til_pago"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_margin="16dp"
+                android:layout_marginTop="8dp"
+                app:endIconTint="@color/white">
+
+                <AutoCompleteTextView
+                    android:textColor="@color/white"
+                    android:id="@+id/tiet_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tipo_de_pago"
+                    android:inputType="none"
+                    android:minWidth="150sp"
+                    android:textColorHint="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

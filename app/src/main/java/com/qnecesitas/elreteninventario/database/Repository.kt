@@ -1,6 +1,7 @@
 package com.qnecesitas.elreteninventario.database
 
 import android.app.Application
+import android.util.Log
 import com.qnecesitas.elreteninventario.ElRetenApplication
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelDrawerLS
@@ -159,7 +160,7 @@ class Repository(application: ElRetenApplication) {
         return productSDao.selectProductLSPath(c_productS).toMutableList()
     }
 
-    suspend fun fetchProductsCounter() : MutableList<ModelEditProductS>{
+    suspend fun fetchProductsCounter() : MutableList<ModelEditProductLS>{
         return productSDao.selectProdcutSCounter().toMutableList()
     }
 
@@ -218,6 +219,7 @@ class Repository(application: ElRetenApplication) {
             )
             result.add( newModel)
         }
+        result.sortBy { it.name }
         return result
     }
 
@@ -237,14 +239,15 @@ class Repository(application: ElRetenApplication) {
         return shelfSSDao.selectShelfS().toMutableList()
     }
 
-    suspend fun transferProductLS_S(c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionS: String,deficit: Int,exists:Int,sendAll: Int,size: String,brand: String){
-        if(exists == 1){
+    suspend fun transferProductLS_S(c_productLS: String,name: String,fk_c_sessionLS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionS: String,deficit: Int,exists:Boolean,sendAll: Boolean,size: String,brand: String){
+        Log.d("XXXXXXXXXXX", "e: ${exists}  sa: ${sendAll} am: ${amount}")
+        if(exists){
             productSDao.updateProductSTransMore(amount,c_productLS)
         }else{
             productSDao.insertProductSTrans(c_productLS,name,c_sessionS,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand)
             sessionSDao.updateSessionSTransMore(c_sessionS)
         }
-        if(sendAll == 1){
+        if(sendAll){
             sessionLSDao.updateSessionLSTransLess(fk_c_sessionLS)
             productLSDao.deleteProductLSTrans(c_productLS)
         }else{
@@ -252,14 +255,14 @@ class Repository(application: ElRetenApplication) {
         }
     }
 
-    suspend fun transferProductS_LS(c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionLS: String,deficit: Int,exists: Int,sendAll: Int,size: String,brand: String){
-        if(exists == 1){
-            productLSDao.updateProductSTrans(amount,c_productS)
+    suspend fun transferProductS_LS(c_productS: String,name: String,fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double,descr: String,statePhoto: Int,c_sessionLS: String,deficit: Int,exists: Boolean,sendAll: Boolean,size: String,brand: String){
+        if(exists){
+            productLSDao.updateProductLSAmountTrannferPlus(amount,c_productS)
         }else{
             productLSDao.insertProductLSTrans(c_productS,name,c_sessionLS,amount,buyPrice,salePrice,descr,statePhoto,deficit,size,brand)
             sessionLSDao.updateSessionLSTransMore(c_sessionLS)
         }
-        if(sendAll == 1){
+        if(sendAll){
             sessionSDao.updateSessionSTransLess(fk_c_sessionS)
             productSDao.deleteProductSTrans(c_productS)
         }else{

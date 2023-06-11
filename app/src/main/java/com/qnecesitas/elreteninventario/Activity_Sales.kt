@@ -1,6 +1,5 @@
 package com.qnecesitas.elreteninventario
 
-import android.app.Application
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -15,19 +14,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.qnecesitas.elreteninventario.adapters.AdapterR_Sales
-import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelSale
 import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivitySalesBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYmBinding
 import com.qnecesitas.elreteninventario.databinding.LiDateYmdBinding
-import com.qnecesitas.elreteninventario.network.RetrofitSalesImpl
 import com.shashank.sony.fancytoastlib.FancyToast
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.Calendar
 
 class Activity_Sales : AppCompatActivity() {
@@ -69,7 +63,7 @@ class Activity_Sales : AppCompatActivity() {
         month = calendar.get(Calendar.MONTH)
         day = calendar.get(Calendar.DAY_OF_MONTH)
         binding.ivDate.setOnClickListener(View.OnClickListener {
-            select_datePick()
+            selectDatePick()
         })
 
 
@@ -319,16 +313,16 @@ class Activity_Sales : AppCompatActivity() {
     /*Date Pickers
     * ---------------------------------
     * */
-    fun select_datePick() {
+    fun selectDatePick() {
         when (dateSelected) {
-            "Todo" -> li_dateYear()
-            "Día" -> li_dateDay()
-            "Mes" -> li_dateMonth()
-            "Año" -> li_dateYear()
+            "Todo" -> liDateYear()
+            "Día" -> liDateDay()
+            "Mes" -> liDateMonth()
+            "Año" -> liDateYear()
         }
     }
 
-    fun li_dateYear() {
+    fun liDateYear() {
         val inflater = LayoutInflater.from(binding.root.context)
         val liBinding = LiDateYBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
@@ -336,8 +330,10 @@ class Activity_Sales : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Declare
+        val calendar = Calendar.getInstance()
         liBinding.ilNpAnno.maxValue = 2050
         liBinding.ilNpAnno.minValue = 2020
+        liBinding.ilNpAnno.value= calendar.get(Calendar.YEAR)
 
         //Listeners
         liBinding.btnCancel.setOnClickListener {
@@ -358,7 +354,7 @@ class Activity_Sales : AppCompatActivity() {
 
     }
 
-    fun li_dateMonth() {
+    fun liDateMonth() {
 
         val inflater = LayoutInflater.from(binding.root.context)
         val liBinding = LiDateYmBinding.inflate(inflater)
@@ -367,10 +363,13 @@ class Activity_Sales : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Declare
+        val calendar = Calendar.getInstance()
         liBinding.ilNpAnnos.maxValue = 2050
         liBinding.ilNpAnnos.minValue = 2020
+        liBinding.ilNpAnnos.value= calendar.get(Calendar.YEAR)
         liBinding.ilNpMonth.maxValue = 11
         liBinding.ilNpMonth.minValue = 0
+        liBinding.ilNpMonth.value= calendar.get(Calendar.MONTH)
         val months = arrayOf(
             "Enero" ,
             "Febrero" ,
@@ -408,7 +407,7 @@ class Activity_Sales : AppCompatActivity() {
 
     }
 
-    fun li_dateDay() {
+    fun liDateDay() {
 
         val inflater = LayoutInflater.from(binding.root.context)
         val liBinding = LiDateYmdBinding.inflate(inflater)
@@ -417,12 +416,17 @@ class Activity_Sales : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Declare
+        val calendar = Calendar.getInstance()
+
         liBinding.ilNpAnnos.maxValue = 2050
         liBinding.ilNpAnnos.minValue = 2020
+        liBinding.ilNpAnnos.value= calendar.get(Calendar.YEAR)
         liBinding.ilNpMonth.maxValue = 11
         liBinding.ilNpMonth.minValue = 0
+        liBinding.ilNpMonth.value= calendar.get(Calendar.MONTH)
         liBinding.ilNpDay.minValue = 1
         liBinding.ilNpDay.maxValue = 31
+        liBinding.ilNpDay.value= calendar.get(Calendar.DAY_OF_MONTH)
         val months = arrayOf(
             "Enero" ,
             "Febrero" ,

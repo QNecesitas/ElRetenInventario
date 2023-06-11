@@ -1,6 +1,8 @@
 package com.qnecesitas.elreteninventario
 
 import android.app.Application
+import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -19,8 +21,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.adapters.AdapterR_CounterProductShow
 import com.qnecesitas.elreteninventario.auxiliary.Constants
+import com.qnecesitas.elreteninventario.data.ModelEditProductLS
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelProductPath
+import com.qnecesitas.elreteninventario.data.ModelProductPathLS
 import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.ActivityCounterBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddCounterBinding
@@ -32,12 +36,13 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class Activity_Counter : AppCompatActivity() {
 
     //Recyclers
     private lateinit var adapterCounter: AdapterR_CounterProductShow
-    private lateinit var alCounter: MutableList<ModelEditProductS>
+    private lateinit var alCounter: MutableList<ModelEditProductLS>
 
     //Binding
     private lateinit var binding: ActivityCounterBinding
@@ -108,7 +113,7 @@ class Activity_Counter : AppCompatActivity() {
     private fun loadRecyclerInfo() {
 
         lifecycleScope.launch {
-            alCounter = repository.fetchProductsSAll()
+            alCounter = repository.fetchProductsCounter()
             binding.rvProductsShow.visibility = View.VISIBLE
             binding.notInfo.visibility = View.GONE
             updateRecyclerAdapter()
@@ -168,7 +173,7 @@ class Activity_Counter : AppCompatActivity() {
         fragment_carrito.setListenerDelete(object : Fragment_Cart.IDeleteProduct {
             override fun onDeleteProduct(code: String , amount: Int) {
                 for (model in alCounter) {
-                    if (model.c_productS == code) {
+                    if (model.c_productLS == code) {
                         model.amount += amount
                         updateRecyclerAdapter()
                     }
@@ -242,13 +247,13 @@ class Activity_Counter : AppCompatActivity() {
 
         //Init
         val name = getString(R.string.Producto_Info , alCounter[position].name)
-        val code = getString(R.string.Codigo_Info , alCounter[position].c_productS)
+        val code = getString(R.string.Codigo_Info , alCounter[position].c_productLS)
         val amount = getString(R.string.Cantidad_Info , alCounter[position].amount)
         val salePrice = getString(R.string.PrecioV_Info , alCounter[position].salePrice)
         val descr = getString(R.string.Descripcion_Info , alCounter[position].descr)
         val size = getString(R.string.Size_Info , alCounter[position].size)
         val brand = getString(R.string.Brand_Info , alCounter[position].brand)
-        val codeImage = alCounter[position].c_productS
+        val codeImage = alCounter[position].c_productLS
 
         //Fill out
         li_info_binding.tvName.text = name
@@ -259,8 +264,10 @@ class Activity_Counter : AppCompatActivity() {
         li_info_binding.tvSize.text = size
         li_info_binding.tvBrand.text = brand
         li_info_binding.ivImageProduct.let {
+            val cw = ContextWrapper(this)
+            val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
             Glide.with(applicationContext)
-                .load(Constants.PHP_IMAGES + "P_" + codeImage + ".jpg")
+                .load(File(directory, "${alCounter[position].c_productLS}.jpg"))
                 .error(R.drawable.widgets)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -287,7 +294,7 @@ class Activity_Counter : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Filling and listeners
-        var currentAmount: Int = 1
+        var currentAmount = 1
         val maxAmount = alCounter[position].amount
 
         li_add_counter_binding.etCantidad.setText(currentAmount.toString())
@@ -362,9 +369,13 @@ class Activity_Counter : AppCompatActivity() {
     --------------
      */
     private fun fetchProductsPathInternet(position: Int) {
-        // val alModelPath = repository.fetchProductSPath(
-        //     alCounter[position].c_productS
-        //)
+        lifecycleScope.launch {
+            val alModelPath = repository.fetchProductLSPath(
+                    alCounter[position].c_productLS)
+            val path = makePath(alModelPath, position)
+            showAlertDialogPath(path)
+            updateRecyclerAdapter()
+        }
 
 
         FancyToast.makeText(
@@ -374,23 +385,20 @@ class Activity_Counter : AppCompatActivity() {
             FancyToast.SUCCESS ,
             false
         ).show()
-        //val path = alModelPath?.let { makePath(it, position) }
-        //path?.let { showAlertDialogPath(it) }
-        updateRecyclerAdapter()
 
     }
 
     /*Auxiliary
     * _________Auxiliary
     * */
-    private fun makePath(al_modelPath: ArrayList<ModelProductPath> , position: Int): String {
-        val shelfCode = al_modelPath[0].c_shelfS
+    private fun makePath(al_modelPath: MutableList<ModelProductPathLS>, position: Int): String {
+        val shelfCode = al_modelPath[0].c_shelfLS
 
-        val drawerCode = al_modelPath[0].c_drawerS
+        val drawerCode = al_modelPath[0].c_drawerLS
         val guionDrawerPosition = drawerCode.lastIndexOf("_")
         val newDrawerCode = drawerCode.substring(guionDrawerPosition + 1)
 
-        val sessionCode = alCounter[position].fk_c_sessionS
+        val sessionCode = alCounter[position].fk_c_sessionLS
         val guionSessionPosition = sessionCode.lastIndexOf("_")
         val newSessionCode = sessionCode.substring(guionSessionPosition + 1)
 

@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelCart
+import com.qnecesitas.elreteninventario.data.ModelEditProductLS
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.data.ModelSale
 import com.qnecesitas.elreteninventario.database.Repository
@@ -44,7 +45,7 @@ class Statistics : AppCompatActivity() {
 
     //Ranking
     private lateinit var alRanking: MutableList<ModelCart>
-    private lateinit var alAllProducts: MutableList<ModelEditProductS>
+    private lateinit var alAllProducts: MutableList<ModelEditProductLS>
     private lateinit var alMonthSalesRanking: MutableList<ModelSale>
 
     //Internet
@@ -166,17 +167,6 @@ class Statistics : AppCompatActivity() {
 
 
         drawChart(listOfEntries)
-    }
-
-
-    private fun alertNotInternet(open: Boolean) {
-        if (open) {
-            binding.aepNotConnection.visibility = View.VISIBLE
-            binding.chart.visibility = View.GONE
-        } else {
-            binding.aepNotConnection.visibility = View.GONE
-            binding.chart.visibility = View.VISIBLE
-        }
     }
 
 
@@ -361,8 +351,10 @@ class Statistics : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Declare
+        val calendar = Calendar.getInstance()
         liBinding.ilNpAnno.maxValue = 2050
         liBinding.ilNpAnno.minValue = 2020
+        liBinding.ilNpAnno.value = calendar.get(Calendar.YEAR)
 
         //Listeners
         liBinding.btnCancel.setOnClickListener {
@@ -391,10 +383,13 @@ class Statistics : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Declare
+        val calendar = Calendar.getInstance()
         liBinding.ilNpAnnos.maxValue = 2050
         liBinding.ilNpAnnos.minValue = 2020
+        liBinding.ilNpAnnos.value = calendar.get(Calendar.YEAR)
         liBinding.ilNpMonth.maxValue = 11
         liBinding.ilNpMonth.minValue = 0
+        liBinding.ilNpMonth.value = calendar.get(Calendar.MONTH)
         val months = arrayOf(
                 "Enero",
                 "Febrero",
@@ -439,12 +434,16 @@ class Statistics : AppCompatActivity() {
         val alertDialog = builder.create()
 
         //Declare
+        val calendar = Calendar.getInstance()
         liBinding.ilNpAnnos.maxValue = 2050
         liBinding.ilNpAnnos.minValue = 2020
+        liBinding.ilNpAnnos.value = calendar.get(Calendar.YEAR)
         liBinding.ilNpMonth.maxValue = 11
         liBinding.ilNpMonth.minValue = 0
+        liBinding.ilNpMonth.value = calendar.get(Calendar.MONTH)
         liBinding.ilNpDay.minValue = 1
         liBinding.ilNpDay.maxValue = 31
+        liBinding.ilNpDay.value = calendar.get(Calendar.DAY_OF_MONTH)
         val months = arrayOf(
                 "Enero",
                 "Febrero",
@@ -525,13 +524,11 @@ class Statistics : AppCompatActivity() {
     }
 
     private fun loadRecyclerAllProducts(week: Int) {
-        /*
-        val response = repository.fetchProductsLSAll()
-        alertNotInternet(false)
-        alAllProducts = response
-        createSalesWeekList(week)
-       TODO
-         */
+        lifecycleScope.launch {
+            val response = repository.fetchProductsLSAll()
+            alAllProducts = response
+            createSalesWeekList(week)
+        }
     }
 
     private fun createSalesWeekList(week: Int) {
@@ -592,7 +589,7 @@ class Statistics : AppCompatActivity() {
         }
     }
 
-    private fun numberSales(modelEditProductS: ModelEditProductS): Int {
+    private fun numberSales(modelEditProductS: ModelEditProductLS): Int {
         var cant = 0
         var cProdIndex: Int
         var subBeforeCode: String
@@ -601,9 +598,9 @@ class Statistics : AppCompatActivity() {
         var startRealAmountIndex: Int
         var endRealAmountIndex: Int
         for (modelSales in alMonthSalesRanking) {
-            if (modelSales.products.contains(modelEditProductS.c_productS)) {
+            if (modelSales.products.contains(modelEditProductS.c_productLS)) {
                 try {
-                    cProdIndex = modelSales.products.indexOf(modelEditProductS.c_productS)
+                    cProdIndex = modelSales.products.indexOf(modelEditProductS.c_productLS)
                     subBeforeCode = modelSales.products.substring(0, cProdIndex)
                     lastAmountIndex = subBeforeCode.lastIndexOf("Cantidad:")
                     subAmount = subBeforeCode.substring(lastAmountIndex)
@@ -627,10 +624,10 @@ class Statistics : AppCompatActivity() {
 
             val list = mutableListOf<String>()
             for (model in arrayRanking) {
-                val cProduct = getString(R.string.Codigo_Info, model.product.c_productS)
+                val cProduct = getString(R.string.Codigo_Info, model.product.c_productLS)
                 val nameProduct = getString(R.string.nombre, model.product.name)
                 val cantProduct = getString(R.string.ventas_cant, model.amount)
-                val infoProduct = "$cProduct     $nameProduct\n$cantProduct"
+                val infoProduct = "$cProduct\n$nameProduct\n$cantProduct"
                 list.add(infoProduct)
             }
 

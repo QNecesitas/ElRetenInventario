@@ -14,17 +14,18 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.qnecesitas.elreteninventario.R
 import com.qnecesitas.elreteninventario.auxiliary.Constants
+import com.qnecesitas.elreteninventario.data.ModelEditProductLS
 import com.qnecesitas.elreteninventario.data.ModelEditProductS
 import com.qnecesitas.elreteninventario.databinding.RecyclerCounterProductShowBinding
 import java.io.File
 import java.util.Locale
 
 class AdapterR_CounterProductShow(
-        val al_CPShow: MutableList<ModelEditProductS>,
+        val al_CPShow: MutableList<ModelEditProductLS>,
         private val context: Context
 ) : RecyclerView.Adapter<AdapterR_CounterProductShow.CounterProductShowViewHolder>() {
 
-    private var alFilter: ArrayList<ModelEditProductS> = ArrayList()
+    private var alFilter: MutableList<ModelEditProductLS> = mutableListOf()
 
     private var clickListener: RecyclerClickListener? = null
 
@@ -44,7 +45,7 @@ class AdapterR_CounterProductShow(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-                model: ModelEditProductS,
+                model: ModelEditProductLS,
                 context: Context,
                 clickListener: RecyclerClickListener?,
                 infoListener: RecyclerClickListener?,
@@ -81,7 +82,7 @@ class AdapterR_CounterProductShow(
                 }else{
                     binding.IVImageProduct.setImageBitmap(null)
                     Glide.with(context)
-                        .load(File(directory, "${model.c_productS}.jpg"))
+                        .load(File(directory, "${model.c_productLS}.jpg"))
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true)
@@ -91,7 +92,7 @@ class AdapterR_CounterProductShow(
                 binding.IVImageProduct.setImageBitmap(null)
                 if(model.statePhoto==1){
                     Glide.with(context)
-                        .load(File(directory, "${model.c_productS}.jpg"))
+                        .load(File(directory, "${model.c_productLS}.jpg"))
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true)
@@ -180,11 +181,11 @@ class AdapterR_CounterProductShow(
                 for (product in al_CPShow) {
                     if (product.name.lowercase(Locale.ROOT).trim().contains(filterPattern)) {
                         alFilter.add(product)
-                    }else if(product.c_productS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
+                    }else if(product.c_productLS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         alFilter.add(product)
                     }else if(product.size.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         alFilter.add(product)
-                    }else if(product.fk_c_sessionS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
+                    }else if(product.fk_c_sessionLS.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         alFilter.add(product)
                     }else if(product.brand.lowercase(Locale.ROOT).trim().contains(filterPattern)){
                         alFilter.add(product)

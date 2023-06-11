@@ -45,6 +45,9 @@ interface ProductLSDao {
     @Query("UPDATE ProductLS SET amount = :amount WHERE c_productLS = :c_productLS")
     suspend fun updateProductLSAmount(amount: Int , c_productLS: String)
 
+    @Query("UPDATE ProductLS SET amount = amount + :amount WHERE c_productLS = :c_productLS")
+    suspend fun updateProductLSAmountTrannferPlus(amount: Int , c_productLS: String)
+
 
     @Query("INSERT INTO ProductLS VALUES (:c_productS,:name,:fk_c_sessionS,:amount,:buyPrice,:salePrice,:descr, :statePhoto,:deficit,:size,:brand)")
     suspend fun insertProductLS(c_productS: String,name: String, fk_c_sessionS: String,amount: Int,buyPrice: Double,salePrice: Double, descr: String, statePhoto: Int, deficit: Int, size: String, brand: String)

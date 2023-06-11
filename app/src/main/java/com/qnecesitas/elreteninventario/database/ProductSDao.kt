@@ -38,8 +38,8 @@ interface ProductSDao {
     suspend fun selectProductSDeficit() : List<ModelEditProductS>
 
 
-    @Query("SELECT * FROM products ORDER BY name ASC")
-    suspend fun selectProdcutSCounter() : List<ModelEditProductS>
+    @Query("SELECT * FROM productls ORDER BY name ASC")
+    suspend fun selectProdcutSCounter() : List<ModelEditProductLS>
 
 
    @Query("SELECT ShelfS.c_shelfS, DrawerS.c_drawerS FROM ProductS JOIN SessionS ON ProductS.fk_c_sessionS = SessionS.c_sessionS JOIN DrawerS ON SessionS.fk_c_drawerS = DrawerS.c_drawerS JOIN ShelfS ON DrawerS.fk_c_shelfS = ShelfS.c_shelfS WHERE ProductS.c_productS = :c_productS")

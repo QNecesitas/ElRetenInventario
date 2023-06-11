@@ -225,7 +225,7 @@
     <string name="seleccione_para_buscar">--Seleccione para buscar--</string>
     <string name="no_hay_valores">No hay valores para mostrar aún</string>
     <string name="ventas_cant">Ventas: %d</string>
-    <string name="m_s_vendidos">Más vendidos:</string>
+    <string name="m_s_vendidos">Más vendidos en la semana:</string>
     <string name="Buscar">Buscar</string>
     <string name="Cant_pago">Cantidad pagada</string>
     <string name="Transferencia">Transferencia</string>

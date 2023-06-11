@@ -61,8 +61,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!--cl_main_content-->
-
-        <FrameLayout
+    <FrameLayout
             android:id="@+id/fl_container"
             app:layout_constraintBottom_toTopOf="@id/aep_cl_transfer"
             app:layout_constraintStart_toStartOf="parent"
