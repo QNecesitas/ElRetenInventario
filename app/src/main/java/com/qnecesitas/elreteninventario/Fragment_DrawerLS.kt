@@ -151,10 +151,10 @@ class Fragment_DrawerLS(var c_shelfLS: String) : Fragment() {
     private fun addNewDrawerInternet(drawerCode: String) {
         lifecycleScope.launch {
 
-            repository.addDrawerLs (drawerCode, c_shelfLS)
+            repository.addDrawerLs ("${c_shelfLS}_${drawerCode}", c_shelfLS)
         }
 
-        val model = ModelDrawerLS(drawerCode , c_shelfLS,0 )
+        val model = ModelDrawerLS("${c_shelfLS}_${drawerCode}" , c_shelfLS,0 )
         al_drawerLS.add(model)
         updateRecyclerAdapter()
         FancyToast.makeText(

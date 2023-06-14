@@ -62,7 +62,7 @@ class Activity_LittleStore : AppCompatActivity() {
         val fragment_drawers = Fragment_DrawerLS(c_shelfS)
         fragment_drawers.setOpenDrawerLSListener(object : Fragment_DrawerLS.OpenDrawerLS {
             override fun onDrawerLSClicked(code: String) {
-                showFragmentSessions(code)
+                showFragmentSessions(code, c_shelfS)
             }
 
         })
@@ -71,12 +71,12 @@ class Activity_LittleStore : AppCompatActivity() {
             .commit()
     }
 
-    private fun showFragmentSessions(c_drawerS: String) {
+    private fun showFragmentSessions(c_drawerS: String, c_shelfS: String) {
         binding.ASToolbar.setTitle(R.string.Secciones)
         FragmentsInfo.LAST_CODE_DRAWER_LS_SENDED = c_drawerS
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SESSION
 
-        val fragment_sessions = Fragment_SessionsLS(c_drawerS)
+        val fragment_sessions = Fragment_SessionsLS(c_drawerS, c_shelfS)
         fragment_sessions.setOpenSessionLSListener(object : Fragment_SessionsLS.OpenSessionLS {
             override fun onSessionLSClicked(c_sessionsLS: String) {
                 FragmentsInfo.LAST_CODE_SESSION_LS_SENDED = c_sessionsLS
@@ -96,7 +96,7 @@ class Activity_LittleStore : AppCompatActivity() {
             FragmentsInfo.Companion.EFragments.FR_SHELVES -> finish()
             FragmentsInfo.Companion.EFragments.FR_DRAWERS -> showFragmentShelves()
             FragmentsInfo.Companion.EFragments.FR_SESSION -> showFragmentDrawers(FragmentsInfo.LAST_CODE_SHELVES_LS_SENDED)
-            FragmentsInfo.Companion.EFragments.AC_PRODUCTS -> showFragmentSessions(FragmentsInfo.LAST_CODE_DRAWER_LS_SENDED)
+            FragmentsInfo.Companion.EFragments.AC_PRODUCTS -> showFragmentSessions(FragmentsInfo.LAST_CODE_DRAWER_LS_SENDED, FragmentsInfo.LAST_CODE_SHELVES_LS_SENDED)
         }
     }
 }

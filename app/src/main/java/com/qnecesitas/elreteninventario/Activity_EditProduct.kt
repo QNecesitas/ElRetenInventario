@@ -1058,7 +1058,7 @@ class Activity_EditProduct : AppCompatActivity() {
         val fragment_drawersLS = Fragment_DrawerLS(c_shelfS)
         fragment_drawersLS.setOpenDrawerLSListener(object : Fragment_DrawerLS.OpenDrawerLS {
             override fun onDrawerLSClicked(code: String) {
-                showFragmentSessionsLS(code, position, transferExist, transferAllSend, selectedAmount)
+                showFragmentSessionsLS(code,c_shelfS, position, transferExist, transferAllSend, selectedAmount)
             }
         })
         fragmentManager.beginTransaction()
@@ -1066,11 +1066,11 @@ class Activity_EditProduct : AppCompatActivity() {
                 .commit()
     }
 
-    private fun showFragmentSessionsLS(c_drawerS: String, position: Int, transferExist: Boolean, transferAllSend: Boolean, selectedAmount: Int) {
+    private fun showFragmentSessionsLS(c_drawerS: String,c_shelfS: String, position: Int, transferExist: Boolean, transferAllSend: Boolean, selectedAmount: Int) {
         binding.clTransferToolbar.setTitle(R.string.Secciones)
         FragmentsInfo.LAST_CODE_DRAWER_LS_SENDED = c_drawerS
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SESSION
-        val fragment_sessionsLS = Fragment_SessionsLS(c_drawerS)
+        val fragment_sessionsLS = Fragment_SessionsLS(c_drawerS, c_shelfS)
         fragment_sessionsLS.setOpenSessionLSListener(object : Fragment_SessionsLS.OpenSessionLS {
             override fun onSessionLSClicked(c_sessionsLS: String) {
                 binding.aepClTransfer.visibility = View.GONE

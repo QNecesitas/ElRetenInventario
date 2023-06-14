@@ -493,7 +493,9 @@ class Activity_EditProductLS : AppCompatActivity() {
             if (checkInfoDataAdd()) {
                 alertDialog.dismiss()
                 statePhoto = if(uriImageCut == null) 0 else 1
-                if(uriImageCut == null) File(URI(uriToDelete.toString())).delete()
+                if(uriToDelete?.isAbsolute == true) {
+                    if (uriImageCut == null) File(URI(uriToDelete.toString())).delete()
+                }
                 updateProductDB(
                         ModelEditProductLS(
                                 al_editProduct[position].c_productLS,
@@ -1139,7 +1141,7 @@ class Activity_EditProductLS : AppCompatActivity() {
         val fragment_drawers = Fragment_Drawers(c_shelfS)
         fragment_drawers.setOpenDrawerSListener(object : Fragment_Drawers.OpenDrawerS {
             override fun onDrawerSClicked(code: String) {
-                showFragmentSessionsLS(code, position, transferExist, transferAllSend, selectedAmount)
+                showFragmentSessionsLS(code, c_shelfS, position, transferExist, transferAllSend, selectedAmount)
             }
         })
         fragmentManager.beginTransaction()
@@ -1147,11 +1149,11 @@ class Activity_EditProductLS : AppCompatActivity() {
                 .commit()
     }
 
-    private fun showFragmentSessionsLS(c_drawerS: String, position: Int, transferExist: Boolean, transferAllSend: Boolean, selectedAmount: Int) {
+    private fun showFragmentSessionsLS(c_drawerS: String,c_shelfS: String, position: Int, transferExist: Boolean, transferAllSend: Boolean, selectedAmount: Int) {
         binding.clTransferToolbar.setTitle(R.string.Secciones)
         FragmentsInfo.LAST_CODE_DRAWER_SENDED = c_drawerS
         FragmentsInfo.LAST_FRAGMENT_TOUCHED = FragmentsInfo.Companion.EFragments.FR_SESSION
-        val fragment_sessions = Fragment_Sessions(c_drawerS)
+        val fragment_sessions = Fragment_Sessions(c_drawerS, c_shelfS)
         fragment_sessions.setOpenSessionListener(object : Fragment_Sessions.OpenSession {
             override fun onSessionClicked(c_sessions: String) {
                 binding.aepClTransfer.visibility = View.GONE

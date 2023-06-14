@@ -21,7 +21,7 @@ import com.qnecesitas.elreteninventario.databinding.LiAddSessionBinding
 import com.shashank.sony.fancytoastlib.FancyToast
 import kotlinx.coroutines.launch
 
-class Fragment_Sessions(var c_drawerS: String) : Fragment() {
+class Fragment_Sessions(var c_drawerS: String, var c_shelfS: String) : Fragment() {
 
     private var openSession: OpenSession? = null
 
@@ -146,10 +146,10 @@ class Fragment_Sessions(var c_drawerS: String) : Fragment() {
         lifecycleScope.launch {
 
 
-            repository.addSessionS(sessionCode , c_drawerS)
+            repository.addSessionS("${c_shelfS}_${c_drawerS}_${sessionCode}" , c_drawerS)
         }
 
-        val model = ModelSessionS(sessionCode , c_drawerS, 0)
+        val model = ModelSessionS("${c_shelfS}_${c_drawerS}_${sessionCode}" , c_drawerS, 0)
         al_sessions.add(model)
         updateRecyclerAdapter()
         FancyToast.makeText(

@@ -155,10 +155,10 @@ class Fragment_Drawers(var c_shelfS: String) : Fragment() {
         lifecycleScope.launch {
 
 
-            repository.addDrawerS(drawerCode , c_shelfS)
+            repository.addDrawerS("${c_shelfS}_${drawerCode}" , c_shelfS)
         }
 
-        val model = ModelDrawerS(drawerCode , c_shelfS, 0)
+        val model = ModelDrawerS("${c_shelfS}_${drawerCode}" , c_shelfS, 0)
         al_drawers.add(model)
         updateRecyclerAdapter()
         FancyToast.makeText(

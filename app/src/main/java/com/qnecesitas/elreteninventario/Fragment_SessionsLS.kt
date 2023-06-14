@@ -12,24 +12,16 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.qnecesitas.elreteninventario.adapters.AdapterRSessions
 import com.qnecesitas.elreteninventario.adapters.AdapterRSessionsLS
-import com.qnecesitas.elreteninventario.auxiliary.Constants
 import com.qnecesitas.elreteninventario.data.ModelSessionLS
-import com.qnecesitas.elreteninventario.data.ModelSessionS
 import com.qnecesitas.elreteninventario.database.Repository
 import com.qnecesitas.elreteninventario.databinding.FragmentSessionsLsBinding
 import com.qnecesitas.elreteninventario.databinding.LiAddSessionBinding
-import com.qnecesitas.elreteninventario.network.RetrofitSessionsImplLS
 import com.shashank.sony.fancytoastlib.FancyToast
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
-class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
+class Fragment_SessionsLS(var c_drawerLS: String, var c_shelfLS: String) : Fragment() {
     private var openSession: OpenSessionLS? = null
 
     //Recycler
@@ -151,9 +143,9 @@ class Fragment_SessionsLS(var c_drawerLS: String) : Fragment() {
     private fun addNewSessionInternet(sessionCode: String) {
         lifecycleScope.launch {
 
-            repository.addSessionLS(sessionCode, c_drawerLS)
+            repository.addSessionLS("${c_shelfLS}_${c_drawerLS}_${sessionCode}", c_drawerLS)
         }
-        val model = ModelSessionLS(sessionCode, c_drawerLS, 0)
+        val model = ModelSessionLS("${c_shelfLS}_${c_drawerLS}_${sessionCode}", c_drawerLS, 0)
         al_sessionLS.add(model)
         updateRecyclerAdapter()
         FancyToast.makeText(

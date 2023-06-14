@@ -242,7 +242,6 @@ class Activity_Sales : AppCompatActivity() {
         if (lastFilterStr.trim().isNotEmpty()) {
             adapterrSales.getFilter()?.filter(lastFilterStr)
         }
-
     }
 
 
