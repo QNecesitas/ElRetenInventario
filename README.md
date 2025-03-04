@@ -29,9 +29,9 @@ This code has been made public as a demonstration of the development team's expe
 
 ## Screenshots
 
-![Screenshot 1](https://github.com/QNecesitas/ElRetenInventario/blob/main/Screenshots/inventario_2.png)
+<img src="https://github.com/QNecesitas/ElRetenInventario/blob/58367033bd8c31077f47dbcd4b2a234e55ebbbba/Screenshots/inventario_1.png"/>
 
-![Screenshot 2](https://github.com/QNecesitas/ElRetenInventario/blob/main/Screenshots/inventario_1.png)
+<img src="https://github.com/QNecesitas/ElRetenInventario/blob/58367033bd8c31077f47dbcd4b2a234e55ebbbba/Screenshots/inventario_2.png"/>
 
-![Screenshot 3](https://github.com/QNecesitas/ElRetenInventario/blob/main/Screenshots/inventario_3.png)
+<img src="https://github.com/QNecesitas/ElRetenInventario/blob/58367033bd8c31077f47dbcd4b2a234e55ebbbba/Screenshots/inventario_3.png"/>
 
